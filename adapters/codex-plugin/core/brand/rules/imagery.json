@@ -1,0 +1,33 @@
+{
+  "_provenance": "Extraído de claude-design-system/readme.md (§Imagery vibe, §CAVEATS) y claude-design-system/assets/campus/README.md, Hito 1, 2026-07-23. Las rutas listadas son las planas de assets/ (confirmadas en uso real por slides/ en el inventario, planning/00-current-state-inventory.md). La subcarpeta assets/campus/ se excluye deliberadamente: contiene duplicados sin comprimir de mayor peso, con nombres inconsistentes respecto a su propio README.md, y ningún slide/guideline/template la referencia.",
+
+  "rule": "Nunca generar, simular, fabricar o inventar imágenes de personas, edificios o escenas para representar a la Universidad. Usar únicamente fotografía oficial de la whitelist.",
+
+  "peoplePhotography": {
+    "bundled": false,
+    "note": "El template original incluye fotos recortadas de estudiantes, pero fueron intencionalmente NO empaquetadas por directiva institucional — el sistema evita representar personas salvo que la universidad suministre imagería aprobada explícita."
+  },
+
+  "default": "assets/campus-2.jpg",
+
+  "approvedCampusPhotography": [
+    { "path": "assets/campus-2.jpg", "orientation": "horizontal", "note": "imagen principal / por defecto — usar salvo que el contenido pida otra específica" },
+    { "path": "assets/campus-1.jpg", "orientation": "horizontal", "note": "vista aérea alternativa" },
+    { "path": "assets/campus-3.jpg", "orientation": "horizontal", "note": "vista aérea alternativa" },
+    { "path": "assets/campus-4.jpg", "orientation": "horizontal", "note": "vista aérea alternativa" },
+    { "path": "assets/campus-plaza-balcones.jpg", "orientation": "horizontal", "note": "Plaza de los Balcones: casa colonial blanca, buganvilia fucsia, piso empedrado; cálida, día soleado" },
+    { "path": "assets/campus-puente.jpg", "orientation": "horizontal", "note": "puente rojo peatonal sobre el lago, edificio de ladrillo, jardines" },
+    { "path": "assets/campus-adportas.png", "orientation": "horizontal", "note": "extraída de la plantilla PPT, menor resolución" },
+    { "path": "assets/campus-balcones.png", "orientation": "horizontal", "note": "extraída de la plantilla PPT, menor resolución" },
+    { "path": "assets/campus-night.png", "orientation": "horizontal", "note": "extraída de la plantilla PPT, menor resolución" }
+  ],
+
+  "excludedPaths": [
+    { "path": "assets/campus/**", "reason": "duplicados sin comprimir, no referenciados por ningún slide/guideline/template; ver planning/00-current-state-inventory.md" },
+    { "path": "uploads/**", "reason": "material fuente crudo del cliente, no procesado ni aprobado para distribución directa; ver planning/06-security-and-governance.md" }
+  ],
+
+  "usageContexts": ["portadas full-bleed con gradiente de protección navy", "separadores", "fondos"],
+
+  "validatorRule": "Cualquier ruta de imagen referenciada en un Deck Spec que no aparezca en approvedCampusPhotography (o en core/brand/rules/logo.json#/approvedAssets) debe marcarse como error de cumplimiento — no advertencia."
+}

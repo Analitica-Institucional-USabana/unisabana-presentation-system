@@ -1,0 +1,11 @@
+{
+  "name": "unisabana-dev",
+  "owner": { "name": "Universidad de La Sabana" },
+  "plugins": [
+    {
+      "name": "unisabana-presentations",
+      "source": "./adapters/claude-plugin",
+      "description": "Marketplace de desarrollo (local, no publicado) para el plugin de presentaciones institucionales de Universidad de La Sabana. Ver planning/03-migration-roadmap.md Hito 3 y Hito 8 para el plan de publicación real."
+    }
+  ]
+}

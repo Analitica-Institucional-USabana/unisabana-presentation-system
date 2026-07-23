@@ -1,0 +1,42 @@
+{
+  "_provenance": "Extraído de claude-design-system/readme.md (§Typography, §11 TYPOGRAPHIC ALIGNMENT FOR PRESENTATIONS, §CAVEATS) y claude-design-system/tokens/typography.css, Hito 1, 2026-07-23. La escala base (--fs-*, --fw-*, etc.) vive en core/brand/tokens.json; este archivo declara las reglas de uso y la escala adicional específica de presentación definida en el addendum del readme.md.",
+
+  "fontFamily": {
+    "allowed": ["Libre Franklin"],
+    "tokenSource": "core/brand/tokens.json#/typography/fontFamily",
+    "rule": "Familia única y obligatoria en todo el sistema. Jerarquía se construye por peso/tamaño/tracking/case, nunca introduciendo otra familia.",
+    "excludedSecondaryFaces": {
+      "_note": "El brand book original lista Publico Banner y Cabinet Grotesk como caras secundarias/co-branding, pero por directiva institucional este sistema usa solo Libre Franklin. No están empaquetadas.",
+      "names": ["Publico Banner", "Cabinet Grotesk"]
+    }
+  },
+
+  "casing": {
+    "titlesAndHeadings": "sentence case (capitaliza primera palabra + nombres propios); nunca ALL-CAPS para strings largos",
+    "eyebrowsAndKickers": "UPPERCASE con tracking amplio (--ls-label)",
+    "facultyAndUnitNames": "usar su capitalización oficial (ej. \"Facultad de Estudios Jurídicos, Políticos e Internacionales\")"
+  },
+
+  "presentationScale": {
+    "_note": "readme.md §11 — escala adicional específica de presentación, complementaria a la escala base de tokens.json (--fs-*). No reemplaza esa escala, la extiende para casos de uso de portada/sección/slide.",
+    "coverTitle": "clamp(64px, 7.5vw, 96px)",
+    "sectionTitle": "clamp(50px, 5.8vw, 76px)",
+    "slideTitle": "clamp(34px, 4vw, 52px)",
+    "body": "20px",
+    "caption": "16px",
+    "source": "14px"
+  },
+
+  "rules": [
+    { "id": "min-body-size", "description": "El cuerpo de texto nunca debe reducirse por debajo de 20px, ni siquiera para resolver overflow.", "severity": "error" },
+    { "id": "no-long-uppercase-headings", "description": "No usar encabezados largos en mayúsculas.", "severity": "warning" },
+    { "id": "no-mixed-weights", "description": "No combinar varios pesos tipográficos no relacionados en un mismo slide.", "severity": "warning" },
+    { "id": "consistent-baselines", "description": "Preservar líneas base de título consistentes entre slides de la misma familia.", "severity": "warning" },
+    { "id": "bold-for-hierarchy-only", "description": "Usar negrita solo para jerarquía, no para párrafos completos.", "severity": "warning" }
+  ],
+
+  "numbers": {
+    "_note": "readme.md §Numbers.",
+    "rule": "Las cifras grandes son una característica del sistema: se presentan grandes, en --fw-bold/--fw-black, con unidades y periodos claramente etiquetados. Siempre citar fuente y periodo en slides de datos ('Fuente: … · 2024')."
+  }
+}

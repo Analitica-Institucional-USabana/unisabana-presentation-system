@@ -1,0 +1,50 @@
+{
+  "_provenance": "Extraído de claude-design-system/readme.md (§Colour) y claude-design-system/tokens/colors.css, Hito 1, 2026-07-23. Los valores hex viven en core/brand/tokens.json; este archivo solo declara las REGLAS de uso, no duplica los valores, para evitar dos fuentes de verdad.",
+
+  "default": "institutional",
+  "options": [
+    "institutional",
+    "ingenieria", "comportamiento", "educacion", "medicina", "juridicas", "cta",
+    "lenguas", "vida", "filosofia", "comunicacion", "familia", "forum", "economicas"
+  ],
+  "tokenSource": "core/brand/tokens.json#/color",
+
+  "rules": [
+    {
+      "id": "no-mixing",
+      "description": "Nunca mezclar dos paletas de facultad, ni una de facultad con la institucional, dentro del mismo deck.",
+      "severity": "error"
+    },
+    {
+      "id": "faculty-scope-whole-piece",
+      "description": "Una paleta de facultad solo se activa cuando la pieza completa pertenece a esa facultad/unidad — no para un slide aislado dentro de un deck institucional general.",
+      "severity": "error"
+    },
+    {
+      "id": "activation-mechanism",
+      "description": "Activar vía atributo data-faculty=\"<slug>\" en un contenedor ancestro; esto repunta --accent/--accent-dark/--accent-mid/--accent-300/--accent-100 según core/brand/tokens.json#/color/facultyAccentMapping.",
+      "severity": "structural"
+    },
+    {
+      "id": "max-background-colors",
+      "description": "Máximo 1-2 colores de fondo por deck. El color construye jerarquía y diferencia categorías, no rellena espacio.",
+      "severity": "warning"
+    },
+    {
+      "id": "no-invented-colors",
+      "description": "Ningún color fuera de este sistema (institucional + 13 facultades + neutrales) puede introducirse en un Deck Spec.",
+      "severity": "error"
+    }
+  ],
+
+  "backgroundRegisters": {
+    "_note": "readme.md §Backgrounds — tres registros permitidos.",
+    "content": ["white", "--sabana-blue-100"],
+    "cover-separator-quote": ["--sabana-blue-deep (navy)"],
+    "immersive-cover": ["full-bleed official campus photography + navy protection gradient"]
+  },
+
+  "openQuestions": [
+    "D-Q4 en planning/07-decisions-and-open-questions.md: el mapeo paleta↔facultad fue reconstruido por Claude Design desde la geometría del PPTX de paletas, no verificado contra una fuente oficial escrita — confirmar con el equipo de marca antes de considerarlo canónico."
+  ]
+}

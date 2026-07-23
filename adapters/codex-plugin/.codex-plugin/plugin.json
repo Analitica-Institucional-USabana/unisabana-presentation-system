@@ -1,0 +1,13 @@
+{
+  "name": "unisabana-presentations",
+  "version": "0.1.0",
+  "description": "Crea y revisa presentaciones institucionales de Universidad de La Sabana respetando la marca oficial: paleta institucional y de facultades, tipografía Libre Franklin, uso correcto del logo, densidad de contenido y atribución de IA.",
+  "skills": "./skills/",
+  "author": { "name": "Universidad de La Sabana" },
+  "keywords": ["design-system", "presentations", "branding", "universidad-de-la-sabana"],
+  "interface": {
+    "displayName": "Universidad de La Sabana — Presentaciones institucionales",
+    "shortDescription": "Crea y revisa presentaciones institucionales respetando la marca de Universidad de La Sabana.",
+    "category": "productivity"
+  }
+}

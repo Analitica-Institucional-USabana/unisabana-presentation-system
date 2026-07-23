@@ -1,0 +1,41 @@
+{
+  "_provenance": "Extraído literalmente de claude-design-system/readme.md §10 PRESENTATION DENSITY AND CONTENT LIMITS y §Density, Hito 1, 2026-07-23. slideContentLimits reproduce el bloque TypeScript ya definido en el propio readme.md — no se inventó ningún límite.",
+
+  "modes": {
+    "low": { "fillRange": [60, 80], "use": "mensajes de alto nivel, cifras clave, títulos grandes, lectura inmediata" },
+    "high": { "fillRange": [80, 90], "use": "tablas, indicadores, contenido técnico — organizado, nunca saturado, jerarquía preservada" }
+  },
+
+  "slideContentLimits": {
+    "_note": "Guía visual, no un objetivo a llenar mecánicamente.",
+    "maxPrimaryIdeas": 1,
+    "maxSupportingBlocks": 3,
+    "maxColumns": 3,
+    "maxCardCount": 6,
+    "maxChartSeriesPreferred": 5,
+    "maxAgendaItemsPreferred": 6,
+    "maxProcessStepsPreferred": 6
+  },
+
+  "overflowResolutionOrder": [
+    "split the slide",
+    "prioritise the conclusion",
+    "move detail to an appendix",
+    "never solve overflow by reducing body copy below 20px",
+    "never reduce the institutional logo below its minimum or recommended size to gain content space"
+  ],
+
+  "visualLanguageLimits": {
+    "_note": "readme.md §12.",
+    "maxDiagrammingElementsPerSlide": 2,
+    "rules": [
+      "do not repeat one decorative element excessively",
+      "keep shapes simple and derived from the established system",
+      "avoid ornamental waves, textures or patterns behind dense content",
+      "use cards only when they organise information",
+      "use shadows sparingly and never on logos",
+      "use one accent rule consistently",
+      "the recurring corner wave must not overlap the logo protection area, appear on every content slide, compete with the title, be combined with additional decorative patterns, or reduce text contrast"
+    ]
+  }
+}

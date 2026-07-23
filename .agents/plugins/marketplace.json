@@ -1,0 +1,12 @@
+{
+  "name": "unisabana-dev",
+  "interface": { "displayName": "Universidad de La Sabana (desarrollo)" },
+  "plugins": [
+    {
+      "name": "unisabana-presentations",
+      "source": { "source": "local", "path": "./adapters/codex-plugin" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "productivity"
+    }
+  ]
+}

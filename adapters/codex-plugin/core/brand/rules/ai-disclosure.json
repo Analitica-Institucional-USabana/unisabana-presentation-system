@@ -1,0 +1,46 @@
+{
+  "_provenance": "Extraído de claude-design-system/CLAUDE.md y claude-design-system/readme.md (§PIE DE ATRIBUCIÓN — ATRIBUCIÓN DE IA, §7 CLAUDE DESIGN ATTRIBUTION VS. INSTITUTIONAL LOGO), Hito 1, 2026-07-23.",
+
+  "openQuestion": "D-Q5 en planning/07-decisions-and-open-questions.md: esta regla nació en un contexto donde el generador era siempre Claude Design. El sistema objetivo puede generarse también desde Codex u otros agentes. Este archivo conserva el texto/activo literal actual ('Diseñado con Claude Design' + assets/claude-logo.svg) por fidelidad a la fuente; la decisión de generalizar el texto (p. ej. a 'Diseñado con IA') o de parametrizarlo por plataforma generadora queda pendiente de validación institucional antes de implementarse — no se decide unilateralmente aquí.",
+
+  "mandatory": true,
+  "text": "Diseñado con Claude Design",
+  "logoAsset": "assets/claude-logo.svg",
+
+  "position": {
+    "corner": "bottom-right",
+    "insetFromEdge": "~40px (dentro del área segura)"
+  },
+
+  "size": {
+    "textPx": 14,
+    "logoHeightPx": 17,
+    "maxWidthPercent": 14
+  },
+
+  "colorByBackground": {
+    "light": { "text": "var(--ink-500)", "logo": "color original" },
+    "darkOrPhoto": { "text": "var(--sabana-blue-300)", "logo": "blanco (filter: brightness(0) invert(1))" }
+  },
+
+  "relationToInstitutionalLogo": {
+    "_note": "readme.md §7 — la atribución es una divulgación, no una marca co-líder.",
+    "minimumSeparation": "área de protección completa del logo institucional + 24px",
+    "rules": [
+      "never place inside the Universidad de La Sabana logo protection area",
+      "never align both logos implying a single combined lockup",
+      "no dividing line that visually merges both marks",
+      "must remain smaller and lower in hierarchy than the institutional logo",
+      "if both marks would share the same corner in a template, move the AI attribution to the opposite lower corner while keeping the institutional logo fixed",
+      "must never force the institutional logo to shrink below its recommended presentation size"
+    ]
+  },
+
+  "referencePattern": "<div style=\"position:absolute;right:32px;bottom:24px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-500)\"><span>Diseñado con Claude Design</span><img src=\"assets/claude-logo.svg\" alt=\"Claude\" style=\"height:15px;width:auto\"></div>",
+
+  "validatorChecks": [
+    "claudeDisclosurePresent",
+    "claudeDisclosureSeparated (no colisiona con el logo institucional)",
+    "attribution remains subordinate in hierarchy"
+  ]
+}
