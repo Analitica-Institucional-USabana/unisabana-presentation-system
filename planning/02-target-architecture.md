@@ -7,7 +7,7 @@
 │ 0. FUENTES ORIGINALES (congeladas, solo lectura, no distribuidas)│
 │    _legacy/claude-design-system/  (el árbol actual, intacto)     │
 └───────────────────────────────┬─────────────────────────────────┘
-                                 │ extracción manual, una vez, con proveniencia citada
+                                │ extracción manual, una vez, con proveniencia citada
 ┌───────────────────────────────▼─────────────────────────────────┐
 │ 1. NÚCLEO CANÓNICO DE MARCA — core/                              │
 │    core/brand/tokens.json         (fuente única; CSS es proyección)│
@@ -29,19 +29,19 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │ 5. DECK SPEC (instancia YAML validada contra el JSON Schema)      │
 └───────────────────────────────┬─────────────────────────────────┘
-                                 │ renderiza
+                                │ renderiza
 ┌───────────────────────────────▼─────────────────────────────────┐
 │ 6. RENDERERS                                                      │
 │    renderers/html/   (MVP — HTML autocontenido)                   │
 │    renderers/pptx/   (fase posterior)                             │
 └───────────────────────────────┬─────────────────────────────────┘
-                                 │ empaquetado por
+                                │ empaquetado por
 ┌───────────────────────────────▼─────────────────────────────────┐
 │ 7. ADAPTADORES DE PLATAFORMA                                       │
 │    adapters/claude-plugin/  → .claude-plugin/plugin.json + marketplace.json │
 │    adapters/codex-plugin/   → .codex-plugin/plugin.json + marketplace.json  │
 └───────────────────────────────┬─────────────────────────────────┘
-                                 │ publicado en
+                                │ publicado en
 ┌───────────────────────────────▼─────────────────────────────────┐
 │ 8. MARKETPLACE (repo git, inicialmente privado/interno)           │
 └─────────────────────────────────────────────────────────────────┘
@@ -119,13 +119,13 @@ No se crea nada de esto en esta fase — es la arquitectura objetivo documentada
 
 ## Estrategia multiplataforma
 
-| Capa | Claude Code | Codex | Portabilidad |
-|---|---|---|---|
-| `core/brand`, `core/schemas`, `core/components` | consumido igual | consumido igual | 100% — es solo datos/código, sin dependencia de plataforma |
-| `skills/create/SKILL.md`, `skills/review/SKILL.md` | `.claude/skills/<name>/` o dentro de un plugin | `.agents/skills/<name>/` o dentro de un plugin Codex | Alta — mismo formato (`name`+`description`+carga progresiva), validable con `skills-ref validate` del repo oficial agentskills/agentskills |
-| `validators/`, `renderers/html/` | invocados vía Bash desde la skill | invocados vía Bash desde la skill | Alta — son scripts Node puros, sin API específica de plataforma |
-| Empaquetado (`plugin.json`/manifest, comandos de instalación) | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`, `/plugin marketplace add`, `/plugin install` | `.codex-plugin/plugin.json` + `marketplace.json`, `codex plugin marketplace add`, `codex plugin add` | Ninguna — esquemas y comandos distintos, requiere un adaptador por plataforma |
-| Hooks / MCP | soportado, no usado en MVP | mecanismo propio, no usado en MVP | N/A para el MVP |
+| Capa                                                             | Claude Code                                                                                                            | Codex                                                                                                        | Portabilidad                                                                                                                                      |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core/brand`, `core/schemas`, `core/components`            | consumido igual                                                                                                        | consumido igual                                                                                              | 100% — es solo datos/código, sin dependencia de plataforma                                                                                      |
+| `skills/create/SKILL.md`, `skills/review/SKILL.md`           | `.claude/skills/<name>/` o dentro de un plugin                                                                       | `.agents/skills/<name>/` o dentro de un plugin Codex                                                       | Alta — mismo formato (`name`+`description`+carga progresiva), validable con `skills-ref validate` del repo oficial agentskills/agentskills |
+| `validators/`, `renderers/html/`                             | invocados vía Bash desde la skill                                                                                     | invocados vía Bash desde la skill                                                                           | Alta — son scripts Node puros, sin API específica de plataforma                                                                                 |
+| Empaquetado (`plugin.json`/manifest, comandos de instalación) | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`, `/plugin marketplace add`, `/plugin install` | `.codex-plugin/plugin.json` + `marketplace.json`, `codex plugin marketplace add`, `codex plugin add` | Ninguna — esquemas y comandos distintos, requiere un adaptador por plataforma                                                                    |
+| Hooks / MCP                                                      | soportado, no usado en MVP                                                                                             | mecanismo propio, no usado en MVP                                                                            | N/A para el MVP                                                                                                                                   |
 
 ## Separación core vs. adaptadores (por qué importa)
 
