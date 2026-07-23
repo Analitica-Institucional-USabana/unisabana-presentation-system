@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Plantilla institucional (fiel PPT)" description="Réplica de la plantilla oficial AF-PPT: portada offset, título de sección, cifra gigante, lista con panel lateral y destacado con año. Tweak de facultad." -->
+<helmet>
+<script src="./ds-base.js"></script>
+<style>
+  body{margin:0;background:#e7e9ee}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0;font-family:var(--font-sans)}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:#fff;color:var(--sabana-blue);box-shadow:0 10px 40px rgba(0,32,91,.18);border-radius:6px}
+  .slide *{box-sizing:border-box}
+  .logo{position:absolute;height:44px;width:auto}
+  .abs{position:absolute}
+  .title{font-weight:800;letter-spacing:-.01em;line-height:1.04;margin:0}
+  .kick{font-size:24px;font-weight:300;letter-spacing:.02em;margin:0;line-height:1.1}
+  .body{font-size:20px;line-height:1.55;color:var(--ink-700)}
+  .body.on-navy{color:var(--sabana-blue-100)}
+  .sq{width:14px;height:14px;background:var(--accent-mid);flex:none;margin-top:6px}
+  .dots{display:grid;grid-template-columns:repeat(3,4px);grid-auto-rows:4px;gap:3px}
+  .dots span{width:4px;height:4px;background:var(--accent-dark);border-radius:50%}
+  .aifoot{position:absolute;right:40px;bottom:24px;display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:.02em;color:var(--ink-500);z-index:5}
+  .aifoot img{height:17px;width:auto;opacity:.55}
+</style>
+</helmet>
+<div class="deck" data-faculty="{{ faculty }}">
+
+  <!-- 1 · PORTADA (bloque de título con sombra en offset) -->
+  <section class="slide">
+    <img class="logo" src="../../assets/logo-horizontal-color.png" style="left:56px;top:44px" alt="Universidad de La Sabana">
+    <!-- sombra azul claro detrás -->
+    <div class="abs" style="right:80px;top:250px;width:430px;height:88px;background:var(--sabana-blue-300)"></div>
+    <!-- bloque navy con título -->
+    <div class="abs" style="right:56px;top:262px;width:430px;height:88px;background:var(--sabana-blue-deep);display:flex;align-items:center;padding:0 26px">
+      <span class="title" style="color:#fff;font-size:40px">Lorem ipsum</span>
+    </div>
+    <p class="abs body" style="right:56px;top:372px;width:500px;font-size:20px;line-height:1.5;color:var(--ink-700)">Recuerda: descargar la presentación en tu computador para poder editarla.</p>
+    <div class="aifoot"><span>Diseñado con Claude Design</span><img src="../../assets/claude-logo.svg" alt="Claude"></div>
+  </section>
+
+  <!-- 2 · TÍTULO DE SECCIÓN (panel navy superior) -->
+  <section class="slide">
+    <div class="abs" style="left:0;top:0;width:1280px;height:492px;background:var(--sabana-blue-deep)"></div>
+    <p class="abs kick" style="left:80px;top:110px;color:var(--sabana-cream)">Título</p>
+    <h1 class="abs title" style="left:80px;top:210px;width:1000px;color:#fff;font-size:66px">Lorem ipsum dolor</h1>
+    <img class="logo" src="../../assets/logo-horizontal-white.png" style="right:56px;bottom:44px" alt="">
+    <div class="aifoot"><span>Diseñado con Claude Design</span><img src="../../assets/claude-logo.svg" alt="Claude"></div>
+  </section>
+
+  <!-- 3 · TÍTULO CON PANEL AZUL CLARO -->
+  <section class="slide">
+    <div class="abs" style="left:110px;top:150px;width:1060px;height:448px;background:var(--sabana-blue-300)"></div>
+    <img class="logo" src="../../assets/logo-horizontal-color.png" style="left:56px;top:44px" alt="">
+    <p class="abs kick" style="left:170px;top:290px;color:var(--sabana-blue-deep);font-weight:400">Título</p>
+    <h1 class="abs title" style="left:170px;top:335px;width:760px;color:#fff;font-size:50px">Lorem ipsum dolor</h1>
+    <div class="aifoot"><span>Diseñado con Claude Design</span><img src="../../assets/claude-logo.svg" alt="Claude"></div>
+  </section>
+
+  <!-- 4 · CIFRA GIGANTE (panel navy lateral derecho) -->
+  <section class="slide">
+    <img class="logo" src="../../assets/logo-horizontal-color.png" style="left:56px;top:44px" alt="">
+    <!-- panel navy derecho con franja de acento -->
+    <div class="abs" style="right:0;top:0;width:524px;height:720px;background:var(--sabana-blue-deep)"></div>
+    <div class="abs" style="right:470px;top:0;width:56px;height:720px;background:var(--accent-mid)"></div>
+    <div class="abs" style="right:0;top:0;width:524px;height:720px;display:flex;align-items:center;justify-content:center">
+      <span style="font-size:220px;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1">72</span>
+    </div>
+    <!-- lado izquierdo -->
+    <div class="abs" style="left:110px;top:250px;width:604px;height:74px;background:var(--accent);opacity:.14"></div>
+    <h1 class="abs title" style="left:110px;top:258px;width:604px;color:var(--sabana-blue);font-size:44px">Lorem ipsum dolor</h1>
+    <div class="abs" style="left:130px;top:440px;width:430px;background:var(--sabana-blue-300);padding:16px 20px">
+      <p class="body" style="color:var(--sabana-blue-deep);font-weight:600;margin:0">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.</p>
+    </div>
+    <div class="aifoot"><span>Diseñado con Claude Design</span><img src="../../assets/claude-logo.svg" alt="Claude"></div>
+  </section>
+
+  <!-- 5 · LISTA CON PANEL LATERAL -->
+  <section class="slide">
+    <div class="abs" style="left:0;top:0;width:498px;height:720px;background:var(--sabana-blue-deep)"></div>
+    <div class="abs" style="left:417px;top:0;width:74px;height:720px;background:var(--sabana-blue-300)"></div>
+    <div class="abs" style="left:492px;top:0;width:74px;height:395px;background:var(--sabana-blue-100)"></div>
+    <img class="logo" src="../../assets/logo-horizontal-color.png" style="right:56px;top:36px" alt="">
+    <p class="abs kick" style="left:640px;top:150px;color:var(--sabana-blue-mid);font-weight:400">Lorem ipsum dolor</p>
+    <h2 class="abs title" style="left:640px;top:190px;color:var(--sabana-blue-deep);font-size:45px">Lorem ipsum</h2>
+    <div class="abs" style="left:640px;top:300px;width:520px;display:flex;flex-direction:column;gap:26px">
+      <div style="display:flex;gap:16px"><span class="sq"></span><div><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> <span class="body">dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</span></div></div>
+      <div style="display:flex;gap:16px"><span class="sq"></span><div><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> <span class="body">dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</span></div></div>
+      <div style="display:flex;gap:16px"><span class="sq"></span><div><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> <span class="body">dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</span></div></div>
+    </div>
+    <div class="aifoot"><span>Diseñado con Claude Design</span><img src="../../assets/claude-logo.svg" alt="Claude"></div>
+  </section>
+
+  <!-- 6 · DESTACADO CON AÑO (panel navy + conectores punteados) -->
+  <section class="slide">
+    <img class="logo" src="../../assets/logo-horizontal-color.png" style="right:56px;top:36px" alt="">
+    <div class="abs" style="left:112px;top:-24px;width:531px;height:768px;background:var(--sabana-blue-deep);transform:skewX(-4deg)"></div>
+    <div class="abs" style="left:220px;top:90px;width:390px">
+      <div style="font-size:92px;font-weight:800;color:var(--sabana-cream);line-height:1">2025</div>
+      <p class="kick" style="color:#fff;margin-top:8px">Lorem ipsum dolor</p>
+      <h2 class="title" style="color:#fff;font-size:40px;margin-top:18px">Lorem ipsum</h2>
+      <p class="body on-navy" style="margin-top:16px">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.</p>
+    </div>
+    <div class="abs" style="left:800px;top:120px;width:380px;display:flex;flex-direction:column;gap:30px">
+      <div style="display:flex;gap:22px;align-items:flex-start"><div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><p class="body" style="margin:0"><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+      <div style="display:flex;gap:22px;align-items:flex-start"><div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><p class="body" style="margin:0"><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+      <div style="display:flex;gap:22px;align-items:flex-start"><div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><p class="body" style="margin:0"><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+      <div style="display:flex;gap:22px;align-items:flex-start"><div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><p class="body" style="margin:0"><b style="color:var(--sabana-blue-deep)">Lorem ipsum:</b> dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+    </div>
+    <div class="aifoot"><span>Diseñado con Claude Design</span><img src="../../assets/claude-logo.svg" alt="Claude"></div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;faculty&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;default&quot;: &quot;&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Marca&quot;,
+    &quot;options&quot;: [&quot;&quot;, &quot;ingenieria&quot;, &quot;comportamiento&quot;, &quot;educacion&quot;, &quot;medicina&quot;, &quot;juridicas&quot;, &quot;cta&quot;, &quot;lenguas&quot;, &quot;vida&quot;, &quot;filosofia&quot;, &quot;comunicacion&quot;, &quot;familia&quot;, &quot;forum&quot;, &quot;economicas&quot;]
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { faculty: this.props.faculty || "" };
+  }
+}
+</script>
+</body>
+</html>

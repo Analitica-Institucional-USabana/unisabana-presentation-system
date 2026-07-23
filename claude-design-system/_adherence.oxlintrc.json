@@ -1,0 +1,430 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": [
+              "components/brand/**",
+              "components/core/**",
+              "components/data/**"
+            ],
+            "message": "Import design-system components from 'index.js', not component internals."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Libre Franklin))/i]",
+        "message": "Font not provided by the design system. Available: Libre Franklin."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|size|disabled|children|key|ref|className|style|children)$/]",
+        "message": "<Button> doesn't accept that prop. Declared props: variant, size, disabled, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute[name.name='variant'] > Literal[value!=/^(?:primary|secondary|ghost)$/]",
+        "message": "<Button> variant must be one of 'primary' | 'secondary' | 'ghost'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute[name.name='size'] > Literal[value!=/^(?:sm|md|lg)$/]",
+        "message": "<Button> size must be one of 'sm' | 'md' | 'lg'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Card'] > JSXAttribute > JSXIdentifier[name!=/^(?:accent|padding|children|key|ref|className|style|children)$/]",
+        "message": "<Card> doesn't accept that prop. Declared props: accent, padding, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Card'] > JSXAttribute[name.name='accent'] > Literal[value!=/^(?:none|top|left)$/]",
+        "message": "<Card> accent must be one of 'none' | 'top' | 'left'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Eyebrow'] > JSXAttribute > JSXIdentifier[name!=/^(?:rule|color|children|key|ref|className|style|children)$/]",
+        "message": "<Eyebrow> doesn't accept that prop. Declared props: rule, color, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Logo'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|height|basePath|alt|key|ref|className|style|children)$/]",
+        "message": "<Logo> doesn't accept that prop. Declared props: variant, height, basePath, alt."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Logo'] > JSXAttribute[name.name='variant'] > Literal[value!=/^(?:color|white|mono)$/]",
+        "message": "<Logo> variant must be one of 'color' | 'white' | 'mono'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ProgressBar'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|label|showValue|height|key|ref|className|style|children)$/]",
+        "message": "<ProgressBar> doesn't accept that prop. Declared props: value, label, showValue, height."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Stat'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|label|delta|deltaDirection|caption|align|key|ref|className|style|children)$/]",
+        "message": "<Stat> doesn't accept that prop. Declared props: value, label, delta, deltaDirection, caption, align."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Stat'] > JSXAttribute[name.name='deltaDirection'] > Literal[value!=/^(?:up|down)$/]",
+        "message": "<Stat> deltaDirection must be one of 'up' | 'down'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Stat'] > JSXAttribute[name.name='align'] > Literal[value!=/^(?:left|center)$/]",
+        "message": "<Stat> align must be one of 'left' | 'center'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Tag'] > JSXAttribute > JSXIdentifier[name!=/^(?:tone|children|key|ref|className|style|children)$/]",
+        "message": "<Tag> doesn't accept that prop. Declared props: tone, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Tag'] > JSXAttribute[name.name='tone'] > Literal[value!=/^(?:accent|solid|neutral|cream)$/]",
+        "message": "<Tag> tone must be one of 'accent' | 'solid' | 'neutral' | 'cream'."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {
+      "Button": {
+        "replaces": []
+      },
+      "Card": {
+        "replaces": []
+      },
+      "Eyebrow": {
+        "replaces": []
+      },
+      "Logo": {
+        "replaces": []
+      },
+      "ProgressBar": {
+        "replaces": []
+      },
+      "Stat": {
+        "replaces": []
+      },
+      "Tag": {
+        "replaces": []
+      }
+    },
+    "tokens": [
+      "--accent",
+      "--accent-100",
+      "--accent-300",
+      "--accent-dark",
+      "--accent-mid",
+      "--bg-inverse",
+      "--bg-page",
+      "--border-accent-width",
+      "--border-subtle",
+      "--border-width",
+      "--dur-fast",
+      "--dur-med",
+      "--ease-standard",
+      "--fac-comportamiento-100",
+      "--fac-comportamiento-200",
+      "--fac-comportamiento-300",
+      "--fac-comportamiento-500",
+      "--fac-comportamiento-700",
+      "--fac-comunicacion-100",
+      "--fac-comunicacion-200",
+      "--fac-comunicacion-300",
+      "--fac-comunicacion-500",
+      "--fac-comunicacion-700",
+      "--fac-cta-100",
+      "--fac-cta-200",
+      "--fac-cta-300",
+      "--fac-cta-500",
+      "--fac-cta-700",
+      "--fac-economicas-100",
+      "--fac-economicas-200",
+      "--fac-economicas-300",
+      "--fac-economicas-500",
+      "--fac-economicas-700",
+      "--fac-educacion-100",
+      "--fac-educacion-200",
+      "--fac-educacion-300",
+      "--fac-educacion-500",
+      "--fac-educacion-700",
+      "--fac-familia-100",
+      "--fac-familia-200",
+      "--fac-familia-300",
+      "--fac-familia-500",
+      "--fac-familia-700",
+      "--fac-filosofia-100",
+      "--fac-filosofia-200",
+      "--fac-filosofia-300",
+      "--fac-filosofia-500",
+      "--fac-filosofia-700",
+      "--fac-forum-100",
+      "--fac-forum-200",
+      "--fac-forum-300",
+      "--fac-forum-500",
+      "--fac-forum-700",
+      "--fac-ingenieria-100",
+      "--fac-ingenieria-200",
+      "--fac-ingenieria-300",
+      "--fac-ingenieria-500",
+      "--fac-ingenieria-700",
+      "--fac-juridicas-100",
+      "--fac-juridicas-200",
+      "--fac-juridicas-300",
+      "--fac-juridicas-500",
+      "--fac-juridicas-700",
+      "--fac-lenguas-100",
+      "--fac-lenguas-200",
+      "--fac-lenguas-300",
+      "--fac-lenguas-500",
+      "--fac-lenguas-700",
+      "--fac-medicina-100",
+      "--fac-medicina-200",
+      "--fac-medicina-300",
+      "--fac-medicina-500",
+      "--fac-medicina-700",
+      "--fac-vida-100",
+      "--fac-vida-200",
+      "--fac-vida-300",
+      "--fac-vida-500",
+      "--fac-vida-700",
+      "--font-display",
+      "--font-sans",
+      "--fs-body",
+      "--fs-caption",
+      "--fs-display",
+      "--fs-h1",
+      "--fs-h2",
+      "--fs-h3",
+      "--fs-h4",
+      "--fs-lead",
+      "--fs-small",
+      "--fw-black",
+      "--fw-bold",
+      "--fw-extrabold",
+      "--fw-extralight",
+      "--fw-light",
+      "--fw-medium",
+      "--fw-regular",
+      "--fw-semibold",
+      "--fw-thin",
+      "--ink-200",
+      "--ink-300",
+      "--ink-500",
+      "--ink-700",
+      "--ink-900",
+      "--lh-body",
+      "--lh-heading",
+      "--lh-snug",
+      "--lh-tight",
+      "--ls-body",
+      "--ls-display",
+      "--ls-heading",
+      "--ls-label",
+      "--paper",
+      "--radius-lg",
+      "--radius-md",
+      "--radius-pill",
+      "--radius-sm",
+      "--sabana-blue",
+      "--sabana-blue-100",
+      "--sabana-blue-300",
+      "--sabana-blue-deep",
+      "--sabana-blue-mid",
+      "--sabana-cream",
+      "--shadow-lg",
+      "--shadow-md",
+      "--shadow-sm",
+      "--slide-gap",
+      "--slide-h",
+      "--slide-margin",
+      "--slide-w",
+      "--space-1",
+      "--space-2",
+      "--space-3",
+      "--space-4",
+      "--space-5",
+      "--space-6",
+      "--space-7",
+      "--space-8",
+      "--space-9",
+      "--surface-cream",
+      "--surface-tint",
+      "--text-body",
+      "--text-muted",
+      "--text-on-dark",
+      "--text-strong"
+    ],
+    "tokenKinds": {
+      "--sabana-blue": "color",
+      "--sabana-blue-deep": "color",
+      "--sabana-blue-mid": "color",
+      "--sabana-blue-300": "color",
+      "--sabana-blue-100": "color",
+      "--sabana-cream": "color",
+      "--ink-900": "color",
+      "--ink-700": "color",
+      "--ink-500": "color",
+      "--ink-300": "color",
+      "--ink-200": "color",
+      "--paper": "color",
+      "--bg-page": "color",
+      "--bg-inverse": "color",
+      "--surface-tint": "color",
+      "--surface-cream": "color",
+      "--border-subtle": "color",
+      "--text-strong": "font",
+      "--text-body": "font",
+      "--text-muted": "font",
+      "--text-on-dark": "font",
+      "--accent": "color",
+      "--accent-dark": "color",
+      "--accent-mid": "color",
+      "--accent-300": "color",
+      "--accent-100": "color",
+      "--fac-ingenieria-700": "color",
+      "--fac-ingenieria-500": "color",
+      "--fac-ingenieria-300": "color",
+      "--fac-ingenieria-200": "color",
+      "--fac-ingenieria-100": "color",
+      "--fac-comportamiento-700": "color",
+      "--fac-comportamiento-500": "color",
+      "--fac-comportamiento-300": "color",
+      "--fac-comportamiento-200": "color",
+      "--fac-comportamiento-100": "color",
+      "--fac-educacion-700": "color",
+      "--fac-educacion-500": "color",
+      "--fac-educacion-300": "color",
+      "--fac-educacion-200": "color",
+      "--fac-educacion-100": "color",
+      "--fac-medicina-700": "color",
+      "--fac-medicina-500": "color",
+      "--fac-medicina-300": "color",
+      "--fac-medicina-200": "color",
+      "--fac-medicina-100": "color",
+      "--fac-juridicas-700": "color",
+      "--fac-juridicas-500": "color",
+      "--fac-juridicas-300": "color",
+      "--fac-juridicas-200": "color",
+      "--fac-juridicas-100": "color",
+      "--fac-cta-700": "color",
+      "--fac-cta-500": "color",
+      "--fac-cta-300": "color",
+      "--fac-cta-200": "color",
+      "--fac-cta-100": "color",
+      "--fac-lenguas-700": "color",
+      "--fac-lenguas-500": "color",
+      "--fac-lenguas-300": "color",
+      "--fac-lenguas-200": "color",
+      "--fac-lenguas-100": "color",
+      "--fac-vida-700": "color",
+      "--fac-vida-500": "color",
+      "--fac-vida-300": "color",
+      "--fac-vida-200": "color",
+      "--fac-vida-100": "color",
+      "--fac-filosofia-700": "color",
+      "--fac-filosofia-500": "color",
+      "--fac-filosofia-300": "color",
+      "--fac-filosofia-200": "color",
+      "--fac-filosofia-100": "color",
+      "--fac-comunicacion-700": "color",
+      "--fac-comunicacion-500": "color",
+      "--fac-comunicacion-300": "color",
+      "--fac-comunicacion-200": "color",
+      "--fac-comunicacion-100": "color",
+      "--fac-familia-700": "color",
+      "--fac-familia-500": "color",
+      "--fac-familia-300": "color",
+      "--fac-familia-200": "color",
+      "--fac-familia-100": "color",
+      "--fac-forum-700": "color",
+      "--fac-forum-500": "color",
+      "--fac-forum-300": "color",
+      "--fac-forum-200": "color",
+      "--fac-forum-100": "color",
+      "--fac-economicas-700": "color",
+      "--fac-economicas-500": "color",
+      "--fac-economicas-300": "color",
+      "--fac-economicas-200": "color",
+      "--fac-economicas-100": "color",
+      "--font-sans": "font",
+      "--font-display": "font",
+      "--fw-thin": "font",
+      "--fw-extralight": "font",
+      "--fw-light": "font",
+      "--fw-regular": "font",
+      "--fw-medium": "font",
+      "--fw-semibold": "font",
+      "--fw-bold": "font",
+      "--fw-extrabold": "font",
+      "--fw-black": "font",
+      "--fs-display": "spacing",
+      "--fs-h1": "spacing",
+      "--fs-h2": "spacing",
+      "--fs-h3": "spacing",
+      "--fs-h4": "spacing",
+      "--fs-lead": "spacing",
+      "--fs-body": "spacing",
+      "--fs-small": "spacing",
+      "--fs-caption": "spacing",
+      "--lh-tight": "font",
+      "--lh-heading": "font",
+      "--lh-snug": "font",
+      "--lh-body": "font",
+      "--ls-display": "font",
+      "--ls-heading": "font",
+      "--ls-body": "font",
+      "--ls-label": "font",
+      "--space-1": "spacing",
+      "--space-2": "spacing",
+      "--space-3": "spacing",
+      "--space-4": "spacing",
+      "--space-5": "spacing",
+      "--space-6": "spacing",
+      "--space-7": "spacing",
+      "--space-8": "spacing",
+      "--space-9": "spacing",
+      "--radius-sm": "radius",
+      "--radius-md": "radius",
+      "--radius-lg": "radius",
+      "--radius-pill": "radius",
+      "--border-width": "spacing",
+      "--border-accent-width": "spacing",
+      "--shadow-sm": "shadow",
+      "--shadow-md": "shadow",
+      "--shadow-lg": "shadow",
+      "--slide-w": "spacing",
+      "--slide-h": "spacing",
+      "--slide-margin": "spacing",
+      "--slide-gap": "spacing",
+      "--ease-standard": "other",
+      "--dur-fast": "other",
+      "--dur-med": "other"
+    },
+    "fontFamilies": [
+      "Libre Franklin"
+    ]
+  }
+}

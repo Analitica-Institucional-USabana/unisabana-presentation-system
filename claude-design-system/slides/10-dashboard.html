@@ -1,0 +1,40 @@
+<!-- @dsCard group="Slides" viewport="1280x720" name="Tablero (alta densidad)" subtitle="Table + indicators, 80–90% fill" -->
+<link rel="stylesheet" href="../styles.css"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden}
+.stage{width:1280px;height:720px;position:relative;overflow:hidden;font-family:var(--font-sans);background:#fff;color:var(--sabana-blue)}
+.navy{background:var(--sabana-blue-deep);color:#fff}
+.pad{position:absolute;inset:0;padding:72px}
+.eye{display:inline-flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eye::before{content:"";width:34px;height:4px;background:currentColor;border-radius:2px}
+.logo{position:absolute;height:56px;width:auto}
+h1{font-weight:900;letter-spacing:-.02em;line-height:1.02}
+h2{font-weight:800;letter-spacing:-.015em;line-height:1.06}
+.src{font-size:17px;color:var(--ink-500)}
+/* Pie de página — atribución de IA (regla fija del sistema) */
+.aifoot{position:absolute;right:40px;bottom:26px;display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:.02em;z-index:5}
+.aifoot img{height:17px;width:auto}
+.aifoot.light{color:var(--ink-500)}
+.aifoot.light img{opacity:.55}
+.aifoot.dark{color:var(--sabana-blue-300)}
+.aifoot.dark img{filter:brightness(0) invert(1);opacity:.85}
+</style>
+<div class="stage">
+<div class="pad" style="padding:52px 72px;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px">
+<div><div class="eye" style="color:var(--sabana-blue-mid)">Indicadores · 2024</div><h2 style="font-size:40px;margin-top:12px">Resultados por facultad</h2></div>
+<img src="../assets/logo-horizontal-color.png" style="height:50px">
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:26px">
+<div style="border:1px solid var(--ink-200);border-radius:8px;padding:20px 22px"><div style="font-size:46px;font-weight:900;color:var(--sabana-blue);letter-spacing:-.02em;line-height:1">4.8K</div><div style="font-size:17px;color:var(--ink-500);margin-top:8px">Nuevos admitidos</div></div><div style="border:1px solid var(--ink-200);border-radius:8px;padding:20px 22px"><div style="font-size:46px;font-weight:900;color:var(--fac-familia-700);letter-spacing:-.02em;line-height:1">91%</div><div style="font-size:17px;color:var(--ink-500);margin-top:8px">Tasa de retención</div></div><div style="border:1px solid var(--ink-200);border-radius:8px;padding:20px 22px"><div style="font-size:46px;font-weight:900;color:var(--sabana-blue-mid);letter-spacing:-.02em;line-height:1">+34%</div><div style="font-size:17px;color:var(--ink-500);margin-top:8px">Producción científica</div></div><div style="border:1px solid var(--ink-200);border-radius:8px;padding:20px 22px"><div style="font-size:46px;font-weight:900;color:var(--fac-economicas-700);letter-spacing:-.02em;line-height:1">18</div><div style="font-size:17px;color:var(--ink-500);margin-top:8px">Acreditaciones</div></div>
+</div>
+<table style="width:100%;border-collapse:collapse;font-size:19px">
+<thead><tr style="text-align:left;color:var(--ink-500);font-size:15px;text-transform:uppercase;letter-spacing:.06em"><th style="padding:13px 14px;border-bottom:3px solid var(--sabana-blue);">Facultad</th><th style="padding:13px 14px;border-bottom:3px solid var(--sabana-blue);text-align:right">Matrícula</th><th style="padding:13px 14px;border-bottom:3px solid var(--sabana-blue);text-align:right">Retención</th><th style="padding:13px 14px;border-bottom:3px solid var(--sabana-blue);text-align:right">Investigación</th><th style="padding:13px 14px;border-bottom:3px solid var(--sabana-blue);text-align:right">Ejecución</th></tr></thead>
+<tbody>
+<tr style="background:#fff"><td style="padding:14px;font-weight:600;color:var(--sabana-blue)">Ingeniería</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">1.240</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">92%</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">48</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">94%</td></tr><tr style="background:var(--sabana-blue-100)"><td style="padding:14px;font-weight:600;color:var(--sabana-blue)">Medicina</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">980</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">95%</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">61</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">90%</td></tr><tr style="background:#fff"><td style="padding:14px;font-weight:600;color:var(--sabana-blue)">Comunicación</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">1.410</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">89%</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">33</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">88%</td></tr><tr style="background:var(--sabana-blue-100)"><td style="padding:14px;font-weight:600;color:var(--sabana-blue)">Filosofía y Cs. Humanas</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">720</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">90%</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">27</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">91%</td></tr><tr style="background:#fff"><td style="padding:14px;font-weight:600;color:var(--sabana-blue)">Cs. Económicas y Adm.</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">1.680</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">88%</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">39</td><td style="padding:14px;text-align:right;font-variant-numeric:tabular-nums">93%</td></tr>
+</tbody>
+</table>
+<div class="src" style="margin-top:auto;padding-top:18px">Fuente: Oficina de Planeación · consolidado 2024. Cifras preliminares.</div>
+</div>
+<div class="aifoot light"><span>Diseñado con Claude Design</span><img src="../assets/claude-logo.svg" alt="Claude"></div>
+</div>

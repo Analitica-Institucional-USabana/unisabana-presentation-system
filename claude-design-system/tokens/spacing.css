@@ -1,0 +1,45 @@
+/* ============================================================
+   Universidad de La Sabana — Spacing, radii, shadows, layout
+   Slide language derived from AF-PLANTILLA PPT GENERA-3.pptx:
+   generous margins, restrained radii, soft single-layer shadows,
+   16:9 canvas with consistent safe area.
+   ============================================================ */
+
+:root {
+  /* ---- Spacing scale (4px base) ---- */
+  --space-1: 0.25rem;   /* 4  */
+  --space-2: 0.5rem;    /* 8  */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.5rem;    /* 24 */
+  --space-6: 2rem;      /* 32 */
+  --space-7: 3rem;      /* 48 */
+  --space-8: 4rem;      /* 64 */
+  --space-9: 6rem;      /* 96 */
+
+  /* ---- Radii ---- restrained; the template favours crisp blocks */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ---- Borders ---- */
+  --border-width: 1px;          /* @kind spacing */
+  --border-accent-width: 3px;   /* @kind spacing */
+
+  /* ---- Shadows ---- soft, single layer, cool-tinted */
+  --shadow-sm: 0 1px 2px rgba(0, 32, 91, 0.08);
+  --shadow-md: 0 6px 18px rgba(0, 32, 91, 0.10);
+  --shadow-lg: 0 18px 48px rgba(0, 32, 91, 0.14);
+
+  /* ---- Slide canvas ---- */
+  --slide-w: 1280px;
+  --slide-h: 720px;
+  --slide-margin: 72px;   /* safe area inset on 16:9 */
+  --slide-gap: 32px;
+
+  /* ---- Motion ---- calm, editorial; no bounce */
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1); /* @kind other */
+  --dur-fast: 140ms;  /* @kind other */
+  --dur-med: 260ms;   /* @kind other */
+}

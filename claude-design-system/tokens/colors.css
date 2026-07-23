@@ -1,0 +1,72 @@
+/* ============================================================
+   Universidad de La Sabana — Color tokens
+   Source of truth: BRAND-GUIDELINES-VF.pdf (institutional)
+   + AF-PLANTILLA PPT GENERA-3.pptx slide 42 (faculty palettes)
+   ============================================================ */
+
+:root {
+  /* ---- Institutional blues (Pantone 281 / 286 / 292 / 2707) ---- */
+  --sabana-blue:        #00205B; /* Pantone 281 · primary brand blue        */
+  --sabana-blue-deep:   #0D2157; /* deck-background navy (template working)  */
+  --sabana-blue-mid:    #003A86; /* Pantone 286 · secondary blue            */
+  --sabana-blue-300:    #98B1D3; /* Pantone 292 · light blue                */
+  --sabana-blue-100:    #DCE5F3; /* Pantone 2707 · pale blue surface        */
+  --sabana-cream:       #FAF3DC; /* Pantone 7499 · warm cream accent        */
+
+  /* ---- Neutrals (Pantone Black ramp) ---- */
+  --ink-900: #000000;
+  --ink-700: #3C3C3B;
+  --ink-500: #717175;
+  --ink-300: #99989D;
+  --ink-200: #C2C3C8;
+  --paper:   #FFFFFF;
+
+  /* ---- Semantic aliases (institutional default) ---- */
+  --bg-page:        var(--paper);
+  --bg-inverse:     var(--sabana-blue-deep);
+  --surface-tint:   var(--sabana-blue-100);
+  --surface-cream:  var(--sabana-cream);
+  --border-subtle:  var(--ink-200);
+  --text-strong:    var(--sabana-blue);
+  --text-body:      var(--ink-700);
+  --text-muted:     var(--ink-500);
+  --text-on-dark:   var(--paper);
+
+  /* accent = active palette; institutional by default, faculties override */
+  --accent:        var(--sabana-blue);
+  --accent-dark:   var(--sabana-blue-deep);
+  --accent-mid:    var(--sabana-blue-mid);
+  --accent-300:    var(--sabana-blue-300);
+  --accent-100:    var(--sabana-blue-100);
+
+  /* ---- Faculty & unit palettes (dark · main · 60% · 30% · 10%) ---- */
+  --fac-ingenieria-700:#63261E; --fac-ingenieria-500:#7F4738; --fac-ingenieria-300:#B29188; --fac-ingenieria-200:#D9C8C3; --fac-ingenieria-100:#F2EDEB;
+  --fac-comportamiento-700:#5E2B50; --fac-comportamiento-500:#7C4277; --fac-comportamiento-300:#B08EAD; --fac-comportamiento-200:#D8C6D6; --fac-comportamiento-100:#F2ECF1;
+  --fac-educacion-700:#0497AA; --fac-educacion-500:#69C2D1; --fac-educacion-300:#A5DAE3; --fac-educacion-200:#D2EDF1; --fac-educacion-100:#F0F9FA;
+  --fac-medicina-700:#CE960B; --fac-medicina-500:#F4C811; --fac-medicina-300:#F8DE70; --fac-medicina-200:#FCEEB8; --fac-medicina-100:#FEF9E7;
+  --fac-juridicas-700:#A30C0C; --fac-juridicas-500:#CE2929; --fac-juridicas-300:#E27E7E; --fac-juridicas-200:#F0BFBF; --fac-juridicas-100:#FAEAEA;
+  --fac-cta-700:#91734A; --fac-cta-500:#BA9965; --fac-cta-300:#D6C2A3; --fac-cta-200:#EAE0D1; --fac-cta-100:#F8F5F0;
+  --fac-lenguas-700:#5E1030; --fac-lenguas-500:#842A4B; --fac-lenguas-300:#B57F93; --fac-lenguas-200:#DABFC9; --fac-lenguas-100:#F3EAED;
+  --fac-vida-700:#9B928C; --fac-vida-500:#BFB8B2; --fac-vida-300:#D8D4D1; --fac-vida-200:#ECEAE8; --fac-vida-100:#F9F8F7;
+  --fac-filosofia-700:#004E8E; --fac-filosofia-500:#1D6CBC; --fac-filosofia-300:#77A7D7; --fac-filosofia-200:#BBD3EB; --fac-filosofia-100:#E8F0F8;
+  --fac-comunicacion-700:#546B70; --fac-comunicacion-500:#708E99; --fac-comunicacion-300:#A9BBC2; --fac-comunicacion-200:#D4DDE0; --fac-comunicacion-100:#F1F4F5;
+  --fac-familia-700:#788C31; --fac-familia-500:#A1B945; --fac-familia-300:#C7D58F; --fac-familia-200:#E3EAC7; --fac-familia-100:#F6F8EC;
+  --fac-forum-700:#28285B; --fac-forum-500:#433D80; --fac-forum-300:#8E8BB3; --fac-forum-200:#C7C5D9; --fac-forum-100:#ECECF2;
+  --fac-economicas-700:#BA550F; --fac-economicas-500:#E27614; --fac-economicas-300:#EEAD72; --fac-economicas-200:#F6D6B9; --fac-economicas-100:#FCF1E8;
+}
+
+/* ---- Faculty scopes: set data-faculty on a container to re-point --accent ----
+   Use ONLY when the whole piece belongs to that faculty; never mix palettes. */
+[data-faculty="ingenieria"]    { --accent:var(--fac-ingenieria-500);    --accent-dark:var(--fac-ingenieria-700);    --accent-mid:var(--fac-ingenieria-500);    --accent-300:var(--fac-ingenieria-300);    --accent-100:var(--fac-ingenieria-100); }
+[data-faculty="comportamiento"]{ --accent:var(--fac-comportamiento-500); --accent-dark:var(--fac-comportamiento-700); --accent-mid:var(--fac-comportamiento-500); --accent-300:var(--fac-comportamiento-300); --accent-100:var(--fac-comportamiento-100); }
+[data-faculty="educacion"]     { --accent:var(--fac-educacion-700);     --accent-dark:var(--fac-educacion-700);     --accent-mid:var(--fac-educacion-500);     --accent-300:var(--fac-educacion-300);     --accent-100:var(--fac-educacion-100); }
+[data-faculty="medicina"]      { --accent:var(--fac-medicina-700);      --accent-dark:var(--fac-medicina-700);      --accent-mid:var(--fac-medicina-500);      --accent-300:var(--fac-medicina-300);      --accent-100:var(--fac-medicina-100); }
+[data-faculty="juridicas"]     { --accent:var(--fac-juridicas-500);     --accent-dark:var(--fac-juridicas-700);     --accent-mid:var(--fac-juridicas-500);     --accent-300:var(--fac-juridicas-300);     --accent-100:var(--fac-juridicas-100); }
+[data-faculty="cta"]           { --accent:var(--fac-cta-700);           --accent-dark:var(--fac-cta-700);           --accent-mid:var(--fac-cta-500);           --accent-300:var(--fac-cta-300);           --accent-100:var(--fac-cta-100); }
+[data-faculty="lenguas"]       { --accent:var(--fac-lenguas-500);       --accent-dark:var(--fac-lenguas-700);       --accent-mid:var(--fac-lenguas-500);       --accent-300:var(--fac-lenguas-300);       --accent-100:var(--fac-lenguas-100); }
+[data-faculty="vida"]          { --accent:var(--fac-vida-700);          --accent-dark:var(--fac-vida-700);          --accent-mid:var(--fac-vida-500);          --accent-300:var(--fac-vida-300);          --accent-100:var(--fac-vida-100); }
+[data-faculty="filosofia"]     { --accent:var(--fac-filosofia-700);     --accent-dark:var(--fac-filosofia-700);     --accent-mid:var(--fac-filosofia-500);     --accent-300:var(--fac-filosofia-300);     --accent-100:var(--fac-filosofia-100); }
+[data-faculty="comunicacion"]  { --accent:var(--fac-comunicacion-700);  --accent-dark:var(--fac-comunicacion-700);  --accent-mid:var(--fac-comunicacion-500);  --accent-300:var(--fac-comunicacion-300);  --accent-100:var(--fac-comunicacion-100); }
+[data-faculty="familia"]       { --accent:var(--fac-familia-700);       --accent-dark:var(--fac-familia-700);       --accent-mid:var(--fac-familia-500);       --accent-300:var(--fac-familia-300);       --accent-100:var(--fac-familia-100); }
+[data-faculty="forum"]         { --accent:var(--fac-forum-500);         --accent-dark:var(--fac-forum-700);         --accent-mid:var(--fac-forum-500);         --accent-300:var(--fac-forum-300);         --accent-100:var(--fac-forum-100); }
+[data-faculty="economicas"]    { --accent:var(--fac-economicas-700);    --accent-dark:var(--fac-economicas-700);    --accent-mid:var(--fac-economicas-500);    --accent-300:var(--fac-economicas-300);    --accent-100:var(--fac-economicas-100); }

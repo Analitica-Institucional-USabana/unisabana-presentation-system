@@ -1,0 +1,31 @@
+<!-- @dsCard group="Slides" viewport="1280x720" name="Separador" subtitle="Section divider — navy, big number" -->
+<link rel="stylesheet" href="../styles.css"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden}
+.stage{width:1280px;height:720px;position:relative;overflow:hidden;font-family:var(--font-sans);background:#fff;color:var(--sabana-blue)}
+.navy{background:var(--sabana-blue-deep);color:#fff}
+.pad{position:absolute;inset:0;padding:72px}
+.eye{display:inline-flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eye::before{content:"";width:34px;height:4px;background:currentColor;border-radius:2px}
+.logo{position:absolute;height:56px;width:auto}
+h1{font-weight:900;letter-spacing:-.02em;line-height:1.02}
+h2{font-weight:800;letter-spacing:-.015em;line-height:1.06}
+.src{font-size:17px;color:var(--ink-500)}
+/* Pie de página — atribución de IA (regla fija del sistema) */
+.aifoot{position:absolute;right:40px;bottom:26px;display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:.02em;z-index:5}
+.aifoot img{height:17px;width:auto}
+.aifoot.light{color:var(--ink-500)}
+.aifoot.light img{opacity:.55}
+.aifoot.dark{color:var(--sabana-blue-300)}
+.aifoot.dark img{filter:brightness(0) invert(1);opacity:.85}
+</style>
+<div class="stage navy">
+<div style="position:absolute;right:0;top:0;width:46%;height:100%;background:linear-gradient(120deg,#00387E 0%,#0D2157 72%);border-top-left-radius:72% 56%;border-bottom-left-radius:60% 66%;opacity:.55"></div>
+<img class="logo" src="../assets/logo-horizontal-white.png" style="left:72px;top:60px;height:60px">
+<div class="pad" style="display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:190px;font-weight:900;color:var(--sabana-blue-mid);line-height:.9;letter-spacing:-.03em">02</div>
+<div class="eye" style="color:var(--sabana-cream);margin-top:22px">Sección</div>
+<h1 style="font-size:76px;max-width:840px;margin-top:16px">Resultados académicos</h1>
+</div>
+<div class="aifoot dark"><span>Diseñado con Claude Design</span><img src="../assets/claude-logo.svg" alt="Claude"></div>
+</div>

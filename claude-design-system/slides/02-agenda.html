@@ -1,0 +1,32 @@
+<!-- @dsCard group="Slides" viewport="1280x720" name="Agenda" subtitle="Numbered index on white" -->
+<link rel="stylesheet" href="../styles.css"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden}
+.stage{width:1280px;height:720px;position:relative;overflow:hidden;font-family:var(--font-sans);background:#fff;color:var(--sabana-blue)}
+.navy{background:var(--sabana-blue-deep);color:#fff}
+.pad{position:absolute;inset:0;padding:72px}
+.eye{display:inline-flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eye::before{content:"";width:34px;height:4px;background:currentColor;border-radius:2px}
+.logo{position:absolute;height:56px;width:auto}
+h1{font-weight:900;letter-spacing:-.02em;line-height:1.02}
+h2{font-weight:800;letter-spacing:-.015em;line-height:1.06}
+.src{font-size:17px;color:var(--ink-500)}
+/* Pie de página — atribución de IA (regla fija del sistema) */
+.aifoot{position:absolute;right:40px;bottom:26px;display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:.02em;z-index:5}
+.aifoot img{height:17px;width:auto}
+.aifoot.light{color:var(--ink-500)}
+.aifoot.light img{opacity:.55}
+.aifoot.dark{color:var(--sabana-blue-300)}
+.aifoot.dark img{filter:brightness(0) invert(1);opacity:.85}
+</style>
+<div class="stage">
+<img class="logo" src="../assets/logo-horizontal-color.png" style="right:72px;top:58px;height:60px">
+<div class="pad" style="display:flex;flex-direction:column;justify-content:center">
+<div class="eye" style="color:var(--sabana-blue-mid)">Contenido</div>
+<h2 style="font-size:58px;margin-top:16px;margin-bottom:44px">Agenda</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 72px;max-width:1040px">
+<div style="display:flex;gap:22px;align-items:baseline;border-top:2px solid var(--ink-200);padding-top:16px"><span style="font-size:40px;font-weight:800;color:var(--sabana-blue-300);min-width:56px">01</span><div><div style="font-size:26px;font-weight:700">Contexto institucional</div><div style="font-size:19px;color:var(--ink-500);margin-top:3px">Panorama y prioridades del periodo</div></div></div><div style="display:flex;gap:22px;align-items:baseline;border-top:2px solid var(--ink-200);padding-top:16px"><span style="font-size:40px;font-weight:800;color:var(--sabana-blue-300);min-width:56px">02</span><div><div style="font-size:26px;font-weight:700">Resultados académicos</div><div style="font-size:19px;color:var(--ink-500);margin-top:3px">Cobertura, calidad y acreditación</div></div></div><div style="display:flex;gap:22px;align-items:baseline;border-top:2px solid var(--ink-200);padding-top:16px"><span style="font-size:40px;font-weight:800;color:var(--sabana-blue-300);min-width:56px">03</span><div><div style="font-size:26px;font-weight:700">Investigación</div><div style="font-size:19px;color:var(--ink-500);margin-top:3px">Producción y proyectos vigentes</div></div></div><div style="display:flex;gap:22px;align-items:baseline;border-top:2px solid var(--ink-200);padding-top:16px"><span style="font-size:40px;font-weight:800;color:var(--sabana-blue-300);min-width:56px">04</span><div><div style="font-size:26px;font-weight:700">Gestión financiera</div><div style="font-size:19px;color:var(--ink-500);margin-top:3px">Ingresos y ejecución</div></div></div><div style="display:flex;gap:22px;align-items:baseline;border-top:2px solid var(--ink-200);padding-top:16px"><span style="font-size:40px;font-weight:800;color:var(--sabana-blue-300);min-width:56px">05</span><div><div style="font-size:26px;font-weight:700">Experiencia estudiantil</div><div style="font-size:19px;color:var(--ink-500);margin-top:3px">Bienestar y permanencia</div></div></div><div style="display:flex;gap:22px;align-items:baseline;border-top:2px solid var(--ink-200);padding-top:16px"><span style="font-size:40px;font-weight:800;color:var(--sabana-blue-300);min-width:56px">06</span><div><div style="font-size:26px;font-weight:700">Metas 2025</div><div style="font-size:19px;color:var(--ink-500);margin-top:3px">Hoja de ruta</div></div></div>
+</div>
+</div>
+<div class="aifoot light"><span>Diseñado con Claude Design</span><img src="../assets/claude-logo.svg" alt="Claude"></div>
+</div>

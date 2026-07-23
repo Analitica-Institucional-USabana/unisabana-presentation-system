@@ -1,0 +1,33 @@
+<!-- @dsCard group="Slides" viewport="1280x720" name="Comparación" subtitle="Two-column contrast" -->
+<link rel="stylesheet" href="../styles.css"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden}
+.stage{width:1280px;height:720px;position:relative;overflow:hidden;font-family:var(--font-sans);background:#fff;color:var(--sabana-blue)}
+.navy{background:var(--sabana-blue-deep);color:#fff}
+.pad{position:absolute;inset:0;padding:72px}
+.eye{display:inline-flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eye::before{content:"";width:34px;height:4px;background:currentColor;border-radius:2px}
+.logo{position:absolute;height:56px;width:auto}
+h1{font-weight:900;letter-spacing:-.02em;line-height:1.02}
+h2{font-weight:800;letter-spacing:-.015em;line-height:1.06}
+.src{font-size:17px;color:var(--ink-500)}
+/* Pie de página — atribución de IA (regla fija del sistema) */
+.aifoot{position:absolute;right:40px;bottom:26px;display:flex;align-items:center;gap:9px;font-size:14px;letter-spacing:.02em;z-index:5}
+.aifoot img{height:17px;width:auto}
+.aifoot.light{color:var(--ink-500)}
+.aifoot.light img{opacity:.55}
+.aifoot.dark{color:var(--sabana-blue-300)}
+.aifoot.dark img{filter:brightness(0) invert(1);opacity:.85}
+</style>
+<div class="stage">
+<img class="logo" src="../assets/logo-horizontal-color.png" style="right:72px;top:58px;height:60px">
+<div class="pad" style="display:flex;flex-direction:column;justify-content:center">
+<div class="eye" style="color:var(--sabana-blue-mid)">Modelo académico</div>
+<h2 style="font-size:50px;margin-top:16px;margin-bottom:42px">Dos modalidades de formación</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="background:var(--sabana-blue-100);border-radius:10px;padding:40px"><div style="font-size:19px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sabana-blue-mid)">Presencial</div><h3 style="font-size:32px;font-weight:800;margin:12px 0 20px">En campus</h3><ul style="font-size:22px;line-height:1.85;color:var(--ink-700);padding-left:22px"><li>Laboratorios y práctica clínica</li><li>Bienestar y vida universitaria</li><li>Acompañamiento cercano</li></ul></div>
+<div style="background:var(--sabana-blue);color:#fff;border-radius:10px;padding:40px"><div style="font-size:19px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sabana-cream)">Híbrido</div><h3 style="font-size:32px;font-weight:800;margin:12px 0 20px">Flexibilidad digital</h3><ul style="font-size:22px;line-height:1.85;color:var(--sabana-blue-100);padding-left:22px"><li>Acceso desde la región</li><li>Clases sincrónicas y grabadas</li><li>Horarios flexibles</li></ul></div>
+</div>
+</div>
+<div class="aifoot light"><span>Diseñado con Claude Design</span><img src="../assets/claude-logo.svg" alt="Claude"></div>
+</div>
