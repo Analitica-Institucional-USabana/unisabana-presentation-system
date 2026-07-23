@@ -1,0 +1,98 @@
+{
+  "_provenance": "Extraído de claude-design-system/readme.md, sección 'INSTITUTIONAL PRESENTATION IMPLEMENTATION ADDENDUM' (§1-8, §13, §15), Hito 1, 2026-07-23. No se inventó ningún valor numérico; donde el readme.md exige un dato que aún no existe (officialClearSpaceRatio), se deja explícitamente null con requiresBrandTeamInput=true en vez de inventarlo — el propio readme.md ordena bloquear el export en ese caso.",
+
+  "authority": {
+    "_note": "Determina qué logo usar. Ver readme.md §1.",
+    "types": ["university", "faculty-or-unit", "protocolary", "government"],
+    "default": "university",
+    "rule": "Si se selecciona faculty-or-unit, protocolary o government y no hay un activo oficial aprobado suministrado, el sistema debe detenerse y solicitarlo — nunca simular, redibujar o reconstruir esos logos."
+  },
+
+  "approvedAssets": {
+    "_note": "Whitelist de rutas — el componente Logo es un selector de activos, no un generador. 'exists' refleja el inventario real de claude-design-system/assets/ (Hito 0); las variantes marcadas false son las que el readme.md exige tener disponibles pero que no existen todavía en el design system actual.",
+    "horizontalPositive": { "path": "assets/logo-horizontal-color.png", "exists": true },
+    "horizontalNegative": { "path": "assets/logo-horizontal-white.png", "exists": true },
+    "horizontalMono": { "path": "assets/logo-horizontal-mono.svg", "exists": true, "note": "tintable vía fill/currentColor a azul, blanco o negro únicamente; procedencia no confirmada contra uploads/, ver planning/07-decisions-and-open-questions.md D-Q3" },
+    "verticalPositive": { "path": "assets/logo-vertical-color.png", "exists": false },
+    "verticalNegative": { "path": "assets/logo-vertical-white.png", "exists": false },
+    "responsivePositive": { "path": "assets/logo-responsive-color.png", "exists": false },
+    "responsiveNegative": { "path": "assets/logo-responsive-white.png", "exists": false },
+    "forbiddenOperations": [
+      "recolor individual parts (other than approved dark blue / white / black whole-lockup swaps)",
+      "rebuild the logo with text or vectors",
+      "crop the symbol or wordmark",
+      "separate symbol and wordmark",
+      "alter symbol-to-wordmark proportions",
+      "apply filter, drop-shadow, stroke, outline, gradient, blur, mask or 3D effects",
+      "skew, rotate, stretch or animate the logo",
+      "use CSS currentColor to tint the institutional logo at runtime (mono variant excepted)",
+      "place content inside the logo protection area"
+    ]
+  },
+
+  "sizing": {
+    "_note": "readme.md §3. Cuatro controles distintos, no intercambiables.",
+    "minimumSymbolHeight": { "screenPx": 22, "printMm": 8 },
+    "responsiveSwitchThreshold": { "screenPx": 20, "printMm": 7 },
+    "recommended": {
+      "cover": "clamp(72px, 11vh, 118px)",
+      "separator": "clamp(54px, 8vh, 84px)",
+      "content": "clamp(32px, 5vh, 48px)",
+      "closing": "clamp(64px, 10vh, 104px)"
+    },
+    "opticalMaximum": {
+      "maxWidthCover": "30%",
+      "maxWidthContent": "20%",
+      "maxHeightCover": "18%",
+      "maxHeightContent": "10%"
+    },
+    "rules": [
+      "never enlarge the logo merely to fill empty space",
+      "never reduce it to the normative minimum when the slide will be projected in a room",
+      "if a logo exceeds either optical maximum, reduce it while keeping it above the normative minimum"
+    ]
+  },
+
+  "clearSpace": {
+    "_note": "readme.md §4. El ratio oficial NO está codificado en ninguna fuente inspeccionada — debe ingresarse una sola vez desde BRAND-GUIDELINES-VF.pdf por el equipo de marca. Hasta entonces, cualquier renderer/validador debe tratar el activo como incompleto y bloquear el export final (no inferir por juicio visual).",
+    "officialClearSpaceRatio": null,
+    "requiresBrandTeamInput": true,
+    "edgeOffsets": { "x": "72px", "y": "56px" },
+    "cumulativeWith": ["slide safe area", "logo edge offset", "logo official clear space"],
+    "forbiddenInsideProtectionArea": [
+      "titles", "body text", "page numbers", "source notes", "chart labels", "lines", "icons",
+      "photographs with high visual contrast", "texture edges", "the Claude Design / AI attribution",
+      "partner logos", "legal marks", "decorative shapes"
+    ]
+  },
+
+  "placementBySlideFamily": {
+    "cover": {
+      "logoVariant": "positive on light backgrounds; negative white on navy/saturated/photography",
+      "rules": ["keep title, subtitle, speaker info outside protection area", "controlled navy gradient behind logo only if needed for contrast on photography", "never place over a visually busy architectural detail without protection"]
+    },
+    "separator": {
+      "rules": ["one consistent logo position across all separators", "negative logo on dark separators, positive on light separators", "do not combine with a second decorative brand mark", "logo stays visually secondary to the section number/message"]
+    },
+    "content": {
+      "rules": ["one consistent corner across the whole deck", "do not alternate position slide to slide", "align to the main slide grid", "never place inside a card, pill or chart container", "never use as a watermark"]
+    },
+    "closing": {
+      "rules": ["same approved logo family/colour logic as rest of deck", "may be larger than on content slides", "keep contact info and closing message outside protection area"]
+    }
+  },
+
+  "contrastAndBackground": {
+    "_note": "readme.md §6. La comprobación de luminancia es un guardarraíl técnico; la combinación activo/fondo aprobada sigue siendo la regla principal.",
+    "positiveLogoOn": ["white", "cream", "approved light backgrounds"],
+    "negativeLogoOn": ["navy", "approved dark colours", "photography"],
+    "luminanceThreshold": 0.45,
+    "rule": "backgroundLuminance < 0.45 => use negative logo; otherwise positive"
+  },
+
+  "collisionValidation": {
+    "_note": "readme.md §4.3. Todo export debe correr esta comprobación.",
+    "algorithm": "expand the visible logo bounds by the official clear-space value; if any non-background element intersects that rectangle, the slide fails validation",
+    "blocksExportOnFailure": true
+  }
+}
