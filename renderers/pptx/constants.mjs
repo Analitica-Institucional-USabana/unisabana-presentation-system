@@ -11,18 +11,39 @@ import {
   CONTENT_COLUMN_GAP,
   CONTENT_ROW_GAP,
   TYPE_SCALE_PX,
+  TYPE_SCALE_MIN_PX,
   LOGO_HEIGHT_PX,
   LOGO_MIN_HEIGHT_PX,
   LOGO_POSITION,
   AI_DISCLOSURE,
   slideFamilyFor,
+  contentBand,
+  centeredContentY,
 } from "../html/constants.mjs";
 
-export { CANVAS, SAFE, FOOTER_ZONE_HEIGHT, CONTENT_COLUMN_GAP, CONTENT_ROW_GAP, LOGO_HEIGHT_PX, LOGO_MIN_HEIGHT_PX, LOGO_POSITION, AI_DISCLOSURE, slideFamilyFor };
+export {
+  CANVAS,
+  SAFE,
+  FOOTER_ZONE_HEIGHT,
+  CONTENT_COLUMN_GAP,
+  CONTENT_ROW_GAP,
+  TYPE_SCALE_PX,
+  TYPE_SCALE_MIN_PX,
+  LOGO_HEIGHT_PX,
+  LOGO_MIN_HEIGHT_PX,
+  LOGO_POSITION,
+  AI_DISCLOSURE,
+  slideFamilyFor,
+  contentBand,
+};
 
 const DPI = 96;
 export const px2in = (px) => px / DPI;
 export const px2pt = (px) => px * 0.75; // 1px @96dpi = 0.75pt (1pt = 1/72in)
+
+// Mismo cálculo de banda/centrado que renderers/html/constants.mjs (la
+// grilla en px es compartida) — convertido a pulgadas en el punto de uso.
+export const centeredContentYIn = (family, contentHeightPx) => px2in(centeredContentY(family, contentHeightPx));
 
 export const PPTX_LAYOUT_NAME = "UNISABANA_16x9";
 export const PPTX_LAYOUT = { name: PPTX_LAYOUT_NAME, width: px2in(CANVAS.width), height: px2in(CANVAS.height) };

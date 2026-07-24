@@ -49,7 +49,7 @@ export function bodyText(text, { x, y, width, sizePx = 20, color = "var(--text-b
   });
 }
 
-export function statBlock({ value, label, delta, deltaDirection, caption }, { x, y, width, valueSizePx = 72 } = {}) {
+export function statBlock({ value, label, delta, deltaDirection, caption }, { x, y, width, height, valueSizePx = 72, card = false } = {}) {
   const deltaColor = deltaDirection === "down" ? "var(--fac-juridicas-500)" : "var(--fac-familia-700)";
   const deltaArrow = deltaDirection === "down" ? "▾" : "▴";
   let html = `<div style="font-family:var(--font-sans)">`;
@@ -66,7 +66,8 @@ export function statBlock({ value, label, delta, deltaDirection, caption }, { x,
     html += `<div style="font-size:var(--fs-caption);color:var(--text-muted);margin-top:4px">${escapeHtml(caption)}</div>`;
   }
   html += `</div>`;
-  return box({ x, y, width, html });
+  if (!card) return box({ x, y, width, html });
+  return box({ x, y, width, height, style: `${surfaceStyle()}padding:24px;box-sizing:border-box;`, html });
 }
 
 // Superficie tipo Card (core/components/core/Card.jsx): blanca, radio contenido,

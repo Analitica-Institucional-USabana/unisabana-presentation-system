@@ -1,19 +1,35 @@
-import { SAFE, TYPE_SCALE_PT, px2in } from "../constants.mjs";
+import { SAFE, TYPE_SCALE_PX, TYPE_SCALE_MIN_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
 import { addTitle, addBody } from "../elements.mjs";
+import { NAVY_GRADIENT, addWavePanel } from "../decor.mjs";
+import { estimateBlockHeightPx, fitTitleSizePx } from "../../html/text-measure.mjs";
 
 export default function renderSeparator(pptxSlide, slide, { colors }) {
-  pptxSlide.background = { color: colors.sabanaBlueDeep };
-  let y = px2in(220);
+  pptxSlide.background = NAVY_GRADIENT(colors);
+  addWavePanel(pptxSlide, colors);
+
+  const titleSizePx = fitTitleSizePx(slide.title, {
+    maxSizePx: TYPE_SCALE_PX.sectionTitle,
+    minSizePx: TYPE_SCALE_MIN_PX.sectionTitle,
+    widthPx: 900,
+    weight: "black",
+  });
+  const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: titleSizePx, widthPx: 900, weight: "black" });
+  const descriptorHeightPx = slide.descriptor
+    ? estimateBlockHeightPx(slide.descriptor, { sizePx: 20, widthPx: 800, weight: "regular", lineHeight: 1.55 })
+    : 0;
+  const contentHeightPx = (slide.sectionNumber != null ? 130 : 0) + titleHeightPx + 20 + descriptorHeightPx;
+
+  let y = centeredContentYIn("separator", contentHeightPx);
 
   if (slide.sectionNumber != null) {
-    addTitle(pptxSlide, String(slide.sectionNumber), { x: px2in(SAFE.left), y, w: 3, h: 1.3, sizePt: 72, color: colors.sabanaBlue300 });
+    addTitle(pptxSlide, String(slide.sectionNumber), { x: px2in(SAFE.left), y, w: 3, h: px2in(96 * 1.15), sizePt: 72, color: colors.sabanaBlue300 });
     y += px2in(130);
   }
-  addTitle(pptxSlide, slide.title, { x: px2in(SAFE.left), y, w: 9, h: 1.2, sizePt: TYPE_SCALE_PT.sectionTitle, color: "FFFFFF" });
-  y += px2in(Math.round(TYPE_SCALE_PT.sectionTitle * 1.3) + 20);
+  addTitle(pptxSlide, slide.title, { x: px2in(SAFE.left), y, w: 9, h: px2in(titleHeightPx), sizePt: px2pt(titleSizePx), color: "FFFFFF" });
+  y += px2in(titleHeightPx + 20);
 
   if (slide.descriptor) {
-    addBody(pptxSlide, slide.descriptor, { x: px2in(SAFE.left), y, w: 8, sizePt: 15, color: colors.sabanaBlue300 });
+    addBody(pptxSlide, slide.descriptor, { x: px2in(SAFE.left), y, w: 8, h: px2in(descriptorHeightPx), sizePt: 15, color: colors.sabanaBlue300 });
   }
 
   return "dark";

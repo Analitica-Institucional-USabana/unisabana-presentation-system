@@ -1,16 +1,36 @@
-import { CANVAS, SAFE, TYPE_SCALE_PT, px2in } from "../constants.mjs";
+import { CANVAS, SAFE, TYPE_SCALE_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
 import { addTitle } from "../elements.mjs";
+import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderProcess(pptxSlide, slide, { colors }) {
   pptxSlide.background = { color: colors.paper };
-  const titleY = px2in(SAFE.top + 40);
-  addTitle(pptxSlide, slide.title, { x: px2in(SAFE.left), y: titleY, w: px2in(CANVAS.width - SAFE.left - SAFE.right), h: 1, sizePt: TYPE_SCALE_PT.slideTitle, color: colors.sabanaBlue });
 
-  const stepsY = titleY + 1.6;
+  const titleWidthPx = CANVAS.width - SAFE.left - SAFE.right;
+  const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidthPx, weight: "black" });
+
   const n = slide.steps.length;
-  const availW = px2in(CANVAS.width - SAFE.left - SAFE.right);
+  const stepWidthPx = titleWidthPx / n;
+  const circleSizePx = 48;
+  const labelBlockHeightPx = Math.max(
+    ...slide.steps.map((step) => {
+      const labelH = estimateBlockHeightPx(step.label, { sizePx: 18, widthPx: stepWidthPx - 12, weight: "semibold", lineHeight: 1.3 });
+      const descH = step.description
+        ? 4 + estimateBlockHeightPx(step.description, { sizePx: 14, widthPx: stepWidthPx - 12, weight: "regular", lineHeight: 1.3 })
+        : 0;
+      return labelH + descH;
+    })
+  );
+  const stepsGapPx = 64;
+  const stepBlockHeightPx = circleSizePx + 16 + labelBlockHeightPx;
+  const contentHeightPx = titleHeightPx + stepsGapPx + stepBlockHeightPx;
+
+  const titleY = centeredContentYIn("content", contentHeightPx);
+  addTitle(pptxSlide, slide.title, { x: px2in(SAFE.left), y: titleY, w: px2in(titleWidthPx), h: px2in(titleHeightPx), sizePt: px2pt(TYPE_SCALE_PX.slideTitle), color: colors.sabanaBlue });
+
+  const stepsY = titleY + px2in(titleHeightPx + stepsGapPx);
+  const availW = px2in(titleWidthPx);
   const stepW = availW / n;
-  const circleSize = 0.5;
+  const circleSize = px2in(circleSizePx);
   const circleCenterY = stepsY + circleSize / 2;
 
   pptxSlide.addShape("rect", {
@@ -31,9 +51,9 @@ export default function renderProcess(pptxSlide, slide, { colors }) {
     const label = step.description ? `${step.label}\n${step.description}` : step.label;
     pptxSlide.addText(label, {
       x: px2in(SAFE.left) + i * stepW,
-      y: stepsY + circleSize + 0.15,
-      w: stepW - 0.1,
-      h: 0.8,
+      y: stepsY + circleSize + px2in(16),
+      w: stepW - px2in(12),
+      h: px2in(labelBlockHeightPx),
       fontFace: "Libre Franklin",
       fontSize: 12,
       color: colors.sabanaBlue,

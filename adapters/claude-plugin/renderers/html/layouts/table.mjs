@@ -1,13 +1,25 @@
-import { CANVAS, SAFE, TYPE_SCALE_PX } from "../constants.mjs";
+import { CANVAS, SAFE, TYPE_SCALE_PX, centeredContentY } from "../constants.mjs";
 import { box, title, escapeHtml } from "../elements.mjs";
+import { estimateBlockHeightPx } from "../text-measure.mjs";
+
+const ROW_HEIGHT_PX = 42;
 
 // Única excepción al "sin flex/grid" del flatten mecánico: una <table> real es
 // explícitamente el caso permitido por claude-design-system/CLAUDE.md para
 // contenido tabular ("o una tabla real editable celda a celda").
 export default function renderTable(slide) {
   const boxes = [];
-  const titleY = SAFE.top + 40;
-  boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: CANVAS.width - SAFE.left - SAFE.right, sizePx: TYPE_SCALE_PX.slideTitle }));
+  const titleWidth = CANVAS.width - SAFE.left - SAFE.right;
+  const titleHeight = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidth, weight: "black" });
+
+  // Altura estimada de la tabla renderizada (encabezado + filas), suficiente
+  // para decidir si el título+tabla caben centrados o deben anclarse arriba
+  // y desbordar hacia abajo — no se mide el DOM real (D-18 no adoptada).
+  const estimatedTableHeight = ROW_HEIGHT_PX * (1 + slide.rows.length);
+  const contentHeight = titleHeight + 40 + estimatedTableHeight;
+
+  const titleY = centeredContentY("content", contentHeight);
+  boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: titleWidth, sizePx: TYPE_SCALE_PX.slideTitle }));
 
   const highlighted = new Set((slide.highlightCells || []).map(([r, c]) => `${r}:${c}`));
   const headerCells = slide.columns
@@ -33,7 +45,7 @@ export default function renderTable(slide) {
 
   const tableHtml = `<table style="border-collapse:collapse;width:100%;font-family:var(--font-sans);"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
 
-  const tableY = titleY + Math.round(TYPE_SCALE_PX.slideTitle * 1.15) + 40;
+  const tableY = titleY + titleHeight + 40;
   boxes.push(box({ x: SAFE.left, y: tableY, width: CANVAS.width - SAFE.left - SAFE.right, html: tableHtml }));
 
   return { tone: "light", backgroundCss: "background:var(--bg-page);", boxesHtml: boxes.join("") };

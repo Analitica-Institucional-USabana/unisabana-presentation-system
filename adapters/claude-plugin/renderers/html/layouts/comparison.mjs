@@ -1,13 +1,18 @@
-import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX } from "../constants.mjs";
+import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, contentBand } from "../constants.mjs";
 import { box, title, surfaceStyle, escapeHtml } from "../elements.mjs";
+import { estimateBlockHeightPx } from "../text-measure.mjs";
 
 export default function renderComparison(slide) {
   const boxes = [];
-  const titleY = SAFE.top + 40;
-  boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: CANVAS.width - SAFE.left - SAFE.right, sizePx: TYPE_SCALE_PX.slideTitle }));
+  const band = contentBand("content");
+  const titleWidth = CANVAS.width - SAFE.left - SAFE.right;
+  const titleHeight = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidth, weight: "black" });
 
-  const colsY = titleY + Math.round(TYPE_SCALE_PX.slideTitle * 1.15) + 48;
-  const colsHeight = CANVAS.height - SAFE.bottom - colsY - 60;
+  const titleY = band.top;
+  boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: titleWidth, sizePx: TYPE_SCALE_PX.slideTitle }));
+
+  const colsY = titleY + titleHeight + 48;
+  const colsHeight = band.bottom - colsY;
   const n = slide.columns.length;
   const availWidth = CANVAS.width - SAFE.left - SAFE.right;
   const colWidth = (availWidth - CONTENT_COLUMN_GAP * (n - 1)) / n;

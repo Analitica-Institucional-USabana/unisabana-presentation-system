@@ -4,7 +4,7 @@
 
 Ensambla cada deck a partir de estas familias en vez de composición libre sin restricciones. Elige la que mejor represente cada idea del contenido — no fuerces todo a "contenido genérico".
 
-1. **Cover / Portada** — un título orientado a mensaje, subtítulo opcional, fecha/evento/presentador solo si aporta, logo institucional, atribución IA obligatoria, un único registro de fondo dominante (claro, navy o fotografía de campus aprobada). Evitar: varias tarjetas, agendas densas, más de un motivo decorativo, logo centrado salvo que la plantilla lo exija.
+1. **Cover / Portada** — un título orientado a mensaje, subtítulo opcional, fecha/evento/presentador solo si aporta, logo institucional, atribución IA obligatoria, un único registro de fondo dominante (claro, navy o fotografía de campus aprobada). **Por defecto usa `background: photo` con `photo: assets/campus-2.jpg`** (core/brand/rules/imagery.json#/default) — es la imagen "casi obligatoria" de portada; usa `light` o `navy`, o una foto distinta de `approvedCampusPhotography`, solo si el usuario lo pide explícitamente o el contenido apunta a una facultad/contexto concreto. Evitar: varias tarjetas, agendas densas, más de un motivo decorativo, logo centrado salvo que la plantilla lo exija.
 2. **Agenda / ruta** — 3-6 ítems, secuencia clara, un solo sistema de numeración, sin descripciones de párrafo.
 3. **Separador de sección** — un número de sección, un mensaje de sección, descriptor corto opcional, alto contraste, baja densidad, sin gráficos ni tablas.
 4. **Mensaje** — una conclusión central, una frase de apoyo o prueba, visual único opcional, tipografía grande y espacio generoso.

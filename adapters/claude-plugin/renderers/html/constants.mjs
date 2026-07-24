@@ -31,6 +31,11 @@ export const TYPE_SCALE_PX = {
   source: 14,
 };
 
+// Piso normativo de cada clamp() de título (primer argumento arriba) — el
+// único tamaño al que renderers/html/text-measure.mjs#fitTitleSizePx puede
+// reducir un título largo sin violar el clamp de marca.
+export const TYPE_SCALE_MIN_PX = { coverTitle: 64, sectionTitle: 50, slideTitle: 34 };
+
 // §3.3 logo sizes por familia de slide, resueltos desde los clamp(*, vh, *) del readme.
 // Decisión de implementación (no está fijado por el brand book): las familias que
 // el readme no distingue explícitamente (agenda, message, data, comparison, process,
@@ -63,6 +68,26 @@ export const AI_DISCLOSURE = {
 export function slideFamilyFor(type) {
   if (type === "cover" || type === "separator" || type === "closing") return type;
   return "content";
+}
+
+// Banda vertical disponible para el bloque de contenido de una slide, entre
+// la zona protegida del logo (arriba) y la zona protegida del pie de
+// atribución IA (abajo). planning/08-visual-quality-and-layout-fixes.md
+// backlog #4: los layouts centran su bloque de contenido en esta banda en
+// vez de anclarlo siempre a un Y fijo cerca del logo.
+export function contentBand(family) {
+  return {
+    top: SAFE.top + LOGO_HEIGHT_PX[family] + 40,
+    bottom: CANVAS.height - SAFE.bottom - FOOTER_ZONE_HEIGHT - 24,
+  };
+}
+
+// Y inicial que centra un bloque de `contentHeightPx` dentro de la banda de
+// `family` — si el contenido es más alto que la banda, se ancla arriba
+// (mismo comportamiento que "llenar y desbordar hacia abajo" en vez de negativo).
+export function centeredContentY(family, contentHeightPx) {
+  const { top, bottom } = contentBand(family);
+  return top + Math.max(0, (bottom - top - contentHeightPx) / 2);
 }
 
 export function resolveClamp(minPx, percent, maxPx, basis) {
