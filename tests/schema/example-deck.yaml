@@ -1,0 +1,101 @@
+# Deck Spec de ejemplo — cubre los 10 tipos de slide del esquema (Hito 4).
+# Criterio de aceptación: node scripts/validate-deck-spec.mjs tests/schema/example-deck.yaml -> VÁLIDO
+schemaVersion: "0.1.0"
+
+presentation:
+  title: "Resultados institucionales 2025"
+  audience: "Consejo Directivo"
+  density: low
+  palette: institutional
+
+slides:
+  - id: cover-01
+    type: cover
+    title: "La Universidad consolidó su crecimiento en investigación durante 2025"
+    subtitle: "Informe de resultados ante el Consejo Directivo"
+    eyebrow: "INFORME ANUAL"
+    background: photo
+    photo: assets/campus-2.jpg
+    presenter: "Rectoría"
+    date: "noviembre de 2025"
+
+  - id: agenda-01
+    type: agenda
+    title: "Agenda"
+    items:
+      - "Contexto institucional"
+      - "Resultados financieros"
+      - "Resultados de investigación"
+      - "Comparación entre facultades"
+      - "Cierre y próximos pasos"
+
+  - id: separator-01
+    type: separator
+    sectionNumber: "01"
+    title: "Contexto institucional"
+    descriptor: "Panorama general 2025"
+
+  - id: message-01
+    type: message
+    title: "La Universidad fortaleció su posición académica regional"
+    supporting: "El crecimiento se sostuvo en investigación, internacionalización y bienestar estudiantil."
+
+  - id: data-01
+    type: data
+    title: "Los ingresos operacionales crecieron 18% frente a 2024"
+    stats:
+      - value: "18%"
+        label: "Crecimiento de ingresos"
+        delta: "2.4 pts"
+        deltaDirection: up
+        caption: "Frente al año anterior"
+      - value: "1,240"
+        label: "Nuevos estudiantes matriculados"
+    source: "Vicerrectoría Financiera"
+    period: "2025"
+
+  - id: comparison-01
+    type: comparison
+    title: "Ingeniería y Medicina lideraron el crecimiento en proyectos de investigación"
+    columns:
+      - heading: "Facultad de Ingeniería"
+        points:
+          - "32 proyectos activos"
+          - "12 publicaciones indexadas"
+      - heading: "Facultad de Medicina"
+        points:
+          - "28 proyectos activos"
+          - "19 publicaciones indexadas"
+
+  - id: process-01
+    type: process
+    title: "El proceso de acreditación avanzó en cuatro etapas"
+    steps:
+      - label: "Autoevaluación"
+        description: "Recolección de evidencia por programa"
+      - label: "Revisión por pares"
+      - label: "Informe final"
+      - label: "Visita de verificación"
+
+  - id: table-01
+    type: table
+    title: "Indicadores por facultad"
+    density: high
+    columns: ["Facultad", "Estudiantes", "Proyectos", "Publicaciones"]
+    rows:
+      - ["Ingeniería", "1,850", "32", "12"]
+      - ["Medicina", "1,420", "28", "19"]
+      - ["Educación", "980", "14", "7"]
+    highlightCells:
+      - [0, 2]
+      - [1, 3]
+
+  - id: quote-01
+    type: quote
+    text: "La investigación aplicada es el puente entre el conocimiento y el bienestar de la sociedad."
+    attribution: "Rectoría, Universidad de La Sabana"
+
+  - id: closing-01
+    type: closing
+    title: "Seguimos construyendo una universidad que transforma su entorno"
+    contact: "contacto@ejemplo.edu.co (dato ficticio de ejemplo)"

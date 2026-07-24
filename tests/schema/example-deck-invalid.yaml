@@ -1,0 +1,26 @@
+# Deck Spec deliberadamente inválido (Hito 4) — prueba negativa del validador.
+# Errores intencionales, uno por regla estructural distinta:
+#  1. presentation.palette: valor fuera del enum (paleta inventada)
+#  2. slide cover: falta "title" (requerido) y sobra "footer" (additionalProperties:false)
+#  3. slide data: falta "source" y "period" (obligatorios en slides de datos)
+# Ejecutar: node scripts/validate-deck-spec.mjs tests/schema/example-deck-invalid.yaml
+# Debe salir con exit code 1 y listar los tres errores.
+schemaVersion: "0.1.0"
+
+presentation:
+  title: "Deck de prueba"
+  density: low
+  palette: neon-inventada
+
+slides:
+  - id: cover-01
+    type: cover
+    background: light
+    footer: "esto no está permitido por additionalProperties:false"
+
+  - id: data-01
+    type: data
+    title: "Cifra sin fuente ni periodo"
+    stats:
+      - value: "10%"
+        label: "Algo"

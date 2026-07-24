@@ -1,0 +1,17 @@
+# Golden deck NEGATIVO (Hito 6) — estructuralmente válido, pero viola
+# core/brand/rules/imagery.json: la foto no está en la whitelist aprobada.
+# Ejecutar: node scripts/validate-brand.mjs tests/golden-decks/imagery-violation.yaml
+# Debe reportar [ERROR] en cover-01 citando imagery.json.
+schemaVersion: "0.1.0"
+
+presentation:
+  title: "Deck de prueba — violación de imagery"
+  density: low
+  palette: institutional
+
+slides:
+  - id: cover-01
+    type: cover
+    title: "Una portada con una foto no aprobada"
+    background: photo
+    photo: assets/campus-inventada-no-aprobada.jpg

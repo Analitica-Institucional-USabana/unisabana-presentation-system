@@ -1,0 +1,48 @@
+# Golden deck NEGATIVO (Hito 6) — estructuralmente válido, pero excede los
+# límites PREFERIDOS de core/brand/rules/density.json (por eso son warning, no error).
+# Ejecutar: node scripts/validate-brand.mjs tests/golden-decks/density-violation.yaml
+# Debe reportar [WARNING] en agenda-01, process-01 y data-01.
+schemaVersion: "0.1.0"
+
+presentation:
+  title: "Deck de prueba — densidad excedida"
+  density: low
+  palette: institutional
+
+slides:
+  - id: agenda-01
+    type: agenda
+    items:
+      - "Punto 1"
+      - "Punto 2"
+      - "Punto 3"
+      - "Punto 4"
+      - "Punto 5"
+      - "Punto 6"
+      - "Punto 7"
+      - "Punto 8"
+
+  - id: process-01
+    type: process
+    title: "Proceso con demasiados pasos"
+    steps:
+      - { label: "Paso 1" }
+      - { label: "Paso 2" }
+      - { label: "Paso 3" }
+      - { label: "Paso 4" }
+      - { label: "Paso 5" }
+      - { label: "Paso 6" }
+      - { label: "Paso 7" }
+
+  - id: data-01
+    type: data
+    title: "Demasiadas cifras en una sola diapositiva"
+    stats:
+      - { value: "1", label: "Cifra 1" }
+      - { value: "2", label: "Cifra 2" }
+      - { value: "3", label: "Cifra 3" }
+      - { value: "4", label: "Cifra 4" }
+      - { value: "5", label: "Cifra 5" }
+      - { value: "6", label: "Cifra 6" }
+    source: "Fuente de prueba"
+    period: "2026"

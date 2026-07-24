@@ -1,0 +1,16 @@
+{
+  "name": "unisabana-presentation-system",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Herramientas de desarrollo (Node/TS) para el núcleo canónico, el Deck Spec y los adaptadores de plugin. Ver planning/ para el plan completo.",
+  "type": "module",
+  "scripts": {
+    "build:adapters": "node scripts/build-adapters.mjs",
+    "validate:deck": "node scripts/validate-deck-spec.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "js-yaml": "^4.1.0",
+    "pptxgenjs": "^4.0.1"
+  }
+}
