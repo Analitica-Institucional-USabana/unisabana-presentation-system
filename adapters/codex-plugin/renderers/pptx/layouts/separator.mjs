@@ -1,11 +1,11 @@
 import { SAFE, TYPE_SCALE_PX, TYPE_SCALE_MIN_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
 import { addTitle, addBody } from "../elements.mjs";
-import { NAVY_GRADIENT, addWavePanel } from "../decor.mjs";
+import { addNavyGradientBackground, addBrandWaveImage } from "../decor.mjs";
 import { estimateBlockHeightPx, fitTitleSizePx } from "../../html/text-measure.mjs";
 
-export default function renderSeparator(pptxSlide, slide, { colors }) {
-  pptxSlide.background = NAVY_GRADIENT(colors);
-  addWavePanel(pptxSlide, colors);
+export default function renderSeparator(pptxSlide, slide, { colors, repoRoot }) {
+  addNavyGradientBackground(pptxSlide, colors);
+  addBrandWaveImage(pptxSlide, repoRoot);
 
   const titleSizePx = fitTitleSizePx(slide.title, {
     maxSizePx: TYPE_SCALE_PX.sectionTitle,

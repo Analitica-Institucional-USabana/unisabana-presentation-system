@@ -2,7 +2,7 @@ import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, FOOTER_ZONE_HEIGHT, BA
 import { addTitle, addBody, addStatBlock, addBanner, addProgressBar } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
-export default function renderData(pptxSlide, slide, { colors }) {
+export default function renderData(pptxSlide, slide, { colors, repoRoot }) {
   pptxSlide.background = { color: slide.background === "tinted" ? colors.surfaceTint : colors.paper };
 
   const titleWidthPx = CANVAS.width - SAFE.left - SAFE.right;
@@ -32,7 +32,7 @@ export default function renderData(pptxSlide, slide, { colors }) {
   let belowStatsY = statsY + px2in(statRowHeightPx);
   if (slide.banner) {
     belowStatsY += px2in(BANNER_GAP_PX);
-    addBanner(pptxSlide, slide.banner, { x: px2in(SAFE.left), y: belowStatsY, w: availW, h: px2in(BANNER_HEIGHT_PX), colors });
+    addBanner(pptxSlide, slide.banner, { x: px2in(SAFE.left), y: belowStatsY, w: availW, h: px2in(BANNER_HEIGHT_PX), colors, repoRoot });
     belowStatsY += px2in(BANNER_HEIGHT_PX);
   }
   if (slide.progress) {

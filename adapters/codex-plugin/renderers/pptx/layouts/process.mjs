@@ -11,6 +11,7 @@ import {
   px2pt,
 } from "../constants.mjs";
 import { addTitle, addBanner, addProgressBar } from "../elements.mjs";
+import { addIcon } from "../icons.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderProcess(pptxSlide, slide, { colors, repoRoot }) {
@@ -18,7 +19,7 @@ export default function renderProcess(pptxSlide, slide, { colors, repoRoot }) {
 
   const titleWidthPx = CANVAS.width - SAFE.left - SAFE.right;
   const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidthPx, weight: "black" });
-  const ctx = { colors, titleWidthPx, titleHeightPx, availWidthPx: titleWidthPx };
+  const ctx = { colors, repoRoot, titleWidthPx, titleHeightPx, availWidthPx: titleWidthPx };
 
   const layout = slide.layout || "steps";
   if (layout === "gantt") renderGantt(pptxSlide, slide, ctx);
@@ -35,10 +36,10 @@ function bannerAndProgressHeightPx(slide) {
   return h;
 }
 
-function pushBannerAndProgress(pptxSlide, slide, { colors, x, y, w }) {
+function pushBannerAndProgress(pptxSlide, slide, { colors, repoRoot, x, y, w }) {
   let cursorY = y;
   if (slide.banner) {
-    addBanner(pptxSlide, slide.banner, { x, y: cursorY, w, h: px2in(BANNER_HEIGHT_PX), colors });
+    addBanner(pptxSlide, slide.banner, { x, y: cursorY, w, h: px2in(BANNER_HEIGHT_PX), colors, repoRoot });
     cursorY += px2in(BANNER_HEIGHT_PX + BANNER_GAP_PX);
   }
   if (slide.progress) {
@@ -47,7 +48,7 @@ function pushBannerAndProgress(pptxSlide, slide, { colors, x, y, w }) {
 }
 
 // ---- layout: "steps" (por defecto) ----
-function renderSteps(pptxSlide, slide, { colors, titleWidthPx, titleHeightPx, availWidthPx }) {
+function renderSteps(pptxSlide, slide, { colors, repoRoot, titleWidthPx, titleHeightPx, availWidthPx }) {
   const n = slide.steps.length;
   const stepWidthPx = availWidthPx / n;
   const circleSizePx = 48;
@@ -99,12 +100,12 @@ function renderSteps(pptxSlide, slide, { colors, titleWidthPx, titleHeightPx, av
   });
 
   if (extraPx) {
-    pushBannerAndProgress(pptxSlide, slide, { colors, x: px2in(SAFE.left), y: stepsY + px2in(stepBlockHeightPx + BANNER_GAP_PX), w: availW });
+    pushBannerAndProgress(pptxSlide, slide, { colors, repoRoot, x: px2in(SAFE.left), y: stepsY + px2in(stepBlockHeightPx + BANNER_GAP_PX), w: availW });
   }
 }
 
 // ---- layout: "alternating" (planning/09-visual-richness-and-content-density.md #5) ----
-function renderAlternating(pptxSlide, slide, { colors, titleWidthPx, titleHeightPx, availWidthPx }) {
+function renderAlternating(pptxSlide, slide, { colors, repoRoot, titleWidthPx, titleHeightPx, availWidthPx }) {
   const steps = slide.steps;
   const n = steps.length;
   const stepWidthPx = availWidthPx / n;
@@ -152,6 +153,12 @@ function renderAlternating(pptxSlide, slide, { colors, titleWidthPx, titleHeight
     const badgeSize = px2in(badgeSizePx);
     const pad = px2in(cardPaddingPx);
     pptxSlide.addShape("roundRect", { x: cardX + pad, y: cardY + pad, w: badgeSize, h: badgeSize, rectRadius: 0.06, fill: { color: colors.accent }, line: { type: "none" } });
+    if (step.icon && repoRoot) {
+      // El ícono de la insignia siempre es blanco (mismo criterio que
+      // elements.mjs statBlock() en HTML: color:var(--paper) fijo aquí).
+      const iconInset = badgeSize * 0.22;
+      addIcon(pptxSlide, repoRoot, step.icon, "light", { x: cardX + pad + iconInset / 2, y: cardY + pad + iconInset / 2, size: badgeSize - iconInset });
+    }
     pptxSlide.addText(`HITO ${i + 1}`, { x: cardX + pad, y: cardY + pad + badgeSize + 0.06, w: cardW - pad * 2, h: 0.2, fontFace: "Libre Franklin", fontSize: 9, bold: true, color: colors.accentDark, charSpacing: 1 });
     pptxSlide.addText(step.label, { x: cardX + pad, y: cardY + pad + badgeSize + 0.28, w: cardW - pad * 2, h: 0.4, fontFace: "Libre Franklin", fontSize: 13, bold: true, color: colors.ink900 });
     if (step.description) {
@@ -168,7 +175,7 @@ function renderAlternating(pptxSlide, slide, { colors, titleWidthPx, titleHeight
   });
 
   if (extraPx) {
-    pushBannerAndProgress(pptxSlide, slide, { colors, x: px2in(SAFE.left), y: bottomCardY + cardH + px2in(BANNER_GAP_PX), w: availW });
+    pushBannerAndProgress(pptxSlide, slide, { colors, repoRoot, x: px2in(SAFE.left), y: bottomCardY + cardH + px2in(BANNER_GAP_PX), w: availW });
   }
 }
 
@@ -193,7 +200,7 @@ const AXIS_AREA_HEIGHT_PX = 32;
 const MILESTONE_AREA_HEIGHT_PX = 44;
 const TODAY_MARKER_TOP_PAD_PX = 40;
 
-function renderGantt(pptxSlide, slide, { colors, titleWidthPx, titleHeightPx, availWidthPx }) {
+function renderGantt(pptxSlide, slide, { colors, repoRoot, titleWidthPx, titleHeightPx, availWidthPx }) {
   const lanes = slide.lanes;
   const milestones = slide.milestones || [];
   const asOfMs = parseGanttDate(slide.asOf);
@@ -310,6 +317,6 @@ function renderGantt(pptxSlide, slide, { colors, titleWidthPx, titleHeightPx, av
   }
 
   if (extraPx) {
-    pushBannerAndProgress(pptxSlide, slide, { colors, x: px2in(SAFE.left), y: bottomIn + px2in(BANNER_GAP_PX), w: px2in(availWidthPx) });
+    pushBannerAndProgress(pptxSlide, slide, { colors, repoRoot, x: px2in(SAFE.left), y: bottomIn + px2in(BANNER_GAP_PX), w: px2in(availWidthPx) });
   }
 }

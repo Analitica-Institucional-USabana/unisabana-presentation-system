@@ -8,3 +8,5 @@ node_modules/
 # pptxgenjs y las skills fallan en el primer uso.
 !adapters/claude-plugin/node_modules/
 !adapters/codex-plugin/node_modules/
+
+.vscode/

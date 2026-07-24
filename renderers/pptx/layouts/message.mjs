@@ -2,7 +2,7 @@ import { CANVAS, SAFE, BANNER_HEIGHT_PX, BANNER_GAP_PX, centeredContentYIn, px2i
 import { addTitle, addBody, addBanner } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
-export default function renderMessage(pptxSlide, slide, { colors }) {
+export default function renderMessage(pptxSlide, slide, { colors, repoRoot }) {
   pptxSlide.background = { color: slide.background === "tinted" ? colors.surfaceTint : colors.paper };
 
   const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: 56, widthPx: 1000, weight: "black" });
@@ -24,7 +24,7 @@ export default function renderMessage(pptxSlide, slide, { colors }) {
 
   if (slide.banner) {
     const bannerWidth = px2in(CANVAS.width - SAFE.left - SAFE.right);
-    addBanner(pptxSlide, slide.banner, { x: px2in(SAFE.left), y, w: bannerWidth, h: px2in(BANNER_HEIGHT_PX), colors });
+    addBanner(pptxSlide, slide.banner, { x: px2in(SAFE.left), y, w: bannerWidth, h: px2in(BANNER_HEIGHT_PX), colors, repoRoot });
   }
   return "light";
 }

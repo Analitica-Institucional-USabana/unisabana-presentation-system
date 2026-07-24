@@ -4,6 +4,7 @@
 // alcance del Hito 7, planning/03-migration-roadmap.md).
 
 import { weightToBold } from "./constants.mjs";
+import { addIcon } from "./icons.mjs";
 
 export function addTitle(slide, text, { x, y, w, h = 1.4, sizePt, color }) {
   slide.addText(text, { x, y, w, h, fontFace: "Libre Franklin", fontSize: sizePt, bold: true, color, valign: "top", fit: "shrink" });
@@ -121,14 +122,14 @@ export function addStatusCard(slide, { heading, badge, accent = "neutral", stats
 }
 
 // Franja de énfasis (planning/09-visual-richness-and-content-density.md #1).
-export function addBanner(slide, { variant, text, label }, { x, y, w, h, colors }) {
-  // ponytail: sin glyph de ícono en pptx — pptxgenjs no puede rasterizar SVG en
-  // Node (mismo precedente ya aceptado en decor.mjs para brand-wave.svg);
-  // label + color ya cargan el significado. Subir si se adopta un rasterizador (ej. sharp).
+// icon usa el PNG pre-rasterizado (renderers/pptx/icons.mjs) en el tono que
+// corresponde al color de texto de la variante — "info" es blanco sobre
+// navy, "warning"/"highlight" son oscuros sobre fondo claro.
+export function addBanner(slide, { variant, text, label, icon }, { x, y, w, h, colors, repoRoot }) {
   const variants = {
-    info: { bg: colors.sabanaBlueDeep, text: "FFFFFF", labelColor: "FFFFFF" },
-    warning: { bg: colors.sabanaCream, text: colors.ink900, labelColor: colors.ctaGold700, accentBar: colors.ctaGold700 },
-    highlight: { bg: colors.surfaceTint, text: colors.ink900, labelColor: colors.accentDark },
+    info: { bg: colors.sabanaBlueDeep, text: "FFFFFF", labelColor: "FFFFFF", iconTone: "light" },
+    warning: { bg: colors.sabanaCream, text: colors.ink900, labelColor: colors.ctaGold700, accentBar: colors.ctaGold700, iconTone: "dark" },
+    highlight: { bg: colors.surfaceTint, text: colors.ink900, labelColor: colors.accentDark, iconTone: "dark" },
   };
   const v = variants[variant] || variants.highlight;
 
@@ -137,7 +138,12 @@ export function addBanner(slide, { variant, text, label }, { x, y, w, h, colors 
     slide.addShape("rect", { x, y, w: 0.06, h, fill: { color: v.accentBar }, line: { type: "none" } });
   }
 
-  const textX = x + (v.accentBar ? 0.35 : 0.3);
+  let textX = x + (v.accentBar ? 0.35 : 0.3);
+  if (icon && repoRoot) {
+    const iconSize = 0.32;
+    addIcon(slide, repoRoot, icon, v.iconTone, { x: textX, y: y + (h - iconSize) / 2, size: iconSize });
+    textX += iconSize + 0.18;
+  }
   const textW = w - (textX - x) - 0.3;
   let cursorY = y + (h - 0.35) / 2;
   if (label) {

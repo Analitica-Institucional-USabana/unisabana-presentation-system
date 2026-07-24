@@ -1,11 +1,11 @@
 import { SAFE, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
 import { addTitle, addBody } from "../elements.mjs";
-import { NAVY_GRADIENT, addWavePanel } from "../decor.mjs";
+import { addNavyGradientBackground, addBrandWaveImage } from "../decor.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
-export default function renderClosing(pptxSlide, slide, { colors }) {
-  pptxSlide.background = NAVY_GRADIENT(colors);
-  addWavePanel(pptxSlide, colors);
+export default function renderClosing(pptxSlide, slide, { colors, repoRoot }) {
+  addNavyGradientBackground(pptxSlide, colors);
+  addBrandWaveImage(pptxSlide, repoRoot);
 
   const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: 52, widthPx: 1000, weight: "black" });
   const contactHeightPx = slide.contact

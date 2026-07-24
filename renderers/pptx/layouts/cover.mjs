@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { CANVAS, SAFE, TYPE_SCALE_PX, TYPE_SCALE_MIN_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
 import { addTitle, addBody, addEyebrow } from "../elements.mjs";
-import { NAVY_GRADIENT, addWavePanel } from "../decor.mjs";
+import { addNavyGradientBackground, addBrandWaveImage } from "../decor.mjs";
 import { estimateBlockHeightPx, fitTitleSizePx } from "../../html/text-measure.mjs";
 
 export default function renderCover(pptxSlide, slide, { repoRoot, colors }) {
@@ -15,8 +15,8 @@ export default function renderCover(pptxSlide, slide, { repoRoot, colors }) {
       line: { type: "none" },
     });
   } else if (slide.background === "navy") {
-    pptxSlide.background = NAVY_GRADIENT(colors);
-    addWavePanel(pptxSlide, colors);
+    addNavyGradientBackground(pptxSlide, colors);
+    addBrandWaveImage(pptxSlide, repoRoot);
   } else {
     pptxSlide.background = { color: colors.paper };
   }
