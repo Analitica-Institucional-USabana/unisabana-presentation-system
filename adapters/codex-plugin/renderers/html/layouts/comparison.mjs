@@ -1,5 +1,5 @@
 import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, contentBand } from "../constants.mjs";
-import { box, title, surfaceStyle, escapeHtml } from "../elements.mjs";
+import { box, title, surfaceStyle, escapeHtml, statusCard } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../text-measure.mjs";
 
 export default function renderComparison(slide) {
@@ -19,6 +19,19 @@ export default function renderComparison(slide) {
 
   slide.columns.forEach((col, i) => {
     const x = SAFE.left + i * (colWidth + CONTENT_COLUMN_GAP);
+    // planning/09-visual-richness-and-content-density.md #2: una columna con
+    // `stats`/`badge` se compone como tarjeta de comparación con estado; el
+    // bullet-card plano existente queda intacto para columnas sin esos campos
+    // (evita una regresión visual en decks que no usan la primitiva nueva).
+    if (col.stats?.length || col.badge) {
+      boxes.push(
+        statusCard(
+          { heading: col.heading, badge: col.badge, accent: col.accent, stats: col.stats, points: col.points },
+          { x, y: colsY, width: colWidth, height: colsHeight }
+        )
+      );
+      return;
+    }
     const pointsHtml = col.points
       .map((p) => `<div style="font-size:18px;color:var(--text-body);line-height:var(--lh-body);margin-bottom:10px;">• ${escapeHtml(p)}</div>`)
       .join("");

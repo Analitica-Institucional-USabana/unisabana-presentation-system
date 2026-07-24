@@ -71,6 +71,43 @@
       "notes": { "type": "string", "description": "Notas de orador, opcional. No se renderiza en el slide." }
     },
 
+    "statItem": {
+      "type": "object",
+      "required": ["value", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "delta": { "type": "string" },
+        "deltaDirection": { "type": "string", "enum": ["up", "down"] },
+        "caption": { "type": "string" },
+        "accent": { "$ref": "#/$defs/statusAccent" },
+        "badge": { "type": "string", "minLength": 1, "description": "Etiqueta corta de esquina, ej. 'Alerta principal · 15%'." }
+      }
+    },
+
+    "statusAccent": {
+      "type": "string",
+      "enum": ["neutral", "alert"],
+      "description": "'alert' reutiliza el rojo ya aprobado de la paleta fac-juridicas (core/brand/tokens.css) para señalar un riesgo/problema real — no es un valor decorativo, ver skills/unisabana-create/references/slide-families.md."
+    },
+
+    "emphasisBanner": {
+      "type": "object",
+      "required": ["variant", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "type": "string",
+          "enum": ["info", "warning", "highlight"],
+          "description": "Franja de énfasis de ancho completo (planning/09-visual-richness-and-content-density.md #1). 'info' = navy, apertura/conclusión fuerte. 'warning' = ámbar/crema, advertencia. 'highlight' = tinte claro, dato secundario relevante."
+        },
+        "text": { "type": "string", "minLength": 1, "description": "Una cifra o una frase corta, no un párrafo." },
+        "label": { "type": "string", "description": "Etiqueta corta en mayúsculas opcional, ej. 'NOTA', 'PUNTO DE PARTIDA'." },
+        "icon": { "type": "string", "minLength": 1, "description": "Slug opcional del set vendorizado en core/brand/rules/icons.json#/approvedIcons; whitelist validada en tiempo de deck-spec (validators/rules/icons.mjs), no enumerada aquí." }
+      }
+    },
+
     "slideCover": {
       "type": "object",
       "required": ["id", "type", "title", "background"],
@@ -140,7 +177,8 @@
         "notes": { "$ref": "#/$defs/slideIdAndNotes/notes" },
         "type": { "const": "message" },
         "title": { "type": "string", "minLength": 1, "description": "La conclusión central." },
-        "supporting": { "type": "string", "description": "Frase de apoyo o prueba, opcional." }
+        "supporting": { "type": "string", "description": "Frase de apoyo o prueba, opcional." },
+        "banner": { "$ref": "#/$defs/emphasisBanner" }
       }
     },
 
@@ -157,21 +195,11 @@
           "type": "array",
           "minItems": 1,
           "maxItems": 6,
-          "items": {
-            "type": "object",
-            "required": ["value", "label"],
-            "additionalProperties": false,
-            "properties": {
-              "value": { "type": "string", "minLength": 1 },
-              "label": { "type": "string", "minLength": 1 },
-              "delta": { "type": "string" },
-              "deltaDirection": { "type": "string", "enum": ["up", "down"] },
-              "caption": { "type": "string" }
-            }
-          }
+          "items": { "$ref": "#/$defs/statItem" }
         },
         "source": { "type": "string", "minLength": 1, "description": "Obligatorio en slides de datos (readme.md §9.5)." },
-        "period": { "type": "string", "minLength": 1 }
+        "period": { "type": "string", "minLength": 1 },
+        "banner": { "$ref": "#/$defs/emphasisBanner" }
       }
     },
 
@@ -195,7 +223,16 @@
             "additionalProperties": false,
             "properties": {
               "heading": { "type": "string", "minLength": 1 },
-              "points": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+              "points": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "accent": { "$ref": "#/$defs/statusAccent" },
+              "badge": { "type": "string", "minLength": 1, "description": "Etiqueta corta de esquina, ej. '30% del ranking'." },
+              "stats": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 2,
+                "description": "Convierte la columna en tarjeta de comparación con estado (planning/09-visual-richness-and-content-density.md #2): hasta 2 cifras grandes lado a lado sobre los bullets de 'points'.",
+                "items": { "$ref": "#/$defs/statItem" }
+              }
             }
           }
         }
@@ -211,6 +248,7 @@
         "notes": { "$ref": "#/$defs/slideIdAndNotes/notes" },
         "type": { "const": "process" },
         "title": { "type": "string", "minLength": 1 },
+        "banner": { "$ref": "#/$defs/emphasisBanner" },
         "steps": {
           "type": "array",
           "minItems": 2,

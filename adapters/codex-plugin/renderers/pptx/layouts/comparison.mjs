@@ -1,5 +1,5 @@
 import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, contentBand, px2in, px2pt } from "../constants.mjs";
-import { addTitle, addBulletCard } from "../elements.mjs";
+import { addTitle, addBulletCard, addStatusCard } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderComparison(pptxSlide, slide, { colors }) {
@@ -21,7 +21,11 @@ export default function renderComparison(pptxSlide, slide, { colors }) {
 
   slide.columns.forEach((col, i) => {
     const x = px2in(SAFE.left) + i * (colW + gap);
-    addBulletCard(pptxSlide, col, { x, y: colsY, w: colW, h: colsH, colors });
+    if (col.stats?.length || col.badge) {
+      addStatusCard(pptxSlide, { heading: col.heading, badge: col.badge, accent: col.accent, stats: col.stats, points: col.points }, { x, y: colsY, w: colW, h: colsH, colors });
+    } else {
+      addBulletCard(pptxSlide, col, { x, y: colsY, w: colW, h: colsH, colors });
+    }
   });
 
   return "light";

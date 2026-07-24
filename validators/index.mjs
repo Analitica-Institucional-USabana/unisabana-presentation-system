@@ -8,6 +8,7 @@
 import { createSlideReport, mergeSlideReports, overallVerdict } from "./report.mjs";
 import { checkImagery } from "./rules/imagery.mjs";
 import { checkDensity } from "./rules/density.mjs";
+import { checkIcons } from "./rules/icons.mjs";
 import { checkLogo } from "./rules/logo.mjs";
 import { checkAiDisclosure } from "./rules/ai-disclosure.mjs";
 
@@ -15,6 +16,7 @@ export function validateDeckSpecRules(deck, ctx) {
   const reportsById = new Map(deck.slides.map((s) => [s.id, createSlideReport(s.id)]));
   checkImagery(deck, ctx, reportsById);
   checkDensity(deck, ctx, reportsById);
+  checkIcons(deck, ctx, reportsById);
   return [...reportsById.values()].map((r) => r.finalize());
 }
 

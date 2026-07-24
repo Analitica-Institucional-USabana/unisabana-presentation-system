@@ -1,5 +1,5 @@
-import { CANVAS, SAFE, TYPE_SCALE_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
-import { addTitle } from "../elements.mjs";
+import { CANVAS, SAFE, TYPE_SCALE_PX, BANNER_HEIGHT_PX, BANNER_GAP_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
+import { addTitle, addBanner } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderProcess(pptxSlide, slide, { colors }) {
@@ -22,7 +22,8 @@ export default function renderProcess(pptxSlide, slide, { colors }) {
   );
   const stepsGapPx = 64;
   const stepBlockHeightPx = circleSizePx + 16 + labelBlockHeightPx;
-  const contentHeightPx = titleHeightPx + stepsGapPx + stepBlockHeightPx;
+  const bannerBlockHeightPx = slide.banner ? BANNER_GAP_PX + BANNER_HEIGHT_PX : 0;
+  const contentHeightPx = titleHeightPx + stepsGapPx + stepBlockHeightPx + bannerBlockHeightPx;
 
   const titleY = centeredContentYIn("content", contentHeightPx);
   addTitle(pptxSlide, slide.title, { x: px2in(SAFE.left), y: titleY, w: px2in(titleWidthPx), h: px2in(titleHeightPx), sizePt: px2pt(TYPE_SCALE_PX.slideTitle), color: colors.sabanaBlue });
@@ -60,6 +61,16 @@ export default function renderProcess(pptxSlide, slide, { colors }) {
       align: "center",
     });
   });
+
+  if (slide.banner) {
+    addBanner(pptxSlide, slide.banner, {
+      x: px2in(SAFE.left),
+      y: stepsY + circleSize + px2in(16) + px2in(labelBlockHeightPx) + px2in(BANNER_GAP_PX),
+      w: availW,
+      h: px2in(BANNER_HEIGHT_PX),
+      colors,
+    });
+  }
 
   return "light";
 }

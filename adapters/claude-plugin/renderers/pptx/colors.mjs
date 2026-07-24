@@ -21,6 +21,7 @@ export function resolveColors(tokens, palette) {
     sabanaBlueMid: inst("sabana-blue-mid"),
     sabanaBlue300: inst("sabana-blue-300"),
     sabanaCream: inst("sabana-cream"),
+    surfaceTint: inst("sabana-blue-100"),
     ink900: neutral("ink-900"),
     ink700: neutral("ink-700"),
     ink500: neutral("ink-500"),
@@ -28,6 +29,9 @@ export function resolveColors(tokens, palette) {
     paper: neutral("paper"),
     familia700: hex(tokens.color.faculties.familia["700"]),
     juridicas500: hex(tokens.color.faculties.juridicas["500"]),
+    juridicas700: hex(tokens.color.faculties.juridicas["700"]),
+    juridicas100: hex(tokens.color.faculties.juridicas["100"]),
+    ctaGold700: hex(tokens.color.faculties.cta["700"]),
   };
 
   if (!palette || palette === "institutional") {

@@ -1,8 +1,9 @@
-import { CANVAS, SAFE, TYPE_SCALE_PX, centeredContentY } from "../constants.mjs";
-import { box, title, escapeHtml } from "../elements.mjs";
+import { CANVAS, SAFE, TYPE_SCALE_PX, BANNER_HEIGHT_PX, BANNER_GAP_PX, centeredContentY } from "../constants.mjs";
+import { box, title, escapeHtml, banner } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../text-measure.mjs";
+import { iconMarkup } from "../icons.mjs";
 
-export default function renderProcess(slide) {
+export default function renderProcess(slide, { repoRoot } = {}) {
   const boxes = [];
   const titleWidth = CANVAS.width - SAFE.left - SAFE.right;
   const titleHeight = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidth, weight: "black" });
@@ -23,7 +24,8 @@ export default function renderProcess(slide) {
   );
   const stepsGap = 64;
   const stepBlockHeight = circleSize + 16 + labelBlockHeight;
-  const contentHeight = titleHeight + stepsGap + stepBlockHeight;
+  const bannerBlockHeight = slide.banner ? BANNER_GAP_PX + BANNER_HEIGHT_PX : 0;
+  const contentHeight = titleHeight + stepsGap + stepBlockHeight + bannerBlockHeight;
 
   const titleY = centeredContentY("content", contentHeight);
   boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: titleWidth, sizePx: TYPE_SCALE_PX.slideTitle }));
@@ -66,6 +68,12 @@ export default function renderProcess(slide) {
       })
     );
   });
+
+  if (slide.banner) {
+    const iconHtml = slide.banner.icon ? iconMarkup(repoRoot, slide.banner.icon, { sizePx: 28 }) : undefined;
+    const bannerY = stepsY + stepBlockHeight + BANNER_GAP_PX;
+    boxes.push(banner({ ...slide.banner, iconHtml }, { x: SAFE.left, y: bannerY, width: availWidth, height: BANNER_HEIGHT_PX }));
+  }
 
   return { tone: "light", backgroundCss: "background:var(--bg-page);", boxesHtml: boxes.join("") };
 }

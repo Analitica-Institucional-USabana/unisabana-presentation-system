@@ -11,9 +11,20 @@ import { join } from "node:path";
 export function checkDensity(deck, { repoRoot }, reportsById) {
   const rules = JSON.parse(readFileSync(join(repoRoot, "core/brand/rules/density.json"), "utf8"));
   const limits = rules.slideContentLimits;
+  const maxDecorative = rules.visualLanguageLimits.maxDiagrammingElementsPerSlide;
 
   for (const slide of deck.slides) {
     const r = reportsById.get(slide.id);
+
+    const decorativeCount =
+      (slide.banner ? 1 : 0) +
+      (hasStatusAccent(slide) ? 1 : 0);
+    if (decorativeCount > maxDecorative) {
+      r.add(
+        "warning",
+        `density.json#/visualLanguageLimits/maxDiagrammingElementsPerSlide=${maxDecorative}: esta diapositiva combina ${decorativeCount} elementos decorativos (banner/tarjeta con estado) — no repitas el mismo patrón, elige uno.`
+      );
+    }
 
     if (slide.type === "agenda" && slide.items.length > limits.maxAgendaItemsPreferred) {
       r.add(
@@ -42,4 +53,10 @@ export function checkDensity(deck, { repoRoot }, reportsById) {
       r.add("pass", `Cifras dentro del límite preferido (${slide.stats.length}/${limits.maxChartSeriesPreferred}).`);
     }
   }
+}
+
+function hasStatusAccent(slide) {
+  const items = slide.type === "data" ? slide.stats : slide.type === "comparison" ? slide.columns : null;
+  if (!items) return false;
+  return items.some((item) => item.accent === "alert" || Boolean(item.badge));
 }

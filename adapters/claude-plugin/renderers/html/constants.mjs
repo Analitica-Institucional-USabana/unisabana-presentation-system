@@ -12,6 +12,12 @@ export const FOOTER_ZONE_HEIGHT = 36;
 export const CONTENT_COLUMN_GAP = 32;
 export const CONTENT_ROW_GAP = 24;
 
+// Franja de énfasis (planning/09-visual-richness-and-content-density.md #1):
+// altura fija, no medida por texto — el propio schema exige "una cifra o una
+// frase corta, no un párrafo", así que una banda de una línea siempre alcanza.
+export const BANNER_HEIGHT_PX = 84;
+export const BANNER_GAP_PX = 32;
+
 function resolveClampVw(minPx, vwPercent, maxPx) {
   const v = (CANVAS.width * vwPercent) / 100;
   return Math.round(Math.min(Math.max(v, minPx), maxPx));

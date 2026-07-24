@@ -1,8 +1,9 @@
-import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, FOOTER_ZONE_HEIGHT, centeredContentY } from "../constants.mjs";
-import { title, bodyText, statBlock } from "../elements.mjs";
+import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, FOOTER_ZONE_HEIGHT, BANNER_HEIGHT_PX, BANNER_GAP_PX, centeredContentY } from "../constants.mjs";
+import { title, bodyText, statBlock, banner } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../text-measure.mjs";
+import { iconMarkup } from "../icons.mjs";
 
-export default function renderData(slide) {
+export default function renderData(slide, { repoRoot } = {}) {
   const boxes = [];
   const titleWidth = CANVAS.width - SAFE.left - SAFE.right;
   const titleHeight = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidth, weight: "black" });
@@ -15,16 +16,28 @@ export default function renderData(slide) {
   // generosa de la altura real de la tarjeta (valor + delta + label + caption
   // + padding), no una medición exacta (D-18 sigue sin adoptarse).
   const statCardHeight = valueSizePx + 120;
+  const bannerBlockHeight = slide.banner ? BANNER_GAP_PX + BANNER_HEIGHT_PX : 0;
 
-  const contentHeight = titleHeight + 60 + statCardHeight;
+  const contentHeight = titleHeight + 60 + statCardHeight + bannerBlockHeight;
   const titleY = centeredContentY("content", contentHeight);
   boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: titleWidth, sizePx: TYPE_SCALE_PX.slideTitle }));
 
   const statsY = titleY + titleHeight + 60;
   slide.stats.forEach((stat, i) => {
     const x = SAFE.left + i * (statWidth + CONTENT_COLUMN_GAP);
-    boxes.push(statBlock(stat, { x, y: statsY, width: statWidth, height: statCardHeight, valueSizePx, card: true }));
+    const accentColor = stat.accent === "alert" ? "var(--fac-juridicas-500)" : undefined;
+    boxes.push(statBlock(stat, { x, y: statsY, width: statWidth, height: statCardHeight, valueSizePx, card: true, accentColor, badge: stat.badge }));
   });
+
+  if (slide.banner) {
+    const iconHtml = slide.banner.icon ? iconMarkup(repoRoot, slide.banner.icon, { sizePx: 28 }) : undefined;
+    boxes.push(
+      banner(
+        { ...slide.banner, iconHtml },
+        { x: SAFE.left, y: statsY + statCardHeight + BANNER_GAP_PX, width: titleWidth, height: BANNER_HEIGHT_PX }
+      )
+    );
+  }
 
   const sourceLine = `Fuente: ${slide.source} · ${slide.period}`;
   boxes.push(

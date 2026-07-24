@@ -16,6 +16,8 @@ import {
   LOGO_MIN_HEIGHT_PX,
   LOGO_POSITION,
   AI_DISCLOSURE,
+  BANNER_HEIGHT_PX,
+  BANNER_GAP_PX,
   slideFamilyFor,
   contentBand,
   centeredContentY,
@@ -33,6 +35,8 @@ export {
   LOGO_MIN_HEIGHT_PX,
   LOGO_POSITION,
   AI_DISCLOSURE,
+  BANNER_HEIGHT_PX,
+  BANNER_GAP_PX,
   slideFamilyFor,
   contentBand,
 };

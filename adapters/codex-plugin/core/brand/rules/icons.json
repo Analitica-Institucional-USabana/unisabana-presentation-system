@@ -1,0 +1,23 @@
+{
+  "_provenance": "claude-design-system/readme.md §ICONOGRAPHY (línea ~78) documenta que el PPTX fuente no trae ningún set de íconos empaquetado y que el propio sistema sustituye con Lucide (lucide.dev, ISC license) como aproximación al carácter lineal/geométrico de la plantilla. Este archivo vendoriza un subconjunto curado de 13 SVGs de lucide-static@0.469.0 (pinned) bajo core/brand/assets/icons/, embebidos localmente para cumplir el requisito offline (D-20, planning/07-decisions-and-open-questions.md) — en vez de cargar Lucide por CDN como hace el sistema original. ES UNA SUSTITUCIÓN NO APROBADA POR MARCA: D-Q6 (mismo documento) pregunta al equipo de marca si existe un set gráfico institucional oficial y sigue sin confirmar. Reemplazar approvedIcons y los SVGs bajo assets/icons/ si/cuando la universidad suministre un set oficial.",
+
+  "rule": "Nunca usar un ícono fuera de approvedIcons. Nunca usar emoji/Unicode como ícono (claude-design-system/readme.md §ICONOGRAPHY). Un ícono acompaña una etiqueta de texto, nunca la reemplaza. Monocromo únicamente — un ícono nunca lleva más de un color (currentColor, heredado del acento institucional o de --ink-500), nunca multicolor ni mezclado con otro estilo de trazo dentro del mismo deck.",
+
+  "approvedIcons": [
+    { "slug": "clock", "label": "Reloj / duración" },
+    { "slug": "map-pin", "label": "Ubicación / lugar" },
+    { "slug": "triangle-alert", "label": "Alerta / advertencia" },
+    { "slug": "check", "label": "Confirmación / completado" },
+    { "slug": "arrow-right", "label": "Siguiente paso / dirección" },
+    { "slug": "calendar", "label": "Fecha / cronograma" },
+    { "slug": "users", "label": "Personas / audiencia" },
+    { "slug": "graduation-cap", "label": "Académico / estudiantes" },
+    { "slug": "briefcase", "label": "Trabajo / institucional" },
+    { "slug": "file-text", "label": "Documento / reporte" },
+    { "slug": "settings", "label": "Configuración / proceso" },
+    { "slug": "x", "label": "Cierre / negativo" },
+    { "slug": "info", "label": "Información / nota" }
+  ],
+
+  "validatorRule": "Cualquier slug de ícono referenciado en un Deck Spec (p. ej. slide.banner.icon) que no aparezca en approvedIcons debe marcarse como error de cumplimiento — no advertencia. Ver validators/rules/icons.mjs."
+}

@@ -39,6 +39,10 @@ slides:
     type: message
     title: "La Universidad fortaleció su posición académica regional"
     supporting: "El crecimiento se sostuvo en investigación, internacionalización y bienestar estudiantil."
+    banner:
+      variant: info
+      label: "PUNTO DE PARTIDA"
+      text: "Arrancamos el periodo con una brecha de 12 puntos frente a la meta institucional."
 
   - id: data-01
     type: data
@@ -51,18 +55,42 @@ slides:
         caption: "Frente al año anterior"
       - value: "1,240"
         label: "Nuevos estudiantes matriculados"
+      - value: "-4%"
+        label: "Deserción en primer semestre"
+        deltaDirection: down
+        accent: alert
+        badge: "Requiere atención"
     source: "Vicerrectoría Financiera"
     period: "2025"
+    banner:
+      variant: warning
+      label: "NOTA"
+      text: "Las cifras de matrícula excluyen programas de posgrado a distancia."
+      icon: triangle-alert
 
   - id: comparison-01
     type: comparison
     title: "Ingeniería y Medicina lideraron el crecimiento en proyectos de investigación"
     columns:
       - heading: "Facultad de Ingeniería"
+        accent: neutral
+        badge: "Líder en crecimiento"
+        stats:
+          - value: "32"
+            label: "Proyectos activos"
+          - value: "12"
+            label: "Publicaciones indexadas"
         points:
           - "32 proyectos activos"
           - "12 publicaciones indexadas"
       - heading: "Facultad de Medicina"
+        accent: alert
+        badge: "Publicaciones bajo la meta"
+        stats:
+          - value: "28"
+            label: "Proyectos activos"
+          - value: "19"
+            label: "Publicaciones indexadas"
         points:
           - "28 proyectos activos"
           - "19 publicaciones indexadas"
@@ -70,6 +98,9 @@ slides:
   - id: process-01
     type: process
     title: "El proceso de acreditación avanzó en cuatro etapas"
+    banner:
+      variant: highlight
+      text: "La visita de verificación concentra el 40% del esfuerzo total del proceso."
     steps:
       - label: "Autoevaluación"
         description: "Recolección de evidencia por programa"
