@@ -14,6 +14,7 @@ Este directorio contiene el análisis y la hoja de ruta para transformar `claude
 6. **[05-testing-strategy.md](05-testing-strategy.md)** — Pruebas estructurales, de marca, visuales y evaluaciones de agente, con una rúbrica de calificación y golden decks (positivos y negativos).
 7. **[06-security-and-governance.md](06-security-and-governance.md)** — Riesgos de instalar plugins/skills de terceros, prompt injection, procedencia/licencia de activos, política de red, reproducibilidad de build, y la brecha confirmada de que ninguna plataforma ofrece hoy firma/checksum de plugins.
 8. **[07-decisions-and-open-questions.md](07-decisions-and-open-questions.md)** — Registro tipo ADR de las 20 decisiones técnicas del enunciado, más preguntas explícitas pendientes de validación institucional, de marca, de tecnología y de usuarios finales.
+9. **[08-visual-quality-and-layout-fixes.md](08-visual-quality-and-layout-fixes.md)** — Post-MVP (Hitos 0–7 completos): backlog de corrección de calidad visual del renderer HTML/PPTX a partir de una prueba real del usuario — bug sistémico de superposición de texto (títulos largos envuelven a varias líneas y el layout no lo contempla), y mejoras de diseño pendientes (foto de portada por defecto, motivo de marca `brand-wave.svg` sin usar, aprovechamiento de espacio, gradientes).
 
 ## Resumen del objetivo
 
