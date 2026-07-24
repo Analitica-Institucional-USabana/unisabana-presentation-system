@@ -2,26 +2,19 @@
 
 Sistema de presentaciones institucional de Universidad de La Sabana: crea, valida, renderiza (HTML autocontenido y PPTX) y revisa presentaciones respetando la marca oficial, mediante dos skills (`unisabana-create`, `unisabana-review`) instalables como plugin en Claude Code y en Codex.
 
+Repositorio institucional: https://github.com/Analitica-Institucional-USabana/unisabana-presentation-system
+
 Ver `planning/README.md` para el análisis y la hoja de ruta completos.
 
 ## Instalación
 
-Si acabas de clonar el repo o modificaste algo bajo `core/`, `skills/`, `scripts/`, `renderers/` o `validators/`, instala dependencias y regenera los adaptadores primero — son generados, nunca se editan a mano (`planning/07-decisions-and-open-questions.md` D-13):
-
-```bash
-npm install
-npm run build:adapters
-```
-
-Por ahora la instalación es solo como **marketplace de desarrollo local** apuntando a este mismo repo — no hay marketplace público todavía (`planning/04-mvp-definition.md`).
+Los adaptadores (`adapters/claude-plugin/`, `adapters/codex-plugin/`) son autocontenidos a propósito: incluyen su propio `core/`, `skills/`, `scripts/`, `renderers/`, `validators/` y `node_modules/` (con `ajv`, `js-yaml`, `pptxgenjs`, que las skills invocan vía Bash). Se comitean tal cual — incluido `node_modules/`, excepcionado en `.gitignore` — porque tanto Claude Code como Codex cachean el plugin instalado a partir de lo que hay en el repo remoto; sin las dependencias vendorizadas ahí, un clon público quedaría sin ellas y las skills fallarían en el primer uso.
 
 ### Claude Code
 
-El repo ya trae el marketplace de desarrollo en `.claude-plugin/marketplace.json`, apuntando a `adapters/claude-plugin`.
-
-1. Agrega el marketplace local (usa la ruta a este repo):
+1. Agrega el marketplace institucional de la Jefatura:
    ```
-   /plugin marketplace add /ruta/a/unisabana-presentation-system
+   /plugin marketplace add https://github.com/Analitica-Institucional-USabana/unisabana-presentation-system.git
    ```
 2. Instala el plugin:
    ```
@@ -31,19 +24,24 @@ El repo ya trae el marketplace de desarrollo en `.claude-plugin/marketplace.json
 
 ### Codex
 
-El repo trae el marketplace de desarrollo equivalente en `.agents/plugins/marketplace.json`, apuntando a `adapters/codex-plugin`.
-
-1. Agrega el marketplace local:
+1. Agrega el marketplace institucional:
    ```
-   codex plugin marketplace add /ruta/a/unisabana-presentation-system
+   codex plugin marketplace add https://github.com/Analitica-Institucional-USabana/unisabana-presentation-system.git
    ```
 2. Instala el plugin:
    ```
    codex plugin add unisabana-presentations
    ```
 
-El esquema de `.codex-plugin/plugin.json` y `.agents/plugins/marketplace.json` se verificó contra la documentación de Codex el 2026-07-23, pero dos valores (`policy.authentication`, `category`) no tienen un enum oficial confirmado — ver `adapters/codex-plugin/README.md`. Confirma ambos contra la documentación vigente de Codex antes de instalar en un entorno real.
+El esquema de `.codex-plugin/plugin.json` y `.agents/plugins/marketplace.json` se verificó contra la documentación de Codex el 2026-07-23, pero dos valores (`policy.authentication`, `category`) no tienen un enum oficial confirmado — ver `adapters/codex-plugin/README.md`. Confirma ambos, y el formato exacto de URL aceptado por `codex plugin marketplace add`, contra la documentación vigente de Codex antes de depender de esto en un entorno real.
 
-### Nota común
+## Desarrollo
 
-Ambos adaptadores son autocontenidos: incluyen su propio `core/`, `skills/`, `scripts/`, `renderers/`, `validators/` y `node_modules/`, sin depender de rutas fuera de su propio árbol — necesario porque ambas plataformas cachean el plugin ya instalado y una ruta relativa que saliera del árbol del plugin no sobreviviría a esa copia.
+Si vas a modificar algo bajo `core/`, `skills/`, `scripts/`, `renderers/` o `validators/`, instala dependencias y regenera los adaptadores antes de comitear — son generados, nunca se editan a mano (`planning/07-decisions-and-open-questions.md` D-13):
+
+```bash
+npm install
+npm run build:adapters
+```
+
+Para probar un checkout local sin publicar nada, usa la misma ruta del repo en vez de la URL de GitHub, tanto en `/plugin marketplace add` como en `codex plugin marketplace add` (ambos aceptan una ruta local absoluta).

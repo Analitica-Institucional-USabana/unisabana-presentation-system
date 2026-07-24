@@ -1,1 +1,10 @@
 node_modules/
+
+# Excepción: los adaptadores de plugin (adapters/*/node_modules) SÍ se comitean.
+# scripts/build-adapters.mjs los copia ahí a propósito (D-13,
+# planning/07-decisions-and-open-questions.md) porque Claude Code y Codex
+# cachean el plugin instalado a partir de lo que hay en el repo — si no
+# viajan aquí, un clon público (Hito 8) instala un plugin sin ajv/js-yaml/
+# pptxgenjs y las skills fallan en el primer uso.
+!adapters/claude-plugin/node_modules/
+!adapters/codex-plugin/node_modules/
