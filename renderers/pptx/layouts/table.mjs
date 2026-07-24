@@ -8,7 +8,7 @@ const ROW_HEIGHT_PX = 42;
 // <table> real del renderer HTML (la excepción explícita al flatten que permite
 // claude-design-system/CLAUDE.md para contenido tabular).
 export default function renderTable(pptxSlide, slide, { colors }) {
-  pptxSlide.background = { color: colors.paper };
+  pptxSlide.background = { color: slide.background === "tinted" ? colors.surfaceTint : colors.paper };
 
   const titleWidthPx = CANVAS.width - SAFE.left - SAFE.right;
   const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: titleWidthPx, weight: "black" });

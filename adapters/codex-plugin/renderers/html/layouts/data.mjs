@@ -1,5 +1,5 @@
-import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, FOOTER_ZONE_HEIGHT, BANNER_HEIGHT_PX, BANNER_GAP_PX, centeredContentY } from "../constants.mjs";
-import { title, bodyText, statBlock, banner } from "../elements.mjs";
+import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, FOOTER_ZONE_HEIGHT, BANNER_HEIGHT_PX, BANNER_GAP_PX, PROGRESS_HEIGHT_PX, PROGRESS_GAP_PX, centeredContentY } from "../constants.mjs";
+import { title, bodyText, statBlock, banner, progressBar } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../text-measure.mjs";
 import { iconMarkup } from "../icons.mjs";
 
@@ -17,8 +17,9 @@ export default function renderData(slide, { repoRoot } = {}) {
   // + padding), no una medición exacta (D-18 sigue sin adoptarse).
   const statCardHeight = valueSizePx + 120;
   const bannerBlockHeight = slide.banner ? BANNER_GAP_PX + BANNER_HEIGHT_PX : 0;
+  const progressBlockHeight = slide.progress ? PROGRESS_GAP_PX + PROGRESS_HEIGHT_PX : 0;
 
-  const contentHeight = titleHeight + 60 + statCardHeight + bannerBlockHeight;
+  const contentHeight = titleHeight + 60 + statCardHeight + bannerBlockHeight + progressBlockHeight;
   const titleY = centeredContentY("content", contentHeight);
   boxes.push(title(slide.title, { x: SAFE.left, y: titleY, width: titleWidth, sizePx: TYPE_SCALE_PX.slideTitle }));
 
@@ -29,14 +30,16 @@ export default function renderData(slide, { repoRoot } = {}) {
     boxes.push(statBlock(stat, { x, y: statsY, width: statWidth, height: statCardHeight, valueSizePx, card: true, accentColor, badge: stat.badge }));
   });
 
+  let belowStatsY = statsY + statCardHeight;
   if (slide.banner) {
     const iconHtml = slide.banner.icon ? iconMarkup(repoRoot, slide.banner.icon, { sizePx: 28 }) : undefined;
-    boxes.push(
-      banner(
-        { ...slide.banner, iconHtml },
-        { x: SAFE.left, y: statsY + statCardHeight + BANNER_GAP_PX, width: titleWidth, height: BANNER_HEIGHT_PX }
-      )
-    );
+    belowStatsY += BANNER_GAP_PX;
+    boxes.push(banner({ ...slide.banner, iconHtml }, { x: SAFE.left, y: belowStatsY, width: titleWidth, height: BANNER_HEIGHT_PX }));
+    belowStatsY += BANNER_HEIGHT_PX;
+  }
+  if (slide.progress) {
+    belowStatsY += PROGRESS_GAP_PX;
+    boxes.push(progressBar(slide.progress, { x: SAFE.left, y: belowStatsY, width: titleWidth, height: PROGRESS_HEIGHT_PX }));
   }
 
   const sourceLine = `Fuente: ${slide.source} · ${slide.period}`;
@@ -49,5 +52,6 @@ export default function renderData(slide, { repoRoot } = {}) {
     })
   );
 
-  return { tone: "light", backgroundCss: "background:var(--bg-page);", boxesHtml: boxes.join("") };
+  const backgroundCss = slide.background === "tinted" ? "background:var(--surface-tint);" : "background:var(--bg-page);";
+  return { tone: "light", backgroundCss, boxesHtml: boxes.join("") };
 }

@@ -120,6 +120,21 @@ export function banner({ variant, text, label, iconHtml }, { x, y, width, height
   return box({ x, y, width, height, style: `border-radius:var(--radius-md);${v.bg}`, html });
 }
 
+// Barra de progreso (core/components/data/ProgressBar.jsx, expuesta en el
+// renderer HTML — planning/09-visual-richness-and-content-density.md #8).
+export function progressBar({ value, label }, { x, y, width, height } = {}) {
+  const pct = Math.max(0, Math.min(100, Number(value) || 0));
+  let html = `<div style="font-family:var(--font-sans);">`;
+  html += `<div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:var(--fs-caption);color:var(--text-strong);">`;
+  html += `<span style="font-weight:var(--fw-medium);">${label ? escapeHtml(label) : ""}</span>`;
+  html += `<span style="font-weight:var(--fw-bold);">${pct}%</span>`;
+  html += `</div>`;
+  html += `<div style="height:10px;width:100%;background:var(--accent-100);border-radius:var(--radius-pill);overflow:hidden;">`;
+  html += `<div style="height:100%;width:${pct}%;background:var(--accent);border-radius:var(--radius-pill);"></div>`;
+  html += `</div></div>`;
+  return box({ x, y, width, height, html });
+}
+
 // Tarjeta de comparación con estado (planning/09-visual-richness-and-content-density.md
 // #2): borde de acento + badge de esquina + hasta 2 cifras grandes + divisor + bullets.
 export function statusCard({ heading, badge, accent = "neutral", stats = [], points = [] }, { x, y, width, height } = {}) {

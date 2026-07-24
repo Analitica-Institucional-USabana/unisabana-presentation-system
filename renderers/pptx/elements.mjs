@@ -17,6 +17,22 @@ export function addEyebrow(slide, text, { x, y, w = 4, color }) {
   slide.addText(text.toUpperCase(), { x, y, w, h: 0.35, fontFace: "Libre Franklin", fontSize: 11, bold: true, color, charSpacing: 2 });
 }
 
+// Barra de progreso (core/components/data/ProgressBar.jsx, expuesta en pptx —
+// planning/09-visual-richness-and-content-density.md #8).
+export function addProgressBar(slide, { value, label }, { x, y, w, colors }) {
+  const pct = Math.max(0, Math.min(100, Number(value) || 0));
+  if (label) {
+    slide.addText(label, { x, y, w: w * 0.7, h: 0.24, fontFace: "Libre Franklin", fontSize: 11, bold: true, color: colors.ink700 });
+  }
+  slide.addText(`${pct}%`, { x, y, w, h: 0.24, fontFace: "Libre Franklin", fontSize: 11, bold: true, color: colors.ink900, align: "right" });
+  const barY = y + 0.3;
+  const barH = 0.14;
+  slide.addShape("roundRect", { x, y: barY, w, h: barH, rectRadius: barH / 2, fill: { color: colors.accent100 }, line: { type: "none" } });
+  if (pct > 0) {
+    slide.addShape("roundRect", { x, y: barY, w: Math.max((w * pct) / 100, barH), h: barH, rectRadius: barH / 2, fill: { color: colors.accent }, line: { type: "none" } });
+  }
+}
+
 // Pill pequeño para badges de esquina (planning/09-visual-richness-and-content-density.md #2).
 function addBadge(slide, text, { x, y, w, color, bg }) {
   const h = 0.26;

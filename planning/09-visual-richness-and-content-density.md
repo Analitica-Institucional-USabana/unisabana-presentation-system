@@ -59,6 +59,12 @@ Cada uno requiere: 1) campo(s) nuevo(s) opcionales en `core/schemas/deck-spec.sc
 
 No se propone un tipo `dashboard` separado (ya existe como `table{density:"high"}` desde el Hito 4) — las primitivas 1-3 y 8 alcanzan para enriquecer `data`/`table` sin una nueva familia.
 
+## Estado: las 8 primitivas aplicadas
+
+Las 8 filas del backlog (íconos, banner, tarjeta de estado, timeline Gantt, grid de agenda, fondo tintado, proceso alternado, `ProgressBar`) están implementadas en schema + validadores + `renderers/html/` + `renderers/pptx/` + `skills/unisabana-create/references/slide-families.md`, y `tests/schema/example-deck.yaml` las ejercita todas (13 slides, `validate-deck-spec`/`validate-brand` en verde sobre HTML y PPTX). La pregunta de íconos (D-Q6) se resolvió pragmáticamente vendorizando un subconjunto de Lucide marcado explícitamente como "no aprobado por marca" en `core/brand/rules/icons.json#/_provenance` — sigue pendiente la confirmación institucional real. Limitación conocida: el ícono de banner/paso solo se dibuja en HTML, no en PPTX (`pptxgenjs` no rasteriza SVG en Node — mismo precedente que `renderers/pptx/decor.mjs` para `brand-wave.svg`).
+
+Pendiente: comparación visual final del usuario contra `ejemplo-presentacion.pdf` (sección "Cómo verificar cuando esté resuelto" abajo) — ninguna validación automática la reemplaza.
+
 ## Plan de trabajo priorizado (para quien retome esto)
 
 1. **[Base, desbloquea el resto] Resolver la pregunta de íconos** (vendorizar subconjunto Lucide + confirmación de marca) — sin esto, 2 y 5 quedan sin insignia con ícono (pueden salir sin ícono como versión reducida, pero pierden fidelidad frente al PDF).

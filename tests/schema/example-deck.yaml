@@ -1,4 +1,5 @@
-# Deck Spec de ejemplo — cubre los 10 tipos de slide del esquema (Hito 4).
+# Deck Spec de ejemplo — cubre los 10 tipos de slide del esquema (Hito 4) y las
+# 8 primitivas visuales de planning/09-visual-richness-and-content-density.md.
 # Criterio de aceptación: node scripts/validate-deck-spec.mjs tests/schema/example-deck.yaml -> VÁLIDO
 schemaVersion: "0.1.0"
 
@@ -22,6 +23,18 @@ slides:
   - id: agenda-01
     type: agenda
     title: "Agenda"
+    items:
+      - "Contexto institucional"
+      - "Resultados financieros"
+      - "Resultados de investigación"
+      - "Comparación entre facultades"
+      - "Cierre y próximos pasos"
+
+  - id: agenda-02
+    type: agenda
+    title: "Agenda (variante grid)"
+    layout: grid
+    background: tinted
     items:
       - "Contexto institucional"
       - "Resultados financieros"
@@ -67,10 +80,14 @@ slides:
       label: "NOTA"
       text: "Las cifras de matrícula excluyen programas de posgrado a distancia."
       icon: triangle-alert
+    progress:
+      value: 72
+      label: "Avance frente a la meta anual de ingresos"
 
   - id: comparison-01
     type: comparison
     title: "Ingeniería y Medicina lideraron el crecimiento en proyectos de investigación"
+    background: tinted
     columns:
       - heading: "Facultad de Ingeniería"
         accent: neutral
@@ -107,6 +124,54 @@ slides:
       - label: "Revisión por pares"
       - label: "Informe final"
       - label: "Visita de verificación"
+
+  - id: process-alt
+    type: process
+    title: "Fases del proceso de acreditación (variante alternada)"
+    layout: alternating
+    steps:
+      - label: "Autoevaluación"
+        description: "Recolección de evidencia por programa"
+        icon: file-text
+      - label: "Revisión por pares"
+        description: "Visita de pares académicos externos"
+        icon: users
+        current: true
+      - label: "Informe final"
+        description: "Consolidación de hallazgos"
+        icon: check
+      - label: "Visita de verificación"
+        description: "Confirmación institucional"
+        icon: calendar
+
+  - id: process-gantt
+    type: process
+    title: "Cronograma del proceso de acreditación"
+    layout: gantt
+    lanes:
+      - label: "Autoevaluación"
+        start: "2026-01"
+        end: "2026-03"
+      - label: "Revisión por pares"
+        start: "2026-03"
+        end: "2026-05"
+      - label: "Informe final"
+        start: "2026-05"
+        end: "2026-06"
+      - label: "Visita de verificación"
+        start: "2026-06-15"
+        end: "2026-07-15"
+    milestones:
+      - label: "Kickoff"
+        date: "2026-01-05"
+      - label: "Entrega parcial"
+        date: "2026-04-15"
+    asOf: "2026-04-01"
+    banner:
+      variant: warning
+      label: "NOTA"
+      text: "La visita de verificación depende de la disponibilidad del par externo."
+      icon: triangle-alert
 
   - id: table-01
     type: table

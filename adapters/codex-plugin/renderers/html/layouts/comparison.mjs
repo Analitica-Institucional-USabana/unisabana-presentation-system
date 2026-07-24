@@ -39,5 +39,6 @@ export default function renderComparison(slide) {
     boxes.push(box({ x, y: colsY, width: colWidth, height: colsHeight, html: inner }));
   });
 
-  return { tone: "light", backgroundCss: "background:var(--bg-page);", boxesHtml: boxes.join("") };
+  const backgroundCss = slide.background === "tinted" ? "background:var(--surface-tint);" : "background:var(--bg-page);";
+  return { tone: "light", backgroundCss, boxesHtml: boxes.join("") };
 }

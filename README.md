@@ -33,9 +33,7 @@ Los adaptadores (`adapters/claude-plugin/`, `adapters/codex-plugin/`) son autoco
    codex plugin add unisabana-presentations
    ```
 
-El esquema de `.codex-plugin/plugin.json` y `.agents/plugins/marketplace.json` se verificó contra la documentación de Codex el 2026-07-23, pero dos valores (`policy.authentication`, `category`) no tienen un enum oficial confirmado — ver `adapters/codex-plugin/README.md`. Confirma ambos, y el formato exacto de URL aceptado por `codex plugin marketplace add`, contra la documentación vigente de Codex antes de depender de esto en un entorno real.
-
-## Desarrollo
+### Desarrollo
 
 Si vas a modificar algo bajo `core/`, `skills/`, `scripts/`, `renderers/` o `validators/`, instala dependencias y regenera los adaptadores antes de comitear — son generados, nunca se editan a mano (`planning/07-decisions-and-open-questions.md` D-13):
 

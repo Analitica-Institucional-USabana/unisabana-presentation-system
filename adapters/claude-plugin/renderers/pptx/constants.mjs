@@ -18,6 +18,8 @@ import {
   AI_DISCLOSURE,
   BANNER_HEIGHT_PX,
   BANNER_GAP_PX,
+  PROGRESS_HEIGHT_PX,
+  PROGRESS_GAP_PX,
   slideFamilyFor,
   contentBand,
   centeredContentY,
@@ -37,6 +39,8 @@ export {
   AI_DISCLOSURE,
   BANNER_HEIGHT_PX,
   BANNER_GAP_PX,
+  PROGRESS_HEIGHT_PX,
+  PROGRESS_GAP_PX,
   slideFamilyFor,
   contentBand,
 };

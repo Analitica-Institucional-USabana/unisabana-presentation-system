@@ -48,5 +48,6 @@ export default function renderTable(slide) {
   const tableY = titleY + titleHeight + 40;
   boxes.push(box({ x: SAFE.left, y: tableY, width: CANVAS.width - SAFE.left - SAFE.right, html: tableHtml }));
 
-  return { tone: "light", backgroundCss: "background:var(--bg-page);", boxesHtml: boxes.join("") };
+  const backgroundCss = slide.background === "tinted" ? "background:var(--surface-tint);" : "background:var(--bg-page);";
+  return { tone: "light", backgroundCss, boxesHtml: boxes.join("") };
 }

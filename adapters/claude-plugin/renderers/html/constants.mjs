@@ -18,6 +18,10 @@ export const CONTENT_ROW_GAP = 24;
 export const BANNER_HEIGHT_PX = 84;
 export const BANNER_GAP_PX = 32;
 
+// Barra de progreso (planning/09-visual-richness-and-content-density.md #8).
+export const PROGRESS_HEIGHT_PX = 40;
+export const PROGRESS_GAP_PX = 24;
+
 function resolveClampVw(minPx, vwPercent, maxPx) {
   const v = (CANVAS.width * vwPercent) / 100;
   return Math.round(Math.min(Math.max(v, minPx), maxPx));

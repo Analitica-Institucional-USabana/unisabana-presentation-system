@@ -3,7 +3,7 @@ import { addTitle, addBody, addBanner } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderMessage(pptxSlide, slide, { colors }) {
-  pptxSlide.background = { color: colors.paper };
+  pptxSlide.background = { color: slide.background === "tinted" ? colors.surfaceTint : colors.paper };
 
   const titleHeightPx = estimateBlockHeightPx(slide.title, { sizePx: 56, widthPx: 1000, weight: "black" });
   const supportingHeightPx = slide.supporting

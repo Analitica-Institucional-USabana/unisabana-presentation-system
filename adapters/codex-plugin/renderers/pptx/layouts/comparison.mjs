@@ -3,7 +3,7 @@ import { addTitle, addBulletCard, addStatusCard } from "../elements.mjs";
 import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderComparison(pptxSlide, slide, { colors }) {
-  pptxSlide.background = { color: colors.paper };
+  pptxSlide.background = { color: slide.background === "tinted" ? colors.surfaceTint : colors.paper };
 
   const band = contentBand("content");
   const titleWidthPx = CANVAS.width - SAFE.left - SAFE.right;

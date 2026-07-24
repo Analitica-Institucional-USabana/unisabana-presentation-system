@@ -35,13 +35,16 @@ export function checkDensity(deck, { repoRoot }, reportsById) {
       r.add("pass", `Agenda dentro del límite preferido (${slide.items.length}/${limits.maxAgendaItemsPreferred}).`);
     }
 
-    if (slide.type === "process" && slide.steps.length > limits.maxProcessStepsPreferred) {
-      r.add(
-        "warning",
-        `density.json#/slideContentLimits/maxProcessStepsPreferred=${limits.maxProcessStepsPreferred}: este proceso tiene ${slide.steps.length} pasos — considera dividirlo en vez de encoger el texto.`
-      );
-    } else if (slide.type === "process") {
-      r.add("pass", `Proceso dentro del límite preferido (${slide.steps.length}/${limits.maxProcessStepsPreferred}).`);
+    // layout='gantt' no usa `steps` (usa `lanes`) — el límite de pasos solo aplica a steps/alternating.
+    if (slide.type === "process" && slide.steps) {
+      if (slide.steps.length > limits.maxProcessStepsPreferred) {
+        r.add(
+          "warning",
+          `density.json#/slideContentLimits/maxProcessStepsPreferred=${limits.maxProcessStepsPreferred}: este proceso tiene ${slide.steps.length} pasos — considera dividirlo en vez de encoger el texto.`
+        );
+      } else {
+        r.add("pass", `Proceso dentro del límite preferido (${slide.steps.length}/${limits.maxProcessStepsPreferred}).`);
+      }
     }
 
     if (slide.type === "data" && slide.stats.length > limits.maxChartSeriesPreferred) {

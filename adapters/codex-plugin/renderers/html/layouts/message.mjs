@@ -25,5 +25,6 @@ export default function renderMessage(slide, { repoRoot } = {}) {
     const iconHtml = slide.banner.icon ? iconMarkup(repoRoot, slide.banner.icon, { sizePx: 28 }) : undefined;
     boxes.push(banner({ ...slide.banner, iconHtml }, { x: SAFE.left, y, width: bannerWidth, height: BANNER_HEIGHT_PX }));
   }
-  return { tone: "light", backgroundCss: "background:var(--bg-page);", boxesHtml: boxes.join("") };
+  const backgroundCss = slide.background === "tinted" ? "background:var(--surface-tint);" : "background:var(--bg-page);";
+  return { tone: "light", backgroundCss, boxesHtml: boxes.join("") };
 }
