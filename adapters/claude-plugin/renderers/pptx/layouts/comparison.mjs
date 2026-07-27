@@ -1,6 +1,6 @@
 import { CANVAS, SAFE, CONTENT_COLUMN_GAP, TYPE_SCALE_PX, contentBand, px2in, px2pt } from "../constants.mjs";
 import { addTitle, addBulletCard, addStatusCard } from "../elements.mjs";
-import { estimateBlockHeightPx } from "../../html/text-measure.mjs";
+import { estimateBlockHeightPx, estimateStatusCardHeightPx, estimateBulletCardHeightPx } from "../../html/text-measure.mjs";
 
 export default function renderComparison(pptxSlide, slide, { colors }) {
   pptxSlide.background = { color: slide.background === "tinted" ? colors.surfaceTint : colors.paper };
@@ -19,12 +19,17 @@ export default function renderComparison(pptxSlide, slide, { colors }) {
   const gap = px2in(CONTENT_COLUMN_GAP);
   const colW = (availW - gap * (n - 1)) / n;
 
+  // planning/10-...md #2: mirror del renderer HTML — la tarjeta nunca es más
+  // chica que lo medido, para que el texto no se salga del rectángulo/borde.
+  const innerWidthPx = colW * 96 - 48;
   slide.columns.forEach((col, i) => {
     const x = px2in(SAFE.left) + i * (colW + gap);
     if (col.stats?.length || col.badge) {
-      addStatusCard(pptxSlide, { heading: col.heading, badge: col.badge, accent: col.accent, stats: col.stats, points: col.points }, { x, y: colsY, w: colW, h: colsH, colors });
+      const cardH = Math.max(colsH, px2in(estimateStatusCardHeightPx(col, innerWidthPx)));
+      addStatusCard(pptxSlide, { heading: col.heading, badge: col.badge, accent: col.accent, stats: col.stats, points: col.points }, { x, y: colsY, w: colW, h: cardH, colors });
     } else {
-      addBulletCard(pptxSlide, col, { x, y: colsY, w: colW, h: colsH, colors });
+      const cardH = Math.max(colsH, px2in(estimateBulletCardHeightPx(col, innerWidthPx)));
+      addBulletCard(pptxSlide, col, { x, y: colsY, w: colW, h: cardH, colors });
     }
   });
 

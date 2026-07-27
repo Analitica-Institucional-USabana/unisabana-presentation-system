@@ -1,7 +1,7 @@
 {
   "_provenance": "Extraído de claude-design-system/CLAUDE.md y claude-design-system/readme.md (§PIE DE ATRIBUCIÓN — ATRIBUCIÓN DE IA, §7 CLAUDE DESIGN ATTRIBUTION VS. INSTITUTIONAL LOGO), Hito 1, 2026-07-23.",
 
-  "openQuestion": "D-Q5 en planning/07-decisions-and-open-questions.md: esta regla nació en un contexto donde el generador era siempre Claude Design. El sistema objetivo puede generarse también desde Codex u otros agentes. Este archivo conserva el texto/activo literal actual ('Diseñado con Claude Design' + assets/claude-logo.svg) por fidelidad a la fuente; la decisión de generalizar el texto (p. ej. a 'Diseñado con IA') o de parametrizarlo por plataforma generadora queda pendiente de validación institucional antes de implementarse — no se decide unilateralmente aquí.",
+  "openQuestion": "D-Q5 (planning/07-decisions-and-open-questions.md) RESUELTA en planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #7: el texto/logo de atribución IA ahora se resuelve por plataforma generadora vía adapters/*/.{claude,codex}-plugin/platform.json (leído por renderers/html/platform.mjs#resolvePlatform), en vez de estar hardcodeado. Este archivo documenta el caso Claude — sigue siendo exacto para ese adaptador — pero ya NO es la fuente que el validador lee directamente; validators/rules/ai-disclosure.mjs lee platform.json. El adaptador Codex usa 'Elaborado con Codex' sin logo (logoAsset:null) hasta que se provea/autorice un asset oficial de OpenAI — no se aproxima ni se genera uno.",
 
   "mandatory": true,
   "text": "Diseñado con Claude Design",

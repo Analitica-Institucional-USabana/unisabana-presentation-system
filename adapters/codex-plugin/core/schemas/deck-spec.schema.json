@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:unisabana:schemas:deck-spec:0.1.0",
+  "$id": "urn:unisabana:schemas:deck-spec:0.2.0",
   "title": "Universidad de La Sabana — Deck Spec",
   "$comment": "Hito 4 (planning/03-migration-roadmap.md). Representación intermedia declarativa: el agente (skill unisabana-create) produce una instancia de este esquema; core/brand/rules/*.json y el futuro validators/ (Hito 6) la comprueban antes de renderizar. Consolida dos taxonomías de la fuente original: las 10 familias narrativas de claude-design-system/readme.md §9 (cover, agenda, section-separator, message, data, comparison, process/timeline, table/technical, quote, closing) y los 10 ejemplos de claude-design-system/slides/*.html — 'photo-cover' se modela como cover{background:photo} y 'dashboard' como table{density:high}, sin perder ninguna de las dos.\n\nPolítica de evolución (SemVer del esquema, independiente del SemVer del plugin): PATCH = aclaraciones que no cambian validación; MINOR = campos nuevos opcionales o un nuevo valor de enum aditivo; MAJOR = cualquier campo requerido nuevo, cualquier remoción, o cualquier restricción de un enum existente. Un campo nunca se elimina sin pasar primero por un aviso 'deprecated' en su description durante al menos una versión MINOR.",
   "type": "object",
@@ -9,7 +9,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "enum": ["0.1.0"],
+      "enum": ["0.1.0", "0.2.0"],
       "description": "Versión del propio esquema del Deck Spec (no la versión del plugin ni la de core/brand)."
     },
     "presentation": { "$ref": "#/$defs/presentation" },
@@ -30,6 +30,10 @@
         "audience": {
           "type": "string",
           "description": "Descripción libre de la audiencia (ej. 'Consejo Directivo', 'Facultad de Ingeniería'). No es un campo de cumplimiento de marca, es contexto para la creatividad del agente."
+        },
+        "owner": {
+          "type": "string",
+          "description": "Dependencia/unidad responsable del deck (ej. 'Facultad de Ingeniería', 'Vicerrectoría de Procesos Académicos'). Se renderiza en la portada como línea jerárquica de propiedad (planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #5). Si se omite, el renderer muestra el placeholder 'Dependencia responsable: pendiente de definir' en su lugar — nunca se omite la línea en silencio."
         },
         "density": {
           "type": "string",

@@ -4,7 +4,10 @@ import { addTitle, addBody, addEyebrow } from "../elements.mjs";
 import { addNavyGradientBackground, addBrandWaveImage } from "../decor.mjs";
 import { estimateBlockHeightPx, fitTitleSizePx } from "../../html/text-measure.mjs";
 
-export default function renderCover(pptxSlide, slide, { repoRoot, colors }) {
+const OWNER_PLACEHOLDER = "Dependencia responsable: pendiente de definir";
+const OWNER_LINE_HEIGHT_PX = 32;
+
+export default function renderCover(pptxSlide, slide, { repoRoot, colors, presentation }) {
   const tone = slide.background === "light" ? "light" : "dark";
 
   if (slide.background === "photo") {
@@ -38,9 +41,14 @@ export default function renderCover(pptxSlide, slide, { repoRoot, colors }) {
   const subtitleHeightPx = slide.subtitle
     ? estimateBlockHeightPx(slide.subtitle, { sizePx: 24, widthPx: contentWidthPx, weight: "medium", lineHeight: 1.55 })
     : 0;
-  const contentHeightPx = (slide.eyebrow ? 40 : 0) + titleHeightPx + 24 + subtitleHeightPx;
+  // planning/10-...md #5: jerarquía de propiedad, mirror del renderer HTML.
+  const contentHeightPx = OWNER_LINE_HEIGHT_PX + (slide.eyebrow ? 40 : 0) + titleHeightPx + 24 + subtitleHeightPx;
 
   let y = centeredContentYIn("cover", contentHeightPx);
+
+  const ownerText = presentation?.owner || OWNER_PLACEHOLDER;
+  addEyebrow(pptxSlide, ownerText, { x: px2in(SAFE.left), y, w: contentW, color: tone === "dark" ? colors.sabanaBlue300 : colors.ink500 });
+  y += px2in(OWNER_LINE_HEIGHT_PX);
 
   if (slide.eyebrow) {
     addEyebrow(pptxSlide, slide.eyebrow, { x: px2in(SAFE.left), y, w: contentW, color: tone === "dark" ? colors.sabanaBlue300 : colors.accentMid });

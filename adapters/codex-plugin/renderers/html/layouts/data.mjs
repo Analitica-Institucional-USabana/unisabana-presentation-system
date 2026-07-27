@@ -12,10 +12,22 @@ export default function renderData(slide, { repoRoot } = {}) {
   const availWidth = CANVAS.width - SAFE.left - SAFE.right;
   const statWidth = (availWidth - CONTENT_COLUMN_GAP * (n - 1)) / n;
   const valueSizePx = n <= 2 ? 96 : n <= 4 ? 72 : 56;
-  // planning/08-visual-quality-and-layout-fixes.md backlog #1: estimación
-  // generosa de la altura real de la tarjeta (valor + delta + label + caption
-  // + padding), no una medición exacta (D-18 sigue sin adoptarse).
-  const statCardHeight = valueSizePx + 120;
+  // planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #2:
+  // altura real por tarjeta = valor/delta + badge (ancho fijo, no envuelve —
+  // ver elements.mjs#tag) + label/caption medidos con estimateBlockHeightPx,
+  // en vez del heurístico fijo `valueSizePx + 120` (backlog #1 de 08, que no
+  // medía label/caption/badge y podía quedarse corto con textos largos).
+  const BADGE_ALLOWANCE_PX = 37; // tag(): padding 6px 14px + fs-caption(14px) + margin-bottom 8px
+  const CARD_PADDING_PX = 48; // surfaceStyle box-sizing:border-box padding:24px arriba+abajo
+  const statCardHeight = Math.max(
+    ...slide.stats.map((stat) => {
+      let h = valueSizePx;
+      if (stat.badge) h += BADGE_ALLOWANCE_PX;
+      if (stat.label) h += 4 + estimateBlockHeightPx(stat.label, { sizePx: 24, widthPx: statWidth, weight: "semibold" });
+      if (stat.caption) h += 4 + estimateBlockHeightPx(stat.caption, { sizePx: 14, widthPx: statWidth, weight: "regular" });
+      return h + CARD_PADDING_PX;
+    })
+  );
   const bannerBlockHeight = slide.banner ? BANNER_GAP_PX + BANNER_HEIGHT_PX : 0;
   const progressBlockHeight = slide.progress ? PROGRESS_GAP_PX + PROGRESS_HEIGHT_PX : 0;
 
@@ -42,11 +54,18 @@ export default function renderData(slide, { repoRoot } = {}) {
     boxes.push(progressBar(slide.progress, { x: SAFE.left, y: belowStatsY, width: titleWidth, height: PROGRESS_HEIGHT_PX }));
   }
 
+  // planning/10-...md #2: la línea de fuente fluye después del contenido real
+  // (belowStatsY) en vez de anclarse siempre a un Y fijo — el Y fijo anterior
+  // pasa a ser el TECHO (nunca más abajo de ahí, para no invadir la banda de
+  // atribución IA / numeración); si el contenido real es más alto que el
+  // presupuesto, footer-overflow.mjs (Capa B) lo marca como error de validación
+  // en vez de dejar que se solape en silencio.
   const sourceLine = `Fuente: ${slide.source} · ${slide.period}`;
+  const sourceFloorY = CANVAS.height - SAFE.bottom - FOOTER_ZONE_HEIGHT - 4;
   boxes.push(
     bodyText(sourceLine, {
       x: SAFE.left,
-      y: CANVAS.height - SAFE.bottom - FOOTER_ZONE_HEIGHT - 4,
+      y: Math.min(belowStatsY + 16, sourceFloorY),
       sizePx: TYPE_SCALE_PX.source,
       color: "var(--text-muted)",
     })

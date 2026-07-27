@@ -4,6 +4,7 @@ import { CANVAS } from "./constants.mjs";
 import { fileToDataUri } from "./embed.mjs";
 import { logoBox } from "./logo.mjs";
 import { aiDisclosureBox } from "./ai-disclosure.mjs";
+import { pageNumberBox } from "./page-number.mjs";
 
 import renderCover from "./layouts/cover.mjs";
 import renderAgenda from "./layouts/agenda.mjs";
@@ -43,13 +44,18 @@ export function buildDocument(deck, { repoRoot }) {
   const facultyAttr = deck.presentation.palette !== "institutional" ? ` data-faculty="${deck.presentation.palette}"` : "";
 
   const slidesHtml = deck.slides
-    .map((slide) => {
+    .map((slide, i) => {
       const layoutFn = LAYOUTS[slide.type];
       if (!layoutFn) throw new Error(`Tipo de slide sin layout de renderer: ${slide.type}`);
-      const { tone, backgroundCss, boxesHtml } = layoutFn(slide, { repoRoot });
+      const { tone, backgroundCss, boxesHtml } = layoutFn(slide, { repoRoot, presentation: deck.presentation });
       const logo = logoBox(repoRoot, slide.type, tone);
       const aiDisclosure = aiDisclosureBox(repoRoot, tone);
-      return `<section class="slide" id="${slide.id}" data-tone="${tone}"${facultyAttr} style="position:relative;width:${CANVAS.width}px;height:${CANVAS.height}px;overflow:hidden;${backgroundCss}">${boxesHtml}${logo}${aiDisclosure}</section>`;
+      const pageNumber = pageNumberBox(i + 1, deck.slides.length, tone);
+      // El comentario delimita dónde termina el contenido de la slide y
+      // empieza el "chrome" fijo (logo/atribución IA/numeración), que vive
+      // deliberadamente en la banda del pie — validators/rules/footer-
+      // overflow.mjs lo usa para no confundir esas cajas con desbordes reales.
+      return `<section class="slide" id="${slide.id}" data-tone="${tone}"${facultyAttr} style="position:relative;width:${CANVAS.width}px;height:${CANVAS.height}px;overflow:hidden;${backgroundCss}">${boxesHtml}<!--CONTENT_END-->${logo}${aiDisclosure}${pageNumber}</section>`;
     })
     .join("\n");
 

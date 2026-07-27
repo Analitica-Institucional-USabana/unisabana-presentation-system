@@ -18,3 +18,5 @@
 **Emoji.** Nunca. No forman parte de la marca.
 
 **Vibe.** Rigor académico + calma editorial. La confianza se transmite por restricción, espacio en blanco y alineación precisa — no por decoración.
+
+**Vocabulario visual.** Restricción no es lo mismo que planitud. Una diapositiva `data`/`message`/`table`/`process` sin ningún banner, tarjeta con estado, ícono o barra de progreso suele leerse como "solo números" en vez de sobria — ver `references/slide-families.md#bloques-compositivos-opcionales-no-son-familias-nuevas` para cuándo cada bloque aplica.

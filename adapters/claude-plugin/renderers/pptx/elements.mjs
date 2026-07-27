@@ -3,8 +3,9 @@
 // se usan alturas generosas; no se persigue ajuste pixel-perfect (fuera de
 // alcance del Hito 7, planning/03-migration-roadmap.md).
 
-import { weightToBold } from "./constants.mjs";
+import { weightToBold, px2in } from "./constants.mjs";
 import { addIcon } from "./icons.mjs";
+import { estimateTextWidthPx } from "../html/text-measure.mjs";
 
 export function addTitle(slide, text, { x, y, w, h = 1.4, sizePt, color }) {
   slide.addText(text, { x, y, w, h, fontFace: "Libre Franklin", fontSize: sizePt, bold: true, color, valign: "top", fit: "shrink" });
@@ -35,23 +36,41 @@ export function addProgressBar(slide, { value, label }, { x, y, w, colors }) {
 }
 
 // Pill pequeño para badges de esquina (planning/09-visual-richness-and-content-density.md #2).
+// pptxgenjs no autoajusta el ancho de una forma al texto — el ancho se calcula
+// desde el texto real (misma heurística de ancho de carácter compartida con el
+// renderer HTML) en vez de un ancho fijo, para evitar el envoltorio a 2 líneas
+// dentro de una píldora angosta (planning/10-numbering-footer-safety-logo-and-
+// multiplatform-branding.md #3, evidencia visual error1.png).
+const BADGE_FONT_SIZE_PT = 9;
+const BADGE_H = 0.3;
+const BADGE_PAD_IN = 0.12;
+const BADGE_MIN_W = 0.9;
+const BADGE_MAX_W = 2.4;
+
+function badgeWidthIn(text, maxWIn = BADGE_MAX_W) {
+  const sizePx = BADGE_FONT_SIZE_PT / 0.75; // pt -> px @96dpi, misma grilla que text-measure.mjs
+  const textWidthIn = px2in(estimateTextWidthPx(text, { sizePx, weight: "bold" }));
+  return Math.min(Math.max(textWidthIn + BADGE_PAD_IN * 2, BADGE_MIN_W), Math.min(maxWIn, BADGE_MAX_W));
+}
+
 function addBadge(slide, text, { x, y, w, color, bg }) {
-  const h = 0.26;
-  slide.addShape("roundRect", { x, y, w, h, rectRadius: 0.13, fill: { color: bg }, line: { type: "none" } });
-  slide.addText(text, { x, y, w, h, fontFace: "Libre Franklin", fontSize: 9, bold: true, color, align: "center", valign: "middle" });
+  const h = BADGE_H;
+  slide.addShape("roundRect", { x, y, w, h, rectRadius: h / 2, fill: { color: bg }, line: { type: "none" } });
+  slide.addText(text, { x, y, w, h, fontFace: "Libre Franklin", fontSize: BADGE_FONT_SIZE_PT, bold: true, color, align: "center", valign: "middle" });
 }
 
 export function addStatBlock(slide, stat, { x, y, w, valueSizePt, colors, accentColor, badge }) {
   let cursorY = y;
   if (badge) {
+    const badgeW = badgeWidthIn(badge, w);
     addBadge(slide, badge, {
       x,
       y: cursorY,
-      w: Math.min(w, 1.6),
+      w: badgeW,
       color: accentColor ? colors.juridicas700 : colors.ink700,
       bg: accentColor ? colors.juridicas100 : colors.ink200,
     });
-    cursorY += 0.34;
+    cursorY += BADGE_H + 0.08;
   }
 
   const deltaColor = stat.deltaDirection === "down" ? colors.juridicas500 : colors.familia700;
@@ -67,11 +86,11 @@ export function addStatBlock(slide, stat, { x, y, w, valueSizePt, colors, accent
 
   cursorY += valueSizePt / 54 + 0.05;
   if (stat.label) {
-    slide.addText(stat.label, { x, y: cursorY, w, h: 0.35, fontFace: "Libre Franklin", fontSize: 16, bold: true, color: colors.sabanaBlue });
+    slide.addText(stat.label, { x, y: cursorY, w, h: 0.35, fontFace: "Libre Franklin", fontSize: 16, bold: true, color: colors.sabanaBlue, fit: "shrink" });
     cursorY += 0.35;
   }
   if (stat.caption) {
-    slide.addText(stat.caption, { x, y: cursorY, w, h: 0.3, fontFace: "Libre Franklin", fontSize: 11, color: colors.ink500 });
+    slide.addText(stat.caption, { x, y: cursorY, w, h: 0.3, fontFace: "Libre Franklin", fontSize: 11, color: colors.ink500, fit: "shrink" });
   }
 }
 
@@ -91,13 +110,14 @@ export function addStatusCard(slide, { heading, badge, accent = "neutral", stats
   slide.addShape("rect", { x, y, w, h, fill: { color: colors.paper }, line: { color: colors.ink200, width: 0.75 } });
   slide.addShape("rect", { x, y, w: 0.06, h, fill: { color: accentColor }, line: { type: "none" } });
 
-  const headingW = badge ? w - 2.0 : w - 0.5;
+  const badgeW = badge ? badgeWidthIn(badge, w * 0.45) : 0;
+  const headingW = badge ? w - badgeW - 0.65 : w - 0.5;
   slide.addText(heading, { x: x + 0.25, y: y + 0.2, w: headingW, h: 0.4, fontFace: "Libre Franklin", fontSize: 16, bold: true, color: colors.sabanaBlue });
   if (badge) {
     addBadge(slide, badge, {
-      x: x + w - 1.65,
+      x: x + w - 0.25 - badgeW,
       y: y + 0.2,
-      w: 1.4,
+      w: badgeW,
       color: accent === "alert" ? colors.juridicas700 : colors.ink700,
       bg: accent === "alert" ? colors.juridicas100 : colors.ink200,
     });

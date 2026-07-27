@@ -7,7 +7,10 @@ import { estimateBlockHeightPx, fitTitleSizePx } from "../text-measure.mjs";
 // slides/01-cover.html y slides/08-photo-cover.html (referencia visual, no copiados
 // literalmente — ver planning/00-current-state-inventory.md) se consolidan aquí en
 // un único layout parametrizado por `background`.
-export default function renderCover(slide, { repoRoot }) {
+const OWNER_PLACEHOLDER = "Dependencia responsable: pendiente de definir";
+const OWNER_LINE_HEIGHT = 32;
+
+export default function renderCover(slide, { repoRoot, presentation }) {
   const tone = slide.background === "light" ? "light" : "dark";
   let boxes = "";
   let backgroundCss;
@@ -41,9 +44,17 @@ export default function renderCover(slide, { repoRoot }) {
   const subtitleHeight = slide.subtitle
     ? estimateBlockHeightPx(slide.subtitle, { sizePx: 24, widthPx: contentWidth, weight: "medium", lineHeight: 1.55 })
     : 0;
-  const contentHeight = (slide.eyebrow ? 40 : 0) + titleHeight + 24 + subtitleHeight;
+  // planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #5:
+  // jerarquía de propiedad — línea siempre visible (placeholder si falta),
+  // encima del eyebrow, mismo patrón visual (elements.mjs#eyebrow) pero en
+  // tono institucional/muted en vez de acento, para diferenciar jerarquía.
+  const contentHeight = OWNER_LINE_HEIGHT + (slide.eyebrow ? 40 : 0) + titleHeight + 24 + subtitleHeight;
 
   let y = centeredContentY("cover", contentHeight);
+
+  const ownerText = presentation?.owner || OWNER_PLACEHOLDER;
+  boxes += eyebrow(ownerText, { x: SAFE.left, y, color: tone === "dark" ? "var(--sabana-blue-300)" : "var(--ink-500)" });
+  y += OWNER_LINE_HEIGHT;
 
   if (slide.eyebrow) {
     boxes += eyebrow(slide.eyebrow, { x: SAFE.left, y, color: tone === "dark" ? "var(--sabana-blue-300)" : "var(--accent-mid)" });

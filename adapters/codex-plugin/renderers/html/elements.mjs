@@ -96,7 +96,7 @@ export function tag(text, { tone = "accent" } = {}) {
     cream: "background:var(--sabana-cream);color:var(--sabana-blue);",
     alert: "background:var(--fac-juridicas-100);color:var(--fac-juridicas-700);",
   };
-  return `<span style="display:inline-flex;align-items:center;font-family:var(--font-sans);font-size:var(--fs-caption);font-weight:var(--fw-semibold);letter-spacing:0.02em;padding:4px 12px;border-radius:var(--radius-pill);${tones[tone] || tones.accent}">${escapeHtml(text)}</span>`;
+  return `<span style="display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0;font-family:var(--font-sans);font-size:var(--fs-caption);font-weight:var(--fw-semibold);letter-spacing:0.02em;padding:6px 14px;border-radius:var(--radius-pill);${tones[tone] || tones.accent}">${escapeHtml(text)}</span>`;
 }
 
 // Franja de énfasis de ancho completo (planning/09-visual-richness-and-content-density.md

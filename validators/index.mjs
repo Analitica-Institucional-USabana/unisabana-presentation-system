@@ -11,6 +11,7 @@ import { checkDensity } from "./rules/density.mjs";
 import { checkIcons } from "./rules/icons.mjs";
 import { checkLogo } from "./rules/logo.mjs";
 import { checkAiDisclosure } from "./rules/ai-disclosure.mjs";
+import { checkFooterOverflow } from "./rules/footer-overflow.mjs";
 
 export function validateDeckSpecRules(deck, ctx) {
   const reportsById = new Map(deck.slides.map((s) => [s.id, createSlideReport(s.id)]));
@@ -24,6 +25,7 @@ export function validateRenderedHtmlRules(html, deck, ctx) {
   const reportsById = new Map(deck.slides.map((s) => [s.id, createSlideReport(s.id)]));
   checkLogo(html, deck, ctx, reportsById);
   checkAiDisclosure(html, deck, ctx, reportsById);
+  checkFooterOverflow(html, deck, ctx, reportsById);
   return [...reportsById.values()].map((r) => r.finalize());
 }
 

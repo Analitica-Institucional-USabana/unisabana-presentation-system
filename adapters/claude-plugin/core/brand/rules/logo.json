@@ -35,16 +35,18 @@
     "minimumSymbolHeight": { "screenPx": 22, "printMm": 8 },
     "responsiveSwitchThreshold": { "screenPx": 20, "printMm": 7 },
     "recommended": {
+      "_note": "Decisión de marca (dueño del sistema, planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #4): un solo tamaño para las 4 familias, para que el logo se vea igual de grande en toda slide — anula explícitamente la regla 'never enlarge the logo merely to fill empty space' más abajo para separator/content/closing, que hasta este cambio usaban clamps más chicos.",
       "cover": "clamp(72px, 11vh, 118px)",
-      "separator": "clamp(54px, 8vh, 84px)",
-      "content": "clamp(32px, 5vh, 48px)",
-      "closing": "clamp(64px, 10vh, 104px)"
+      "separator": "clamp(72px, 11vh, 118px)",
+      "content": "clamp(72px, 11vh, 118px)",
+      "closing": "clamp(72px, 11vh, 118px)"
     },
     "opticalMaximum": {
+      "_note": "maxWidthContent/maxHeightContent alineados a los mismos topes de cover tras la decisión de tamaño único (ver nota en sizing.recommended) — con el nuevo clamp de 72-118px, los topes previos (20%/10%) quedaban por debajo del propio mínimo normativo nuevo.",
       "maxWidthCover": "30%",
-      "maxWidthContent": "20%",
+      "maxWidthContent": "30%",
       "maxHeightCover": "18%",
-      "maxHeightContent": "10%"
+      "maxHeightContent": "18%"
     },
     "rules": [
       "never enlarge the logo merely to fill empty space",

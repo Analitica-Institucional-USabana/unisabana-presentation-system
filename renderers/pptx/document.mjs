@@ -3,6 +3,7 @@ import { PPTX_LAYOUT, PPTX_LAYOUT_NAME } from "./constants.mjs";
 import { loadTokens, resolveColors } from "./colors.mjs";
 import { addLogo } from "./logo.mjs";
 import { addAiDisclosure } from "./ai-disclosure.mjs";
+import { addPageNumber } from "./page-number.mjs";
 
 import renderCover from "./layouts/cover.mjs";
 import renderAgenda from "./layouts/agenda.mjs";
@@ -37,13 +38,14 @@ export async function buildPptx(deck, { repoRoot }) {
   pptx.layout = PPTX_LAYOUT_NAME;
   pptx.title = deck.presentation.title;
 
-  for (const slide of deck.slides) {
+  for (const [i, slide] of deck.slides.entries()) {
     const layoutFn = LAYOUTS[slide.type];
     if (!layoutFn) throw new Error(`Tipo de slide sin layout pptx: ${slide.type}`);
     const pptxSlide = pptx.addSlide();
-    const tone = layoutFn(pptxSlide, slide, { repoRoot, colors, tokens });
+    const tone = layoutFn(pptxSlide, slide, { repoRoot, colors, tokens, presentation: deck.presentation });
     addLogo(pptxSlide, repoRoot, slide.type, tone);
-    addAiDisclosure(pptxSlide, repoRoot, tone);
+    addAiDisclosure(pptxSlide, repoRoot, tone, colors);
+    addPageNumber(pptxSlide, i + 1, deck.slides.length, tone);
   }
 
   return pptx;

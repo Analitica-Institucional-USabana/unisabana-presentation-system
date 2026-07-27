@@ -46,15 +46,17 @@ export const TYPE_SCALE_PX = {
 // reducir un título largo sin violar el clamp de marca.
 export const TYPE_SCALE_MIN_PX = { coverTitle: 64, sectionTitle: 50, slideTitle: 34 };
 
-// §3.3 logo sizes por familia de slide, resueltos desde los clamp(*, vh, *) del readme.
-// Decisión de implementación (no está fijado por el brand book): las familias que
-// el readme no distingue explícitamente (agenda, message, data, comparison, process,
-// table, quote) se tratan todas como "content" a efectos de tamaño y posición de logo.
+// §3.3 logo sizes por familia de slide. Decisión de marca (dueño del sistema,
+// planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #4):
+// el logo debe verse igual de grande en TODA slide, no solo portada/cierre —
+// anula explícitamente la guía original del readme ("never enlarge the logo
+// merely to fill empty space") para las 4 familias. Un solo clamp reutilizado.
+const LOGO_CLAMP = resolveClampVh(72, 11, 118);
 export const LOGO_HEIGHT_PX = {
-  cover: resolveClampVh(72, 11, 118),
-  separator: resolveClampVh(54, 8, 84),
-  content: resolveClampVh(32, 5, 48),
-  closing: resolveClampVh(64, 10, 104),
+  cover: LOGO_CLAMP,
+  separator: LOGO_CLAMP,
+  content: LOGO_CLAMP,
+  closing: LOGO_CLAMP,
 };
 
 // core/brand/rules/logo.json#/sizing/minimumSymbolHeight — nunca por debajo de esto.
@@ -73,6 +75,16 @@ export const AI_DISCLOSURE = {
   bottom: 24,
   textPx: 14,
   logoHeightPx: 17,
+};
+
+// Numeración de slide ("N / total"), esquina inferior izquierda — misma banda
+// horizontal que el pie de atribución IA, lado opuesto (nunca colisionan).
+// planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #1:
+// cuenta TODO el deck (portada y cierre incluidos), 1..deck.slides.length.
+export const PAGE_NUMBER = {
+  left: 32,
+  bottom: 24,
+  textPx: 14,
 };
 
 export function slideFamilyFor(type) {

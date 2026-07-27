@@ -10,7 +10,21 @@ export default function renderData(pptxSlide, slide, { colors, repoRoot }) {
 
   const n = slide.stats.length;
   const valueSizePt = n <= 2 ? 60 : n <= 4 ? 44 : 34;
-  const statRowHeightPx = valueSizePt / 0.75 + 120; // pt->px + margen para label/caption/delta
+  const valueSizePx = valueSizePt / 0.75;
+  const statWidthPx = (titleWidthPx - CONTENT_COLUMN_GAP * (n - 1)) / n;
+  // planning/10-...md #2: altura reservada por stat = valor + badge (ancho fijo,
+  // no envuelve) + label/caption medidos con estimateBlockHeightPx, en vez del
+  // heurístico fijo `valueSizePt/0.75 + 120` que no medía label/caption/badge.
+  const BADGE_ALLOWANCE_PX = 37;
+  const statRowHeightPx = Math.max(
+    ...slide.stats.map((stat) => {
+      let h = valueSizePx;
+      if (stat.badge) h += BADGE_ALLOWANCE_PX;
+      if (stat.label) h += 4 + estimateBlockHeightPx(stat.label, { sizePx: 24, widthPx: statWidthPx, weight: "semibold" });
+      if (stat.caption) h += 4 + estimateBlockHeightPx(stat.caption, { sizePx: 14, widthPx: statWidthPx, weight: "regular" });
+      return h + 24;
+    })
+  );
   const bannerBlockHeightPx = slide.banner ? BANNER_GAP_PX + BANNER_HEIGHT_PX : 0;
   const progressBlockHeightPx = slide.progress ? PROGRESS_GAP_PX + PROGRESS_HEIGHT_PX : 0;
 
@@ -40,9 +54,12 @@ export default function renderData(pptxSlide, slide, { colors, repoRoot }) {
     addProgressBar(pptxSlide, slide.progress, { x: px2in(SAFE.left), y: belowStatsY, w: availW, colors });
   }
 
+  // planning/10-...md #2: fluye después del contenido real (belowStatsY) en vez
+  // de un Y fijo; el Y fijo anterior pasa a ser el techo (nunca más abajo).
+  const sourceFloorIn = px2in(CANVAS.height - SAFE.bottom - FOOTER_ZONE_HEIGHT - 20);
   addBody(pptxSlide, `Fuente: ${slide.source} · ${slide.period}`, {
     x: px2in(SAFE.left),
-    y: px2in(CANVAS.height - SAFE.bottom - FOOTER_ZONE_HEIGHT - 20),
+    y: Math.min(belowStatsY + px2in(16), sourceFloorIn),
     w: availW,
     sizePt: 11,
     color: colors.ink500,

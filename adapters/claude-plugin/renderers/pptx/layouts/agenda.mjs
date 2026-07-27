@@ -19,7 +19,12 @@ export default function renderAgenda(pptxSlide, slide, { colors }) {
 
 function renderList(pptxSlide, slide, titleText, colors) {
   const titleHeightPx = estimateBlockHeightPx(titleText, { sizePx: TYPE_SCALE_PX.slideTitle, widthPx: 700, weight: "black" });
-  const itemsHeightPx = slide.items.length * ROW_HEIGHT_PX;
+  // planning/10-...md #2: altura de fila medida (mirror de renderers/html/layouts/agenda.mjs).
+  const itemTextWidthPx = 8 * 96 - 70; // w:8in @96dpi menos el prefijo numerado
+  const rowHeightsPx = slide.items.map((item) =>
+    Math.max(ROW_HEIGHT_PX, estimateBlockHeightPx(item, { sizePx: 15 / 0.75, widthPx: itemTextWidthPx, weight: "bold", lineHeight: 1.3 }) + 20)
+  );
+  const itemsHeightPx = rowHeightsPx.reduce((a, b) => a + b, 0);
   const contentHeightPx = titleHeightPx + 48 + itemsHeightPx;
 
   let y = centeredContentYIn("content", contentHeightPx);
@@ -33,9 +38,9 @@ function renderList(pptxSlide, slide, titleText, colors) {
         { text: `${num}  `, options: { fontSize: 18, bold: true, color: colors.accent } },
         { text: item, options: { fontSize: 15, bold: true, color: colors.sabanaBlue } },
       ],
-      { x: px2in(SAFE.left), y, w: 8, h: px2in(ROW_HEIGHT_PX), fontFace: "Libre Franklin" }
+      { x: px2in(SAFE.left), y, w: 8, h: px2in(rowHeightsPx[i]), fontFace: "Libre Franklin" }
     );
-    y += px2in(ROW_HEIGHT_PX);
+    y += px2in(rowHeightsPx[i]);
   });
 }
 
@@ -49,7 +54,17 @@ function renderGrid(pptxSlide, slide, titleText, colors) {
   const cols = n <= 4 ? 2 : 3;
   const rows = Math.ceil(n / cols);
   const cardWidthPx = (titleWidthPx - CONTENT_COLUMN_GAP * (cols - 1)) / cols;
-  const gridHeightPx = rows * GRID_CARD_HEIGHT_PX + (rows - 1) * CONTENT_ROW_GAP;
+  const cardTextWidthPx = cardWidthPx - 0.44 * 96; // w: cardWidthIn - 0.44 (ver addText item más abajo)
+
+  // planning/10-...md #2: altura de fila medida (mirror de renderers/html/layouts/agenda.mjs).
+  const itemHeightsPx = slide.items.map((item) =>
+    Math.max(GRID_CARD_HEIGHT_PX, estimateBlockHeightPx(item, { sizePx: 14 / 0.75, widthPx: cardTextWidthPx, weight: "bold", lineHeight: 1.3 }) + 40)
+  );
+  const rowHeightsPx = [];
+  for (let r = 0; r < rows; r++) {
+    rowHeightsPx.push(Math.max(...itemHeightsPx.slice(r * cols, r * cols + cols)));
+  }
+  const gridHeightPx = rowHeightsPx.reduce((a, b) => a + b, 0) + (rows - 1) * CONTENT_ROW_GAP;
 
   const contentHeightPx = titleHeightPx + 48 + gridHeightPx;
   let y = centeredContentYIn("content", contentHeightPx);
@@ -57,15 +72,22 @@ function renderGrid(pptxSlide, slide, titleText, colors) {
   y += px2in(titleHeightPx + 48);
 
   const cardWidthIn = px2in(cardWidthPx);
-  const cardHeightIn = px2in(GRID_CARD_HEIGHT_PX);
   const gapIn = px2in(CONTENT_COLUMN_GAP);
   const rowGapIn = px2in(CONTENT_ROW_GAP);
+
+  const rowOffsetsIn = [];
+  let accIn = y;
+  for (let r = 0; r < rows; r++) {
+    rowOffsetsIn.push(accIn);
+    accIn += px2in(rowHeightsPx[r]) + rowGapIn;
+  }
 
   slide.items.forEach((item, i) => {
     const row = Math.floor(i / cols);
     const col = i % cols;
     const x = px2in(SAFE.left) + col * (cardWidthIn + gapIn);
-    const cardY = y + row * (cardHeightIn + rowGapIn);
+    const cardY = rowOffsetsIn[row];
+    const cardHeightIn = px2in(rowHeightsPx[row]);
     const num = String(i + 1).padStart(2, "0");
 
     pptxSlide.addShape("rect", { x, y: cardY, w: cardWidthIn, h: cardHeightIn, fill: { color: colors.paper }, line: { color: colors.ink200, width: 0.75 } });

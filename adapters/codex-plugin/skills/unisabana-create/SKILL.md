@@ -25,10 +25,10 @@ Eres un diseñador institucional experto de Universidad de La Sabana. Tu rol es 
 
 ## Flujo al ser invocada
 
-1. Si falta contexto, pregunta: audiencia, facultad/unidad (si aplica), densidad (`low`=ejecutiva / `high`=técnica), número aproximado de diapositivas.
+1. Si falta contexto, pregunta: audiencia, facultad/unidad (si aplica), densidad (`low`=ejecutiva / `high`=técnica), número aproximado de diapositivas, y **dependencia/unidad responsable del deck** (para `presentation.owner`, se muestra en la portada — planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md #5). Nunca asumas esta última por tu cuenta a partir del tema del deck; si tras preguntar el usuario no la da, deja `presentation.owner` sin definir — el renderer ya muestra un placeholder visible ("Dependencia responsable: pendiente de definir") en vez de omitir la línea en silencio, así que no inventes un valor para evitarlo.
 2. Elige, para cada idea del contenido, el tipo de slide de `references/slide-families.md` que mejor la represente — no fuerces todo a `message` o `data`.
 3. Redacta el contenido siguiendo `references/content-voice.md` (conclusiones como título, tercera persona institucional, sin emoji, fuente+periodo en `data`).
-4. Escribe el Deck Spec como archivo YAML (ej. `/tmp/deck.yaml` o donde el usuario prefiera), validando mentalmente contra `core/schemas/deck-spec.schema.json` mientras lo redactas.
+4. Escribe el Deck Spec como archivo YAML (ej. `/tmp/deck.yaml` o donde el usuario prefiera), validando mentalmente contra `core/schemas/deck-spec.schema.json` mientras lo redactas. Incluye `presentation.owner` si obtuviste la respuesta en el paso 1.
 5. Valida la estructura:
    ```
    node scripts/validate-deck-spec.mjs <deck.yaml>

@@ -1,6 +1,6 @@
 import { CANVAS, SAFE, TYPE_SCALE_PX, centeredContentY } from "../constants.mjs";
 import { box, title, escapeHtml } from "../elements.mjs";
-import { estimateBlockHeightPx } from "../text-measure.mjs";
+import { estimateBlockHeightPx, estimateLineCount } from "../text-measure.mjs";
 
 const ROW_HEIGHT_PX = 42;
 
@@ -14,8 +14,17 @@ export default function renderTable(slide) {
 
   // Altura estimada de la tabla renderizada (encabezado + filas), suficiente
   // para decidir si el título+tabla caben centrados o deben anclarse arriba
-  // y desbordar hacia abajo — no se mide el DOM real (D-18 no adoptada).
-  const estimatedTableHeight = ROW_HEIGHT_PX * (1 + slide.rows.length);
+  // y desbordar hacia abajo — no se mide el DOM real (D-18 no adoptada). La
+  // <table> real se autodimensiona en el navegador (celda a celda, sin
+  // clipping), así que esta estimación no puede impedir un desborde real
+  // hacia el pie — eso lo cubre validators/rules/footer-overflow.mjs (Capa B,
+  // planning/10-...md #2). Aun así, medir la celda más ancha de cada fila da
+  // una estimación de altura razonable para centrar el bloque título+tabla.
+  const colWidthPx = (CANVAS.width - SAFE.left - SAFE.right) / slide.columns.length;
+  const estimatedTableHeight = slide.rows.reduce((sum, row) => {
+    const maxLines = Math.max(1, ...row.map((cell) => estimateLineCount(String(cell), { sizePx: 16, widthPx: colWidthPx - 32, weight: "regular" })));
+    return sum + Math.max(ROW_HEIGHT_PX, Math.round(maxLines * 16 * 1.3) + 20);
+  }, ROW_HEIGHT_PX);
   const contentHeight = titleHeight + 40 + estimatedTableHeight;
 
   const titleY = centeredContentY("content", contentHeight);
