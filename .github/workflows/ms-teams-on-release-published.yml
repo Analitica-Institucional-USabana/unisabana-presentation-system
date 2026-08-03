@@ -1,0 +1,156 @@
+name: MS Teams Notification - Release Published
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  notify-teams:
+    runs-on: ubuntu-latest
+
+    env:
+      TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+    steps:
+    - name: Send notification to Microsoft Teams
+      run: |
+        curl -X POST "$TEAMS_WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          --data-binary @- <<'EOF'
+        {
+          "type": "AdaptiveCard",
+          "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+          "version": "1.4",
+          "msteams": {
+            "width": "Full"
+          },
+          "body": [
+            {
+              "type": "Container",
+              "style": "emphasis",
+              "bleed": true,
+              "items": [
+                {
+                  "type": "ColumnSet",
+                  "columns": [
+                    {
+                      "type": "Column",
+                      "width": "auto",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "text": "🚀",
+                          "size": "ExtraLarge",
+                          "spacing": "None"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Column",
+                      "width": "stretch",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "text": "Nueva release del plugin publicada",
+                          "weight": "Bolder",
+                          "size": "Large",
+                          "wrap": true
+                        },
+                        {
+                          "type": "TextBlock",
+                          "text": "Se publicó una nueva versión del plugin.",
+                          "isSubtle": true,
+                          "spacing": "None",
+                          "wrap": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "spacing": "Medium",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "📌 Información de la release",
+                  "weight": "Bolder",
+                  "size": "Medium",
+                  "wrap": true
+                },
+                {
+                  "type": "FactSet",
+                  "facts": [
+                    {
+                      "title": "Repositorio:",
+                      "value": "${{ github.repository }}"
+                    },
+                    {
+                      "title": "Release:",
+                      "value": "${{ github.event.release.name }}"
+                    },
+                    {
+                      "title": "Tag:",
+                      "value": "${{ github.event.release.tag_name }}"
+                    },
+                    {
+                      "title": "Publicada por:",
+                      "value": "${{ github.actor }}"
+                    },
+                    {
+                      "title": "Pre-release:",
+                      "value": "${{ github.event.release.prerelease }}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "spacing": "Medium",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "🧭 Estado del flujo",
+                  "weight": "Bolder",
+                  "size": "Medium",
+                  "wrap": true
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "La release fue publicada, si quieres tener las nuevas funcionalidades, actualiza tu plugin.",
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "type": "Container",
+              "style": "good",
+              "spacing": "Medium",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Pídele a tu agente que actualice el plugin de unisabana-presentations o pega esta línea de código en tu agente para actualizar el plugin a la última versión: `/plugin update unisabana-presentations@unisabana-dev` ",
+                  "weight": "Bolder",
+                  "wrap": true
+                }
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "type": "Action.OpenUrl",
+              "title": "Abrir release",
+              "url": "${{ github.event.release.html_url }}"
+            },
+            {
+              "type": "Action.OpenUrl",
+              "title": "Abrir repositorio",
+              "url": "https://github.com/${{ github.repository }}"
+            }
+          ]
+        }
+        EOF
