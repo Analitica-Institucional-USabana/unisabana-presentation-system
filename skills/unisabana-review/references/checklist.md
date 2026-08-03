@@ -41,9 +41,18 @@
 - [ ] Jerarquía subordinada al logo institucional.
 
 ## Layout general
-- [ ] Canvas 1280×720, contenido dentro del área segura (`core/brand/tokens.json#/spacing/canvas`).
+- [ ] Canvas 1280×720 (deck) o perfil vertical/horizontal de `core/brand/rules/infografia-canvas.json#/profiles` (infografía), contenido dentro del área segura.
 - [ ] Sin texto cortado ni elementos fuera del lienzo.
 - [ ] Sin superposiciones no intencionadas.
+
+## Infografías (adicional a lo anterior, `core/schemas/infografia-spec.schema.json`)
+- [ ] `infografia.keyNumbers` presente, 1-6 tarjetas, cada una con `value`/`unit`/`descriptor`/`icon`/`accent` (`guidelines/infografias.md` §3.4).
+- [ ] `infografia.sources` presente — nunca omitido en silencio (§3.7).
+- [ ] Cada módulo de `modules[]` responde a una única idea (`validators/rules/module-density.mjs`, warning si mezcla demasiado).
+- [ ] Iconografía consistente: outline **o** solid, nunca ambos en la misma pieza (`validators/rules/icon-style-consistency.mjs`, error si se mezclan).
+- [ ] Cuerpo ≥ `core/brand/rules/infografia-canvas.json#/minBodyPxByMedium` según `infografia.medium` (`validators/rules/accessibility-min-body.mjs`).
+- [ ] Si hay `coBrand`: dentro de los límites de `core/brand/rules/cobrand.json` (tamaño relativo del logo secundario, un solo color de acento, sin segunda paleta institucional completa) — `validators/rules/cobrand-constraints.mjs`.
+- [ ] `basemap` de módulos `geography` es `colombia` o `world` (los únicos vendorizados) — nunca un basemap inventado.
 
 ## Formato de salida sugerido
 

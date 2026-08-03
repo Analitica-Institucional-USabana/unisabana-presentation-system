@@ -1,0 +1,498 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:unisabana:schemas:infografia-spec:0.1.0",
+  "title": "Universidad de La Sabana — Infografía Spec",
+  "$comment": "Artefacto hermano del Deck Spec (core/schemas/deck-spec.schema.json), no una extensión suya: una infografía es una pieza de canvas único (no una secuencia de slides 16:9) y admite una segunda institución acotada como co-marca, algo que el Deck Spec prohíbe explícitamente vía core/brand/rules/palette.json#/rules/no-mixing. Ver planning/11-infografia-artifact-type.md. Estructura obligatoria tomada literalmente de claude-design-system/guidelines/infografias.md §3: logo (chrome del renderer) → title/subtitle → keyNumbers (justo después del encabezado) → modules[] ('desarrollo', una idea por módulo) → conclusions (opcional, solo si el usuario las pide) → sources (obligatorio, siempre). Por eso title/keyNumbers/sources son campos requeridos de 'infografia' y no entradas opcionales de modules[] — igual que slideData.source/period ya son requeridos directamente en deck-spec.schema.json en vez de dejarse a la disciplina del agente.\n\nPolítica de evolución (SemVer del esquema, independiente del SemVer del plugin y del de core/brand): PATCH = aclaraciones que no cambian validación; MINOR = campos nuevos opcionales, o un nuevo valor de enum aditivo (p. ej. una nueva 'variant' dentro de una familia de módulo existente); MAJOR = cualquier campo requerido nuevo, cualquier remoción, o cualquier restricción de un enum existente (p. ej. quitar una 'variant'). Un campo nunca se elimina sin pasar primero por un aviso 'deprecated' en su description durante al menos una versión MINOR.",
+  "type": "object",
+  "required": ["schemaVersion", "infografia", "modules"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "enum": ["0.1.0"],
+      "description": "Versión del propio esquema de la Infografía Spec (no la del plugin ni la de core/brand)."
+    },
+    "infografia": { "$ref": "#/$defs/infografia" },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "description": "El 'desarrollo' (guidelines/infografias.md §3.5): cada módulo responde a una única idea. No mezclar demasiada información en un módulo — ver validators/rules/module-density.mjs.",
+      "items": { "$ref": "#/$defs/module" }
+    }
+  },
+
+  "$defs": {
+    "infografia": {
+      "type": "object",
+      "required": ["title", "audience", "medium", "format", "palette", "owner", "keyNumbers", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string" },
+        "audience": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Público objetivo (guidelines/infografias.md §1, punto 1 del checklist obligatorio). Contexto para la creatividad del agente, no un campo de cumplimiento de marca."
+        },
+        "medium": {
+          "type": "string",
+          "enum": ["web", "redes-sociales", "impresion", "proyeccion"],
+          "description": "Medio de publicación (checklist §1, punto 2). Determina el tamaño mínimo de cuerpo exigido — ver core/brand/rules/infografia-canvas.json y guidelines/infografias.md §10 (mínimo 20px en piezas de proyección)."
+        },
+        "format": {
+          "type": "string",
+          "enum": ["vertical", "horizontal"],
+          "description": "Checklist §1, punto 4. Corresponde a un perfil de canvas en core/brand/rules/infografia-canvas.json#/profiles."
+        },
+        "palette": {
+          "type": "string",
+          "enum": [
+            "institutional",
+            "ingenieria", "comportamiento", "educacion", "medicina", "juridicas", "cta",
+            "lenguas", "vida", "filosofia", "comunicacion", "familia", "forum", "economicas"
+          ],
+          "description": "Única para toda la pieza (misma regla no-mixing de core/brand/rules/palette.json que en el Deck Spec). Una segunda institución se resuelve vía coBrand, nunca mezclando una segunda paleta institucional/facultad completa."
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unidad Académica responsable — guidelines/infografias.md §3.7 exige preguntar siempre por esto antes de entregar (ej. 'Dirección de Desarrollo Estratégico – Jefatura de Analítica Institucional')."
+        },
+        "coBrand": { "$ref": "#/$defs/coBrand" },
+        "keyNumbers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "description": "'Números clave' (guidelines/infografias.md §3.4): tarjetas KPI inmediatamente después del encabezado. Obligatorias, por eso viven en 'infografia' y no como un module opcional.",
+          "items": { "$ref": "#/$defs/kpiCard" }
+        },
+        "conclusions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "guidelines/infografias.md §3.6: SOLO si el usuario las solicitó explícitamente — la skill debe preguntar antes de incluir este campo, nunca asumir que se requieren."
+        },
+        "sources": { "$ref": "#/$defs/sources" }
+      }
+    },
+
+    "coBrand": {
+      "type": "object",
+      "required": ["institutionName", "logoAsset", "accentColor"],
+      "additionalProperties": false,
+      "description": "Modelo de 'co-marca' acotado (guidelines/infografias.md §2): la segunda institución obtiene su logo y UN color de acento propio, siempre subordinados a la paleta de La Sabana — nunca una segunda paleta institucional completa en pie de igualdad. Ver core/brand/rules/cobrand.json para los límites de tamaño/posición/uso. El agente NUNCA inventa estos valores (§2): deben venir del usuario, quien debe confirmar tener el manual de marca de la otra institución.",
+      "properties": {
+        "institutionName": { "type": "string", "minLength": 1 },
+        "logoAsset": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Ruta al logo oficial suministrado por el usuario para esta pieza (no un asset vendorizado del sistema — a diferencia de logo.json#/approvedAssets, que es una whitelist cerrada, este campo referencia un archivo aportado puntualmente por el usuario para ESTA infografía)."
+        },
+        "accentColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Color institucional oficial de la otra institución en HEX (checklist §2, punto 4). Debe venir confirmado por el usuario — nunca inventado ni aproximado."
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["sabana-primary", "equal"],
+          "default": "sabana-primary",
+          "description": "Prioridad visual entre ambas instituciones (checklist §2, punto 6). 'equal' solo si el usuario lo pide explícitamente y sigue sin habilitar una segunda paleta completa — ver core/brand/rules/cobrand.json."
+        }
+      }
+    },
+
+    "sources": {
+      "type": "object",
+      "required": ["developedBy"],
+      "additionalProperties": false,
+      "description": "'Fuentes' (guidelines/infografias.md §3.7) — módulo de cierre obligatorio, nunca omitido en silencio.",
+      "properties": {
+        "developedBy": { "type": "string", "minLength": 1, "description": "'Desarrollado por: <Unidad Académica>'." },
+        "dataSource": { "type": "string", "description": "De dónde salen los datos mostrados (ej. 'SNIES, corte 2025-2')." },
+        "period": { "type": "string", "description": "Periodo de corte de los datos, ej. '2025-2'." }
+      }
+    },
+
+    "kpiCard": {
+      "type": "object",
+      "required": ["value", "unit", "descriptor", "icon", "accent"],
+      "additionalProperties": false,
+      "description": "guidelines/infografias.md §3.4: cifra + unidad + descriptor corto + icono + color de énfasis.",
+      "properties": {
+        "value": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 },
+        "descriptor": { "type": "string", "minLength": 1 },
+        "icon": { "type": "string", "minLength": 1, "description": "Slug del set vendorizado en core/brand/rules/icons.json#/approvedIcons; whitelist validada por validators/rules/icons.mjs (extendido en Hito de infografías, no enumerada aquí)." },
+        "accent": { "$ref": "#/$defs/accentTone" },
+        "delta": { "type": "string" },
+        "deltaDirection": { "type": "string", "enum": ["up", "down"] }
+      }
+    },
+
+    "accentTone": {
+      "type": "string",
+      "enum": ["primary", "secondary", "alert", "neutral"],
+      "description": "Mapea a --accent/--accent-dark del sistema activo de paleta (core/brand/tokens.json), nunca a un color libre — guidelines/infografias.md §9 'Únicamente los colores institucionales autorizados'."
+    },
+
+    "dataPoint": {
+      "type": "object",
+      "required": ["label", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "unit": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+
+    "categoricalSeries": {
+      "type": "object",
+      "required": ["name", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "values": { "type": "array", "items": { "type": "number" }, "minItems": 1 }
+      }
+    },
+
+    "node": {
+      "type": "object",
+      "required": ["id", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "group": { "type": "string" }
+      }
+    },
+
+    "link": {
+      "type": "object",
+      "required": ["source", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" }
+      }
+    },
+
+    "treeNode": {
+      "type": "object",
+      "required": ["label"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/treeNode" } }
+      }
+    },
+
+    "geoRegion": {
+      "type": "object",
+      "required": ["region", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "region": { "type": "string", "minLength": 1, "description": "Código de región coincidente con el basemap vendorizado en core/brand/assets/maps/ (ver renderers/html/charts/geography.mjs)." },
+        "value": { "type": "number" },
+        "label": { "type": "string" }
+      }
+    },
+
+    "matrixItem": {
+      "type": "object",
+      "required": ["label", "x", "y"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "size": { "type": "number" },
+        "category": { "type": "string" }
+      }
+    },
+
+    "moduleIdAndMeta": {
+      "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+      "moduleTitle": { "type": "string", "minLength": 1 },
+      "source": { "type": "string" },
+      "notes": { "type": "string" }
+    },
+
+    "module": {
+      "type": "object",
+      "required": ["id", "type", "title"],
+      "discriminator": { "propertyName": "type" },
+      "oneOf": [
+        { "$ref": "#/$defs/moduleIndicators" },
+        { "$ref": "#/$defs/moduleComparison" },
+        { "$ref": "#/$defs/moduleTrend" },
+        { "$ref": "#/$defs/moduleDistribution" },
+        { "$ref": "#/$defs/moduleComposition" },
+        { "$ref": "#/$defs/moduleRelationship" },
+        { "$ref": "#/$defs/moduleProcess" },
+        { "$ref": "#/$defs/moduleHierarchy" },
+        { "$ref": "#/$defs/moduleGeography" },
+        { "$ref": "#/$defs/moduleStrategy" }
+      ]
+    },
+
+    "moduleIndicators": {
+      "type": "object",
+      "required": ["id", "type", "title", "items"],
+      "additionalProperties": false,
+      "description": "Familia 'Indicadores' (catálogo §4) usada DENTRO del desarrollo — distinta de infografia.keyNumbers, que es la tira obligatoria justo después del encabezado.",
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "indicators" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["kpi-cards", "big-number", "percentage", "progress-bar", "gauge"],
+          "default": "kpi-cards"
+        },
+        "items": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "$ref": "#/$defs/dataPoint" } }
+      }
+    },
+
+    "moduleComparison": {
+      "type": "object",
+      "required": ["id", "type", "title", "categories", "series"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "comparison" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["bars-horizontal", "bars-vertical", "grouped", "stacked", "divergent", "ranking", "lollipop", "dumbbell", "bullet"],
+          "default": "bars-horizontal"
+        },
+        "categories": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "series": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "description": "core/brand/rules/density.json#/slideContentLimits/maxChartSeriesPreferred = 5, mismo límite aplicado aquí.",
+          "items": { "$ref": "#/$defs/categoricalSeries" }
+        }
+      }
+    },
+
+    "moduleTrend": {
+      "type": "object",
+      "required": ["id", "type", "title", "categories", "series"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "trend" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["line", "area", "stacked-area", "timeline", "slope", "sparkline"],
+          "default": "line"
+        },
+        "categories": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 }, "description": "Eje X — típicamente periodos/fechas." },
+        "series": { "type": "array", "minItems": 1, "maxItems": 5, "items": { "$ref": "#/$defs/categoricalSeries" } }
+      }
+    },
+
+    "moduleDistribution": {
+      "type": "object",
+      "required": ["id", "type", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "distribution" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["dot-plot", "scatter", "histogram", "box-plot", "violin"],
+          "default": "dot-plot"
+        },
+        "points": {
+          "type": "array",
+          "description": "Usado por dot-plot/scatter/box-plot/violin.",
+          "items": {
+            "type": "object",
+            "required": ["x"],
+            "additionalProperties": false,
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "group": { "type": "string" }
+            }
+          }
+        },
+        "bins": {
+          "type": "array",
+          "description": "Usado por histogram.",
+          "items": {
+            "type": "object",
+            "required": ["label", "count"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "count": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+
+    "moduleComposition": {
+      "type": "object",
+      "required": ["id", "type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "composition" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["donut", "waffle", "treemap", "sunburst", "mosaic"],
+          "default": "donut"
+        },
+        "items": { "type": "array", "minItems": 2, "maxItems": 8, "items": { "$ref": "#/$defs/dataPoint" } }
+      }
+    },
+
+    "moduleRelationship": {
+      "type": "object",
+      "required": ["id", "type", "title", "nodes", "links"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "relationship" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["sankey", "network", "bubble", "correlation-matrix", "chord"],
+          "default": "network"
+        },
+        "nodes": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/node" } },
+        "links": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/link" } }
+      }
+    },
+
+    "moduleProcess": {
+      "type": "object",
+      "required": ["id", "type", "title", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "process" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["flowchart", "swimlane", "chevron", "funnel", "journey-map", "pipeline"],
+          "default": "chevron"
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["label"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "description": { "type": "string" },
+              "icon": { "type": "string", "minLength": 1 },
+              "lane": { "type": "string", "description": "Solo con sentido en variant='swimlane'." },
+              "value": { "type": "number", "description": "Solo con sentido en variant='funnel' (tamaño relativo de cada etapa)." }
+            }
+          }
+        }
+      }
+    },
+
+    "moduleHierarchy": {
+      "type": "object",
+      "required": ["id", "type", "title", "root"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "hierarchy" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["orgchart", "tree", "mindmap", "pyramid"],
+          "default": "tree"
+        },
+        "root": { "$ref": "#/$defs/treeNode" }
+      }
+    },
+
+    "moduleGeography": {
+      "type": "object",
+      "required": ["id", "type", "title", "basemap", "regions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "geography" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["choropleth", "bubble-map", "heatmap", "point-map"],
+          "default": "choropleth"
+        },
+        "basemap": {
+          "type": "string",
+          "enum": ["colombia", "world"],
+          "description": "Mapa base vendorizado disponible en core/brand/assets/maps/ (renderers/html/charts/geography.mjs) — nunca se genera una proyección cartográfica en vivo."
+        },
+        "regions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/geoRegion" } }
+      }
+    },
+
+    "moduleStrategy": {
+      "type": "object",
+      "required": ["id", "type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/moduleIdAndMeta/id" },
+        "type": { "const": "strategy" },
+        "title": { "$ref": "#/$defs/moduleIdAndMeta/moduleTitle" },
+        "source": { "$ref": "#/$defs/moduleIdAndMeta/source" },
+        "notes": { "$ref": "#/$defs/moduleIdAndMeta/notes" },
+        "variant": {
+          "type": "string",
+          "enum": ["matrix-2x2", "eisenhower", "bcg", "risk-matrix", "radar", "venn", "canvas"],
+          "default": "matrix-2x2"
+        },
+        "axes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "xLabel": { "type": "string" },
+            "yLabel": { "type": "string" }
+          },
+          "description": "Sin sentido en variant='venn'/'canvas'."
+        },
+        "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/matrixItem" } }
+      }
+    }
+  }
+}

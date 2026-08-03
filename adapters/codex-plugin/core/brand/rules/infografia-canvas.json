@@ -1,0 +1,42 @@
+{
+  "_provenance": "Nuevo para el artefacto Infografía (claude-design-system/guidelines/infografias.md, planning/11-infografia-artifact-type.md). Equivalente de core/brand/rules/density.json pero para un canvas único (vertical u horizontal) en vez de una secuencia de slides 1280×720 — los slideContentLimits de density.json no aplican aquí porque no hay noción de 'slide'.",
+
+  "profiles": {
+    "vertical": {
+      "widthPx": 1080,
+      "recommendedMaxHeightPx": 6000,
+      "safeMargin": { "x": 48, "y": 64 },
+      "note": "Formato por defecto para redes sociales/web — altura variable según cantidad de módulos, ancho fijo."
+    },
+    "horizontal": {
+      "widthPx": 1920,
+      "recommendedMaxHeightPx": 3000,
+      "safeMargin": { "x": 64, "y": 48 },
+      "note": "Formato para proyección/impresión tipo póster apaisado."
+    }
+  },
+
+  "minBodyPxByMedium": {
+    "_note": "guidelines/infografias.md §10: 'cuerpo mínimo 20px en piezas de proyección' es el único mínimo explícito del documento fuente; los demás son valores conservadores derivados por consistencia con core/brand/rules/density.json#/overflowResolutionOrder ('never reduce body copy below 20px'), no un valor literal del documento.",
+    "web": 16,
+    "redes-sociales": 18,
+    "impresion": 16,
+    "proyeccion": 20
+  },
+
+  "moduleContentLimits": {
+    "_note": "Guía visual, no un objetivo a llenar mecánicamente — mismo espíritu que density.json#/slideContentLimits.",
+    "maxModulesPreferred": 8,
+    "maxKeyNumbersPreferred": 6,
+    "maxChartSeriesPreferred": 5,
+    "maxDiagrammingElementsPerModule": 2
+  },
+
+  "overflowResolutionOrder": [
+    "dividir en más módulos, nunca comprimir uno solo con demasiada información",
+    "priorizar los key numbers y el módulo de mayor impacto",
+    "mover detalle secundario a una nota al pie del módulo, no eliminar la fuente",
+    "nunca resolver overflow reduciendo el cuerpo por debajo del mínimo de minBodyPxByMedium",
+    "nunca reducir el logo institucional por debajo de su tamaño mínimo (core/brand/rules/logo.json#/sizing) para ganar espacio"
+  ]
+}

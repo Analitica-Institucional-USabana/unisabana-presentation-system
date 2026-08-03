@@ -1,0 +1,68 @@
+# Golden infografía NEGATIVA — estructuralmente válida, pero excede los
+# límites PREFERIDOS de core/brand/rules/infografia-canvas.json#/moduleContentLimits
+# (por eso son warning, no error): 9 módulos (max preferido 8) y un módulo de
+# comparación con 6 series (max preferido 5).
+# Ejecutar: node scripts/validate-brand.mjs tests/golden-infografias/density-violation.yaml
+# Debe reportar [WARNING] en "infografia" y en "comparativo-01".
+schemaVersion: "0.1.0"
+
+infografia:
+  title: "Infografía de prueba — densidad excedida"
+  audience: "Consejo Directivo"
+  medium: "web"
+  format: "vertical"
+  palette: "institutional"
+  owner: "Dirección de Desarrollo Estratégico"
+  keyNumbers:
+    - value: "10"
+      unit: "proyectos"
+      descriptor: "activos"
+      icon: "briefcase"
+      accent: "primary"
+  sources:
+    developedBy: "Dirección de Desarrollo Estratégico"
+
+modules:
+  - id: comparativo-01
+    type: comparison
+    title: "Demasiadas series en un solo módulo"
+    categories: ["2021", "2022", "2023"]
+    series:
+      - { name: "Serie 1", values: [1, 2, 3] }
+      - { name: "Serie 2", values: [2, 3, 4] }
+      - { name: "Serie 3", values: [3, 4, 5] }
+      - { name: "Serie 4", values: [4, 5, 6] }
+      - { name: "Serie 5", values: [5, 6, 7] }
+      - { name: "Serie 6", values: [6, 7, 8] }
+  - id: indicador-02
+    type: indicators
+    title: "Módulo 2"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-03
+    type: indicators
+    title: "Módulo 3"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-04
+    type: indicators
+    title: "Módulo 4"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-05
+    type: indicators
+    title: "Módulo 5"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-06
+    type: indicators
+    title: "Módulo 6"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-07
+    type: indicators
+    title: "Módulo 7"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-08
+    type: indicators
+    title: "Módulo 8"
+    items: [{ label: "A", value: 1 }]
+  - id: indicador-09
+    type: indicators
+    title: "Módulo 9"
+    items: [{ label: "A", value: 1 }]

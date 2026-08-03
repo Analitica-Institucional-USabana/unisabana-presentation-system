@@ -1,0 +1,34 @@
+# Golden infografía NEGATIVA — estructuralmente válida, pero
+# infografia.coBrand.accentColor coincide exactamente con el acento
+# institucional activo (core/brand/rules/cobrand.json).
+# Ejecutar: node scripts/validate-brand.mjs tests/golden-infografias/cobrand-accent-collision.yaml
+# Debe reportar [WARNING] en "infografia" citando cobrand.json.
+schemaVersion: "0.1.0"
+
+infografia:
+  title: "Infografía de prueba — color de co-marca duplicado"
+  audience: "Consejo Directivo"
+  medium: "web"
+  format: "vertical"
+  palette: "institutional"
+  owner: "Dirección de Desarrollo Estratégico"
+  coBrand:
+    institutionName: "Red Universitaria de Innovación"
+    logoAsset: "assets/logo-horizontal-color.png"
+    accentColor: "#00205B"
+  keyNumbers:
+    - value: "10"
+      unit: "proyectos"
+      descriptor: "activos"
+      icon: "briefcase"
+      accent: "primary"
+  sources:
+    developedBy: "Dirección de Desarrollo Estratégico"
+
+modules:
+  - id: modulo-01
+    type: indicators
+    title: "Un indicador cualquiera"
+    items:
+      - label: "Avance"
+        value: 50

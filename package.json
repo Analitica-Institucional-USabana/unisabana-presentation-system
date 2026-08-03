@@ -6,11 +6,13 @@
   "type": "module",
   "scripts": {
     "build:adapters": "node scripts/build-adapters.mjs",
-    "validate:deck": "node scripts/validate-deck-spec.mjs"
+    "validate:deck": "node scripts/validate-deck-spec.mjs",
+    "test": "node tests/run.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
     "js-yaml": "^4.1.0",
+    "playwright": "^1.62.1",
     "pptxgenjs": "^4.0.1"
   }
 }

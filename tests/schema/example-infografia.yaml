@@ -1,0 +1,153 @@
+# Infografía Spec de ejemplo — cubre las 10 familias de módulo del esquema
+# (Hito de infografías, planning/11-infografia-artifact-type.md), keyNumbers,
+# conclusions, sources y coBrand.
+# Criterio de aceptación: node scripts/validate-infografia-spec.mjs tests/schema/example-infografia.yaml -> VÁLIDO
+schemaVersion: "0.1.0"
+
+infografia:
+  title: "La investigación institucional creció en 2025"
+  subtitle: "Resultados consolidados por la Dirección de Desarrollo Estratégico"
+  audience: "Consejo Directivo"
+  medium: "proyeccion"
+  format: "vertical"
+  palette: "institutional"
+  owner: "Dirección de Desarrollo Estratégico"
+  coBrand:
+    institutionName: "Red Universitaria de Innovación"
+    logoAsset: "core/brand/assets/logo-horizontal-color.png"
+    accentColor: "#7F4738"
+    priority: "sabana-primary"
+  keyNumbers:
+    - value: "128"
+      unit: "proyectos"
+      descriptor: "activos en 2025"
+      icon: "briefcase"
+      accent: "primary"
+      delta: "12%"
+      deltaDirection: "up"
+    - value: "540"
+      unit: "estudiantes"
+      descriptor: "vinculados a semilleros"
+      icon: "graduation-cap"
+      accent: "secondary"
+    - value: "18"
+      unit: "alianzas"
+      descriptor: "con instituciones externas"
+      icon: "users"
+      accent: "neutral"
+  conclusions:
+    - "La producción investigativa creció de forma sostenida en las cinco facultades evaluadas."
+    - "El presupuesto de investigación se concentra en tres rubros principales, con margen para diversificar fuentes."
+  sources:
+    developedBy: "Dirección de Desarrollo Estratégico – Jefatura de Analítica Institucional"
+    dataSource: "Sistema de Información de Investigación (SII), corte 2025-2"
+    period: "2025-2"
+
+modules:
+  - id: avance-meta
+    type: indicators
+    title: "Avance hacia la meta institucional de investigación 2026"
+    variant: progress-bar
+    source: "Jefatura de Analítica Institucional"
+    items:
+      - label: "Meta de proyectos activos"
+        value: 76
+
+  - id: ranking-facultades
+    type: comparison
+    title: "Ingeniería lidera en proyectos activos"
+    variant: ranking
+    categories: ["Ingeniería", "Medicina", "Educación", "Ciencias Económicas"]
+    series:
+      - name: "Proyectos activos"
+        values: [40, 30, 22, 36]
+
+  - id: tendencia-matricula
+    type: trend
+    title: "La matrícula de posgrado creció cuatro años consecutivos"
+    variant: area
+    categories: ["2022", "2023", "2024", "2025"]
+    series:
+      - name: "Posgrado"
+        values: [420, 460, 500, 540]
+
+  - id: distribucion-graduacion
+    type: distribution
+    title: "El tiempo de graduación varía entre facultades"
+    variant: box-plot
+    points:
+      - { x: 9, group: "Ingeniería" }
+      - { x: 11, group: "Ingeniería" }
+      - { x: 10, group: "Ingeniería" }
+      - { x: 14, group: "Ingeniería" }
+      - { x: 8, group: "Medicina" }
+      - { x: 12, group: "Medicina" }
+      - { x: 10, group: "Medicina" }
+      - { x: 13, group: "Medicina" }
+
+  - id: composicion-presupuesto
+    type: composition
+    title: "Tres rubros concentran el presupuesto de investigación"
+    variant: donut
+    source: "Vicerrectoría Financiera"
+    items:
+      - { label: "Personal investigador", value: 55 }
+      - { label: "Equipos y laboratorios", value: 30 }
+      - { label: "Movilidad y divulgación", value: 15 }
+
+  - id: red-alianzas
+    type: relationship
+    title: "La red de alianzas se articula alrededor de tres nodos centrales"
+    variant: network
+    nodes:
+      - { id: "sabana", label: "Universidad de La Sabana" }
+      - { id: "red-uni", label: "Red Universitaria de Innovación" }
+      - { id: "hospital", label: "Hospital Universitario" }
+      - { id: "empresa", label: "Sector productivo" }
+    links:
+      - { source: "sabana", target: "red-uni", value: 5 }
+      - { source: "sabana", target: "hospital", value: 4 }
+      - { source: "red-uni", target: "empresa", value: 2 }
+
+  - id: proceso-acreditacion
+    type: process
+    title: "El proceso de acreditación avanzó en cuatro etapas"
+    variant: chevron
+    steps:
+      - { label: "Autoevaluación", icon: "file-text" }
+      - { label: "Revisión por pares", icon: "users" }
+      - { label: "Informe final", icon: "check" }
+      - { label: "Visita de verificación", icon: "calendar" }
+
+  - id: estructura-investigacion
+    type: hierarchy
+    title: "La Dirección de Investigación coordina tres unidades"
+    variant: tree
+    root:
+      label: "Dirección de Investigación"
+      children:
+        - label: "Jefatura de Analítica Institucional"
+        - label: "Jefatura de Semilleros"
+        - label: "Jefatura de Divulgación Científica"
+
+  - id: cobertura-nacional
+    type: geography
+    title: "Los proyectos con impacto regional se concentran en tres departamentos"
+    variant: choropleth
+    basemap: colombia
+    regions:
+      - { region: "cundinamarca", label: "Cundinamarca", value: 62 }
+      - { region: "antioquia", label: "Antioquia", value: 28 }
+      - { region: "valle", label: "Valle del Cauca", value: 15 }
+
+  - id: priorizacion-iniciativas
+    type: strategy
+    title: "Tres iniciativas concentran el mayor impacto con menor esfuerzo"
+    variant: matrix-2x2
+    axes:
+      xLabel: "Esfuerzo"
+      yLabel: "Impacto"
+    items:
+      - { label: "Semilleros interfacultad", x: 3, y: 8, category: "Alta prioridad" }
+      - { label: "Laboratorio compartido", x: 7, y: 7, category: "Alta prioridad" }
+      - { label: "Movilidad internacional", x: 8, y: 3, category: "Revisar" }

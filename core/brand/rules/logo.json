@@ -81,6 +81,16 @@
     },
     "closing": {
       "rules": ["same approved logo family/colour logic as rest of deck", "may be larger than on content slides", "keep contact info and closing message outside protection area"]
+    },
+    "infografia": {
+      "_note": "Añadido para el artefacto Infografía (core/schemas/infografia-spec.schema.json, planning/11-infografia-artifact-type.md) — un canvas único (vertical u horizontal), no una secuencia de slides, por eso el logo va en el encabezado fijo en vez de repetirse por slide.",
+      "rules": [
+        "logo siempre en el encabezado, encima del título (guidelines/infografias.md §3, punto 1 de la estructura obligatoria)",
+        "una sola posición fija por pieza — no se repite en cada módulo del desarrollo",
+        "positive sobre fondo claro; negative white sobre navy/foto",
+        "nunca dentro de una tarjeta KPI, gráfico o módulo de contenido",
+        "si hay coBrand (core/brand/rules/cobrand.json), el logo institucional siempre queda visualmente primero/más grande que el logo de la co-marca"
+      ]
     }
   },
 

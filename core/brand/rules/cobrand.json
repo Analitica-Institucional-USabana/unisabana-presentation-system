@@ -1,0 +1,30 @@
+{
+  "_provenance": "Nuevo para el artefacto Infografía. Implementa guidelines/infografias.md §2 (DETECCIÓN DE OTRAS MARCAS) con el alcance acotado decidido en planning/11-infografia-artifact-type.md: co-marca = logo + un color de acento de la otra institución, siempre subordinados a la paleta de La Sabana. Renderizar dos identidades de marca completas en pie de igualdad queda fuera de alcance — core/brand/rules/palette.json#/rules/no-mixing sigue vigente para infografías.",
+
+  "rule": "Una infografía admite como máximo UNA co-marca (core/schemas/infografia-spec.schema.json#/$defs/coBrand). Nunca se activa una segunda paleta institucional/facultad completa (palette.json#/rules/no-mixing sigue aplicando íntegro). Los valores de coBrand (institutionName, logoAsset, accentColor) nunca se inventan ni se aproximan — deben venir confirmados por el usuario (guidelines/infografias.md §2, preguntas 3-4).",
+
+  "logo": {
+    "maxHeightRelativeToPrimary": "60%",
+    "position": "adyacente o inmediatamente debajo del logo institucional en el encabezado — nunca centrado ni en posición de liderazgo visual salvo coBrand.priority='equal'",
+    "clearSpace": "mismo criterio de core/brand/rules/logo.json#/clearSpace, aplicado a su propio bounding box; no puede invadir el área de protección del logo institucional"
+  },
+
+  "accentColor": {
+    "usage": [
+      "el logo de la co-marca en sí mismo",
+      "como mucho un acento de KPI o resaltado de módulo explícitamente ligado a contenido de la co-marca"
+    ],
+    "forbidden": [
+      "reemplazar el acento institucional como color primario de la pieza",
+      "aplicarse a más de un módulo sin que el usuario lo pida explícitamente",
+      "usarse como color de fondo de la pieza completa"
+    ]
+  },
+
+  "priority": {
+    "default": "sabana-primary",
+    "equal": "solo si el usuario lo confirma explícitamente (guidelines/infografias.md §2, pregunta 6) — incluso en 'equal', el logo institucional de La Sabana nunca se retira ni se reduce por debajo de su tamaño mínimo (logo.json#/sizing)."
+  },
+
+  "validatorRule": "validators/rules/cobrand-constraints.mjs marca error si: (a) el logo de la co-marca excede maxHeightRelativeToPrimary, (b) accentColor se aplica a más de un módulo sin coBrand.priority='equal', o (c) coexisten dos paletas institucionales/facultad completas en la misma pieza."
+}

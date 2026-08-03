@@ -12,6 +12,11 @@ import { checkIcons } from "./rules/icons.mjs";
 import { checkLogo } from "./rules/logo.mjs";
 import { checkAiDisclosure } from "./rules/ai-disclosure.mjs";
 import { checkFooterOverflow } from "./rules/footer-overflow.mjs";
+import { checkModuleDensity } from "./rules/module-density.mjs";
+import { checkIconStyleConsistency } from "./rules/icon-style-consistency.mjs";
+import { checkSourcesRequired } from "./rules/sources-required.mjs";
+import { checkCobrandConstraints } from "./rules/cobrand-constraints.mjs";
+import { checkAccessibilityMinBody } from "./rules/accessibility-min-body.mjs";
 
 export function validateDeckSpecRules(deck, ctx) {
   const reportsById = new Map(deck.slides.map((s) => [s.id, createSlideReport(s.id)]));
@@ -26,6 +31,30 @@ export function validateRenderedHtmlRules(html, deck, ctx) {
   checkLogo(html, deck, ctx, reportsById);
   checkAiDisclosure(html, deck, ctx, reportsById);
   checkFooterOverflow(html, deck, ctx, reportsById);
+  return [...reportsById.values()].map((r) => r.finalize());
+}
+
+// Artefacto Infografía (core/schemas/infografia-spec.schema.json) — reportado
+// por módulo (module.id), más una clave "infografia" para hallazgos a nivel
+// de toda la pieza (keyNumbers, sources, co-marca, densidad global).
+export function validateInfografiaSpecRules(spec, ctx) {
+  const reportsById = new Map([
+    ["infografia", createSlideReport("infografia")],
+    ...spec.modules.map((m) => [m.id, createSlideReport(m.id)]),
+  ]);
+  checkModuleDensity(spec, ctx, reportsById);
+  checkIconStyleConsistency(spec, ctx, reportsById);
+  checkSourcesRequired(spec, ctx, reportsById);
+  checkCobrandConstraints(spec, ctx, reportsById);
+  return [...reportsById.values()].map((r) => r.finalize());
+}
+
+export function validateRenderedInfografiaHtmlRules(html, spec, ctx) {
+  const reportsById = new Map([
+    ["infografia", createSlideReport("infografia")],
+    ...spec.modules.map((m) => [m.id, createSlideReport(m.id)]),
+  ]);
+  checkAccessibilityMinBody(html, spec, ctx, reportsById);
   return [...reportsById.values()].map((r) => r.finalize());
 }
 

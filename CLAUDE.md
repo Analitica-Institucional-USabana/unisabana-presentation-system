@@ -8,19 +8,22 @@ A pipeline that turns `claude-design-system/` — a design-system bundle origina
 
 `claude-design-system/` is the **frozen original source** (components, tokens, brand guidelines, example slides). It is never edited by this pipeline — see `planning/07-decisions-and-open-questions.md` D-12. Everything this repo builds lives in `core/`, `skills/`, `validators/`, `renderers/`, `adapters/`.
 
-Read `planning/README.md` first — it indexes 9 planning docs (current-state inventory, gap analysis, target architecture, migration roadmap, MVP definition, testing strategy, security/governance, decisions/ADRs, visual-quality backlog) that explain *why* the architecture is shaped this way. `planning/07-decisions-and-open-questions.md` is the ADR log; check it before revisiting a technical choice (format, stack, validation order, etc.) — it's probably already been decided there with a stated rationale.
+Read `planning/README.md` first — it indexes the planning docs (current-state inventory, gap analysis, target architecture, migration roadmap, MVP definition, testing strategy, security/governance, decisions/ADRs, visual-quality backlog, and the Infografía artifact type) that explain *why* the architecture is shaped this way. `planning/07-decisions-and-open-questions.md` is the ADR log; check it before revisiting a technical choice (format, stack, validation order, etc.) — it's probably already been decided there with a stated rationale. `planning/11-infografia-artifact-type.md` documents the second artifact type (see below) — a sibling of the Deck Spec, not an extension of it.
 
 ## Commands
 
 ```bash
-node scripts/validate-deck-spec.mjs <deck.yaml>              # structural validation (JSON Schema) only
-node scripts/validate-brand.mjs <deck.yaml> [rendered.html]  # brand-rule validation; add the html arg to also check logo + AI-disclosure rules
-node renderers/html/render.mjs <deck.yaml> [out.html]        # validates structure, then renders self-contained HTML
-node renderers/pptx/render.mjs <deck.yaml> [out.pptx]        # same, for editable PPTX
-npm run build:adapters                                       # regenerate adapters/claude-plugin and adapters/codex-plugin from source (see below)
+node scripts/validate-deck-spec.mjs <deck.yaml>                    # structural validation (JSON Schema) only, Deck Spec
+node scripts/validate-infografia-spec.mjs <infografia.yaml>        # structural validation (JSON Schema) only, Infografía Spec
+node scripts/validate-brand.mjs <spec.yaml> [rendered.html]        # brand-rule validation; auto-detects deck vs. infografía by root key; add the html arg to also check the rendered-output rules
+node renderers/html/render.mjs <deck.yaml> [out.html]              # validates structure, then renders self-contained HTML (deck)
+node renderers/pptx/render.mjs <deck.yaml> [out.pptx]              # same, for editable PPTX (deck only — infografía has no PPTX export)
+node renderers/html/render-infografia.mjs <infografia.yaml> [out.html]  # validates structure, then renders self-contained HTML (infografía)
+node renderers/pdf/render.mjs <infografia.yaml> [out.pdf]          # renders the infografía HTML in headless Chromium and exports PDF
+npm run build:adapters                                             # regenerate adapters/claude-plugin and adapters/codex-plugin from source (see below)
 ```
 
-There is no test runner configured yet (no `npm test`); `tests/golden-decks/` and `tests/schema/` hold fixtures (valid/invalid Deck Specs, known brand violations) used by the validators/renderers manually or via the commands above — see `planning/05-testing-strategy.md` for the intended strategy.
+`npm test` (`tests/run.mjs`) is a small dependency-free runner (no jest/vitest — D-15, thin deterministic CLI): it validates every fixture in `tests/schema/` (structural, both Deck Spec and Infografía Spec) and `tests/golden-decks/`/`tests/golden-infografias/` (brand-rule violations, one fixture per rule) against the exact result documented in that fixture's own header comment, and exercises every `renderers/html/charts/` family × variant declared in `core/schemas/infografia-spec.schema.json` with a representative payload. See `planning/05-testing-strategy.md` for the fuller intended strategy (visual/snapshot testing, agent evals) this doesn't yet cover.
 
 ## Architecture
 
@@ -46,9 +49,11 @@ adapters/{claude-plugin,codex-plugin}/
 
 **Deck Spec** (`core/schemas/deck-spec.schema.json`) has 10 slide types: `cover, agenda, separator, message, data, comparison, process, table, quote, closing`. One `presentation.palette` per deck — mixing institutional and faculty palettes is a hard rule violation (`core/brand/rules/palette.json`). Schema evolves under its own SemVer independent of the plugin version (see schema `$comment` for the PATCH/MINOR/MAJOR policy).
 
+**Infografía Spec** (`core/schemas/infografia-spec.schema.json`, `planning/11-infografia-artifact-type.md`) is a **sibling artifact, not a Deck Spec variant**: a single-canvas piece (not a slide sequence) with a mandatory structure (title → `keyNumbers` KPI strip → `modules[]` "development", one idea per module, chosen from 10 visualization families with per-family `variant` — `renderers/html/charts/`) → optional `conclusions` → mandatory `sources`. Exports to HTML + PDF (via headless Chromium, `renderers/pdf/render.mjs`), never PPTX. Same single-palette rule as the deck, plus an optional acotado `coBrand` (secondary institution logo + one accent color, always subordinate — `core/brand/rules/cobrand.json`) for pieces that legitimately involve a second institution; a full second institutional palette is never allowed. Created by the `unisabana-infografia` skill, audited by the same `unisabana-review` skill (Case 1 in its SKILL.md auto-detects the artifact kind).
+
 **Adapters are generated, never hand-edited** (`planning/07-decisions-and-open-questions.md` D-13). `adapters/claude-plugin/` and `adapters/codex-plugin/` are full copies of `core/, skills/, scripts/, renderers/, validators/, node_modules/, package.json` produced by `scripts/build-adapters.mjs`. This is required because both platforms cache installed plugins in a way that breaks any relative path reaching outside the plugin's own tree — so everything a skill invokes via Bash must travel inside the adapter. After changing anything in those source directories, re-run `npm run build:adapters` before the change is reflected in an installed plugin; don't edit files under `adapters/*/` directly, edit the source and rebuild.
 
-**Two skills only, by design** (D-03): `unisabana-create` (generate) and `unisabana-review` (audit), not one skill or one-per-slide-type — this maps 1:1 to the creativity/compliance split. Both are portable as-is between Claude Code (`.claude/skills/`) and Codex (`.agents/skills/`) since they're just `SKILL.md` + progressively-loaded `references/`.
+**One creation skill per artifact type, one shared audit skill** (D-03, extended by `planning/11-infografia-artifact-type.md`): `unisabana-create` (deck) and `unisabana-infografia` (infografía) generate; `unisabana-review` audits both. D-03's "two skills, not one-per-slide-type" only rules out fragmenting *within* an artifact type (e.g. a skill per slide family) — a genuinely different artifact (single-canvas piece vs. slide deck) still warrants its own creation skill, since the creativity decisions involved (module/visualization selection vs. slide-family selection) don't overlap. All skills are portable as-is between Claude Code (`.claude/skills/`) and Codex (`.agents/skills/`) since they're just `SKILL.md` + progressively-loaded `references/`.
 
 **Offline requirement** (D-20): the HTML renderer and validators must work with zero network access — fonts and images are embedded as data URIs (`scripts/lib/embed.mjs`), not linked.
 

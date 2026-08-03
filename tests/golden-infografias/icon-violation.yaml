@@ -1,0 +1,30 @@
+# Golden infografía NEGATIVA — estructuralmente válida, pero viola
+# core/brand/rules/icons.json: el ícono de keyNumbers no está en el subconjunto
+# vendorizado aprobado.
+# Ejecutar: node scripts/validate-brand.mjs tests/golden-infografias/icon-violation.yaml
+# Debe reportar [ERROR] en "infografia" citando icons.json.
+schemaVersion: "0.1.0"
+
+infografia:
+  title: "Infografía de prueba — violación de iconografía"
+  audience: "Consejo Directivo"
+  medium: "web"
+  format: "vertical"
+  palette: "institutional"
+  owner: "Dirección de Desarrollo Estratégico"
+  keyNumbers:
+    - value: "10"
+      unit: "proyectos"
+      descriptor: "activos"
+      icon: "smiley-face-inventado"
+      accent: "primary"
+  sources:
+    developedBy: "Dirección de Desarrollo Estratégico"
+
+modules:
+  - id: modulo-01
+    type: indicators
+    title: "Un indicador cualquiera"
+    items:
+      - label: "Avance"
+        value: 50

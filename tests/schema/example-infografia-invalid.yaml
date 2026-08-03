@@ -1,0 +1,28 @@
+# Infografía Spec deliberadamente inválida — prueba negativa del validador.
+# Errores intencionales, uno por regla estructural distinta:
+#  1. infografia.palette: valor fuera del enum (paleta inventada)
+#  2. infografia.sources: ausente (campo requerido)
+#  3. módulo type=comparison: falta "series" (requerido para ese tipo)
+# Ejecutar: node scripts/validate-infografia-spec.mjs tests/schema/example-infografia-invalid.yaml
+# Debe salir con exit code 1 y listar los tres errores.
+schemaVersion: "0.1.0"
+
+infografia:
+  title: "Infografía de prueba"
+  audience: "Consejo Directivo"
+  medium: "web"
+  format: "vertical"
+  palette: "neon-inventada"
+  owner: "Dirección de Desarrollo Estratégico"
+  keyNumbers:
+    - value: "10"
+      unit: "proyectos"
+      descriptor: "activos"
+      icon: "briefcase"
+      accent: "primary"
+
+modules:
+  - id: comparativo-sin-series
+    type: comparison
+    title: "Comparación sin datos"
+    categories: ["A", "B"]
