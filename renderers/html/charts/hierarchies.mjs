@@ -1,6 +1,7 @@
 // Familia "Jerarquías" (guidelines/infografias.md §4). module.root
 // (core/schemas/infografia-spec.schema.json#/$defs/treeNode, recursivo).
 import { colorForIndex, svgWrap, wrapText, multilineTextEl } from "./chart-kit.mjs";
+import { layoutTree } from "./tree-layout.mjs";
 
 const NODE_GAP = 28;
 const LINE_HEIGHT = 17;
@@ -12,39 +13,6 @@ function wrapLabel(label, maxWidthPx, sizePx = 13, weight = 700) {
 
 function multilineText(cx, cy, lines, { sizePx = 13, weight = 700, color = "var(--paper)" } = {}) {
   return multilineTextEl(cx, cy, lines, { size: sizePx, weight, color, lineHeight: LINE_HEIGHT });
-}
-
-// Layout de árbol vertical simplificado: hojas repartidas en X en orden de
-// aparición, cada padre centrado sobre el promedio de sus hijos.
-function layoutTree(root) {
-  const nodes = [];
-  const edges = [];
-  let leafCounter = 0;
-
-  function visit(node, depth, parentId) {
-    const id = nodes.length;
-    const isLeaf = !node.children || node.children.length === 0;
-    let x;
-    if (isLeaf) {
-      x = leafCounter;
-      leafCounter += 1;
-    }
-    const entry = { id, label: node.label, depth, x: 0, childIds: [] };
-    nodes.push(entry);
-    if (parentId != null) {
-      edges.push([parentId, id]);
-      nodes[parentId].childIds.push(id);
-    }
-    if (isLeaf) {
-      entry.x = x;
-    } else {
-      const childXs = node.children.map((child) => visit(child, depth + 1, id));
-      entry.x = childXs.reduce((a, b) => a + b, 0) / childXs.length;
-    }
-    return entry.x;
-  }
-  visit(root, 0, null);
-  return { nodes, edges, leafCount: Math.max(1, leafCounter) };
 }
 
 function verticalTree(root, widthPx) {

@@ -1,15 +1,16 @@
-# Deck de muestra — un slide por cada tipo de `chart` de Fase 1
-# (planning/09-visual-richness-and-content-density.md): bar-horizontal,
-# bar-vertical, line, area, donut, scatter, radar. Para revisión visual del
-# usuario, no es un fixture de reglas de marca (no ejercita golden violations).
-# Cifras ilustrativas, no reales — nunca se inventan datos institucionales
-# reales para un ejemplo (core/schemas/deck-spec.schema.json#/$defs/chart).
+# Deck de muestra — un slide por cada tipo de `chart` (Fase 1, planning/09-
+# visual-richness-and-content-density.md: bar-horizontal, bar-vertical, line,
+# area, donut, scatter, radar; Fase 2 adenda: matrix-2x2, funnel, hierarchy).
+# Para revisión visual del usuario, no es un fixture de reglas de marca (no
+# ejercita golden violations). Cifras ilustrativas, no reales — nunca se
+# inventan datos institucionales reales para un ejemplo
+# (core/schemas/deck-spec.schema.json#/$defs/chart).
 # Criterio de aceptación: node scripts/validate-deck-spec.mjs -> VÁLIDO,
 # node scripts/validate-brand.mjs -> sin [ERROR].
-schemaVersion: "0.3.0"
+schemaVersion: "0.5.0"
 
 presentation:
-  title: "Gráficos nativos en presentaciones — muestra Fase 1"
+  title: "Gráficos y diagramas en presentaciones — muestra"
   audience: "Equipo de diseño"
   owner: "Vicerrectoría de Procesos Académicos"
   density: low
@@ -28,6 +29,8 @@ slides:
     sectionNumber: "01"
     title: "Comparación entre categorías"
     descriptor: "bar-horizontal y bar-vertical"
+    background: photo
+    photo: assets/campus-adportas.png
 
   - id: data-bar-horizontal
     type: data
@@ -68,6 +71,8 @@ slides:
     sectionNumber: "02"
     title: "Evolución en el tiempo"
     descriptor: "line y area"
+    background: photo
+    photo: assets/campus-balcones.png
 
   - id: message-line
     type: message
@@ -98,6 +103,8 @@ slides:
     sectionNumber: "03"
     title: "Composición y relaciones"
     descriptor: "donut, scatter y radar"
+    background: photo
+    photo: assets/campus-3.jpg
 
   - id: data-donut
     type: data
@@ -147,6 +154,131 @@ slides:
         - { label: "Internacionalización", value: 4.5 }
         - { label: "Bienestar", value: 3.9 }
         - { label: "Extensión", value: 4.0 }
+
+  - id: separator-04
+    type: separator
+    sectionNumber: "04"
+    title: "Diagramas sin gráfico nativo"
+    descriptor: "matriz 2×2, funnel y jerarquía"
+    background: photo
+    photo: assets/campus-1.jpg
+
+  - id: data-matrix
+    type: data
+    title: "Dos iniciativas concentran el mayor impacto con bajo esfuerzo"
+    stats:
+      - value: "2"
+        label: "Iniciativas prioritarias"
+    source: "Comité de Planeación"
+    period: "2025"
+    chart:
+      type: matrix-2x2
+      axes:
+        xLabel: "Esfuerzo"
+        yLabel: "Impacto"
+      items:
+        - { label: "Rediseño de admisiones", x: 3, y: 8 }
+        - { label: "Nuevo campus virtual", x: 8, y: 9 }
+        - { label: "Renovación de auditorios", x: 7, y: 3 }
+        - { label: "Encuesta de clima", x: 2, y: 2 }
+
+  - id: message-funnel
+    type: message
+    title: "Uno de cada tres aspirantes llega a matricularse"
+    supporting: "El mayor punto de fuga está entre admitidos y matriculados."
+    chart:
+      type: funnel
+      items:
+        - { label: "Aspirantes", value: 3000 }
+        - { label: "Admitidos", value: 1800 }
+        - { label: "Matriculados", value: 1000 }
+
+  - id: data-hierarchy
+    type: data
+    title: "La Vicerrectoría articula seis facultades en dos líneas"
+    stats:
+      - value: "6"
+        label: "Facultades"
+    source: "Secretaría General"
+    period: "2025"
+    chart:
+      type: hierarchy
+      tree:
+        label: "Vicerrectoría Académica"
+        children:
+          - label: "Ciencias de la Salud"
+            children:
+              - label: "Medicina"
+              - label: "Enfermería"
+          - label: "Ingeniería y Ciencias Básicas"
+            children:
+              - label: "Ingeniería"
+              - label: "Ciencias Básicas"
+
+  - id: separator-05
+    type: separator
+    sectionNumber: "05"
+    title: "Relaciones y composición"
+    descriptor: "red, treemap, pirámide y venn"
+    background: photo
+    photo: assets/campus-night.png
+
+  - id: message-network
+    type: message
+    title: "La Analítica Institucional articula a todas las demás unidades"
+    supporting: "Un hub-and-spoke es solo una red con un nodo central conectado a los demás."
+    chart:
+      type: network
+      nodes:
+        - { id: "analitica", label: "Analítica Institucional" }
+        - { id: "admisiones", label: "Admisiones" }
+        - { id: "bienestar", label: "Bienestar" }
+        - { id: "planeacion", label: "Planeación" }
+        - { id: "docencia", label: "Docencia" }
+      links:
+        - { source: "analitica", target: "admisiones" }
+        - { source: "analitica", target: "bienestar" }
+        - { source: "analitica", target: "planeacion" }
+        - { source: "analitica", target: "docencia" }
+
+  - id: data-treemap
+    type: data
+    title: "Ingeniería concentra más de un tercio de la matrícula de pregrado"
+    stats:
+      - value: "38%"
+        label: "Ingeniería"
+    source: "Oficina de Admisiones"
+    period: "2025-1"
+    chart:
+      type: treemap
+      items:
+        - { label: "Ingeniería", value: 38 }
+        - { label: "Medicina", value: 22 }
+        - { label: "Educación", value: 20 }
+        - { label: "Derecho", value: 20 }
+
+  - id: message-pyramid
+    type: message
+    title: "La decisión institucional se construye sobre tres niveles previos"
+    supporting: "Cada nivel depende de que el anterior esté resuelto."
+    chart:
+      type: pyramid
+      items:
+        - { label: "Decisión" }
+        - { label: "Conocimiento" }
+        - { label: "Información" }
+        - { label: "Datos" }
+
+  - id: message-venn
+    type: message
+    title: "La analítica institucional vive en la intersección de tres campos"
+    supporting: "Ninguno de los tres por separado explica lo que hace el equipo."
+    chart:
+      type: venn
+      items:
+        - { label: "Datos institucionales" }
+        - { label: "Estadística aplicada" }
+        - { label: "Conocimiento del negocio" }
 
   - id: closing-01
     type: closing

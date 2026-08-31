@@ -13,6 +13,15 @@ const CHART_TYPE_TO_MODULE = {
   donut: { type: "composition", variant: "donut" },
   scatter: { type: "distribution", variant: "scatter" },
   radar: { type: "strategy", variant: "radar" },
+  // Fase 2 (planning/09 adenda): sin equivalente nativo en pptxgenjs, pero el
+  // motor SVG de la Infografía ya sabe dibujarlos — mismo principio de reuso.
+  "matrix-2x2": { type: "strategy", variant: "matrix-2x2" },
+  funnel: { type: "process", variant: "funnel" },
+  hierarchy: { type: "hierarchy", variant: "orgchart" },
+  network: { type: "relationship", variant: "network" },
+  treemap: { type: "composition", variant: "treemap" },
+  pyramid: { type: "hierarchy", variant: "pyramid" },
+  venn: { type: "strategy", variant: "venn" },
 };
 
 // Charts circulares (donut/radar): su alto natural depende de su ANCHO (ver
@@ -26,11 +35,23 @@ const CHART_TYPE_TO_MODULE = {
 // Con `capHeightPx`, se les da un ancho ~igual al alto disponible (probamos
 // "cuadrado"); si el resultado real no calza exacto, renderFittedChartBlock
 // sigue siendo la red de seguridad que lo ajusta al presupuesto real.
-const NARROW_CHART_TYPES = new Set(["donut", "radar"]);
+const NARROW_CHART_TYPES = new Set(["donut", "radar", "matrix-2x2", "network", "venn"]);
 
 export function chartWidthPx(chart, fullWidthPx, capHeightPx) {
   if (!NARROW_CHART_TYPES.has(chart.type)) return fullWidthPx;
   return Math.min(fullWidthPx, capHeightPx ?? fullWidthPx);
+}
+
+// El módulo 'hierarchy/pyramid' espera un árbol (module.root) y agrupa las
+// etiquetas por profundidad — un chart{type:pyramid} de Deck Spec es en
+// cambio una lista PLANA y ya ordenada (items[0]=cúspide/angosto...
+// items[N-1]=base/ancho). Encadenar cada ítem como hijo único del anterior
+// reproduce exactamente ese orden como profundidades 0..N-1 sin tocar
+// hierarchies.mjs — cada nivel queda con un solo nodo, nunca varios a la vez.
+function chainTree(items) {
+  let node = { label: items[items.length - 1].label };
+  for (let i = items.length - 2; i >= 0; i--) node = { label: items[i].label, children: [node] };
+  return node;
 }
 
 export function renderChartBlock(chart, { widthPx, repoRoot }) {
@@ -41,12 +62,26 @@ export function renderChartBlock(chart, { widthPx, repoRoot }) {
   if (chart.categories) module.categories = chart.categories;
   if (chart.series) module.series = chart.series;
   if (chart.points) module.points = chart.points;
+  if (chart.axes) module.axes = chart.axes;
+  if (chart.nodes) module.nodes = chart.nodes;
+  if (chart.links) module.links = chart.links;
   if (chart.items) {
-    // El módulo 'strategy/radar' espera matrixItem{label,x,y} (comparte forma
-    // con matrix-2x2/bcg); un radar de Deck Spec es de un solo eje de valor
-    // por ítem, así que x queda en 0 (no se usa para radar).
-    module.items = chart.type === "radar" ? chart.items.map((it) => ({ label: it.label, x: 0, y: it.value })) : chart.items;
+    if (chart.type === "radar") {
+      // El módulo 'strategy/radar' espera matrixItem{label,x,y} (comparte
+      // forma con matrix-2x2/bcg); un radar de Deck Spec es de un solo eje de
+      // valor por ítem, así que x queda en 0 (no se usa para radar).
+      module.items = chart.items.map((it) => ({ label: it.label, x: 0, y: it.value }));
+    } else if (chart.type === "funnel") {
+      // El módulo 'process' espera `steps`, no `items` — misma forma
+      // {label, value?}, solo cambia el nombre del campo.
+      module.steps = chart.items;
+    } else if (chart.type === "pyramid") {
+      module.root = chainTree(chart.items);
+    } else {
+      module.items = chart.items;
+    }
   }
+  if (chart.tree) module.root = chart.tree;
 
   return MODULE_CHARTS[mapping.type](module, { widthPx, repoRoot });
 }

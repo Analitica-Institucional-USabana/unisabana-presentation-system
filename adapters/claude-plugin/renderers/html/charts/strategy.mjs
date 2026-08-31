@@ -95,12 +95,24 @@ function venn(items, widthPx) {
   const cy = size / 2;
   const positions = items.length === 2 ? [size / 2 - r * 0.55, size / 2 + r * 0.55] : [size / 2 - r * 0.6, size / 2 + r * 0.6, size / 2];
   const yPositions = items.length === 3 ? [cy - r * 0.4, cy - r * 0.4, cy + r * 0.5] : [cy, cy];
+  // El tercer círculo de un venn de 3 va MÁS ABAJO que los otros dos (ver
+  // yPositions) y su borde inferior ya casi toca el borde de `size` — poner
+  // su etiqueta siempre "arriba" (y-r-14, como los otros dos) la metía
+  // dentro de la zona de intersección superior en vez de debajo de su propio
+  // círculo (bug preexistente del motor compartido, Infografía y Deck Spec
+  // chart{type:venn}). Debajo es lo correcto, pero no cabe en `size` sin
+  // ensanchar el lienzo — de ahí el extra solo para el caso de 3 conjuntos.
+  const extraBottomPx = items.length === 3 ? 34 : 0;
+  const height = size + extraBottomPx;
   let svg = "";
   items.forEach((it, i) => {
-    svg += `<circle cx="${positions[i]}" cy="${yPositions[i] ?? cy}" r="${r}" fill="${colorForIndex(i)}" opacity="0.45" stroke="${colorForIndex(i)}" stroke-width="2.5" />`;
-    svg += textEl(positions[i], (yPositions[i] ?? cy) - r - 14, it.label, { size: 14, anchor: "middle", weight: 700, color: "var(--text-strong)" });
+    const y = yPositions[i] ?? cy;
+    svg += `<circle cx="${positions[i]}" cy="${y}" r="${r}" fill="${colorForIndex(i)}" opacity="0.45" stroke="${colorForIndex(i)}" stroke-width="2.5" />`;
+    const isBottomOfThree = items.length === 3 && i === 2;
+    const labelY = isBottomOfThree ? y + r + 18 : y - r - 14;
+    svg += textEl(positions[i], labelY, it.label, { size: 14, anchor: "middle", weight: 700, color: "var(--text-strong)" });
   });
-  return { heightPx: size, html: centered(widthPx, svgWrap(size, size, svg)) };
+  return { heightPx: height, html: centered(widthPx, svgWrap(size, height, svg)) };
 }
 
 function canvas(items, widthPx) {

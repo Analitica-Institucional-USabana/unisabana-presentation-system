@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:unisabana:schemas:deck-spec:0.3.0",
+  "$id": "urn:unisabana:schemas:deck-spec:0.5.0",
   "title": "Universidad de La Sabana — Deck Spec",
   "$comment": "Hito 4 (planning/03-migration-roadmap.md). Representación intermedia declarativa: el agente (skill unisabana-create) produce una instancia de este esquema; core/brand/rules/*.json y el futuro validators/ (Hito 6) la comprueban antes de renderizar. Consolida dos taxonomías de la fuente original: las 10 familias narrativas de claude-design-system/readme.md §9 (cover, agenda, section-separator, message, data, comparison, process/timeline, table/technical, quote, closing) y los 10 ejemplos de claude-design-system/slides/*.html — 'photo-cover' se modela como cover{background:photo} y 'dashboard' como table{density:high}, sin perder ninguna de las dos.\n\nPolítica de evolución (SemVer del esquema, independiente del SemVer del plugin): PATCH = aclaraciones que no cambian validación; MINOR = campos nuevos opcionales o un nuevo valor de enum aditivo; MAJOR = cualquier campo requerido nuevo, cualquier remoción, o cualquier restricción de un enum existente. Un campo nunca se elimina sin pasar primero por un aviso 'deprecated' en su description durante al menos una versión MINOR.",
   "type": "object",
@@ -9,7 +9,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "enum": ["0.1.0", "0.2.0", "0.3.0"],
+      "enum": ["0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.5.0"],
       "description": "Versión del propio esquema del Deck Spec (no la versión del plugin ni la de core/brand)."
     },
     "presentation": { "$ref": "#/$defs/presentation" },
@@ -138,12 +138,12 @@
       "type": "object",
       "required": ["type"],
       "additionalProperties": false,
-      "description": "Gráfico nativo de PowerPoint (editable, pptxgenjs addChart) para cifras reales — planning/09-visual-richness-and-content-density.md Fase 1. Nunca inventar valores: si el contenido no trae datos numéricos reales, omitir este campo en vez de fabricar cifras (readme.md §Restricción contra visualizaciones inventadas).",
+      "description": "Gráfico o diagrama para datos/relaciones reales — planning/09-visual-richness-and-content-density.md. Fase 1 (bar-horizontal..radar): nativo de PowerPoint, editable (pptxgenjs addChart). Fase 2 (matrix-2x2, funnel, hierarchy, network, treemap, pyramid, venn): sin equivalente nativo en pptxgenjs, se dibuja con formas (renderers/pptx/diagrams.mjs) — sigue siendo un objeto real del deck, no una imagen. Nunca inventar valores: si el contenido no trae datos/relaciones reales, omitir este campo en vez de fabricar cifras (readme.md §Restricción contra visualizaciones inventadas).",
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["bar-horizontal", "bar-vertical", "line", "area", "donut", "scatter", "radar"],
-          "description": "bar-horizontal/vertical = comparar categorías. line = evolución temporal. area = evolución + volumen. donut = composición de un todo (pocas categorías). scatter = relación entre dos variables. radar = perfil multidimensional (3+ ejes)."
+          "enum": ["bar-horizontal", "bar-vertical", "line", "area", "donut", "scatter", "radar", "matrix-2x2", "funnel", "hierarchy", "network", "treemap", "pyramid", "venn"],
+          "description": "bar-horizontal/vertical = comparar categorías. line = evolución temporal. area = evolución + volumen. donut = composición de un todo (pocas categorías). scatter = relación entre dos variables. radar = perfil multidimensional (3+ ejes). matrix-2x2 = priorización en dos dimensiones. funnel = reducción progresiva entre etapas. hierarchy = organigrama/árbol (estructura, no proceso). network = relaciones entre varios elementos, incluye hub-and-spoke (un nodo central conectado a los demás). treemap = composición jerárquica cuando hay muchas categorías. pyramid = jerarquía real entre niveles (nunca decorativo). venn = intersección real entre 2-3 conjuntos."
         },
         "title": { "type": "string", "description": "Rótulo corto opcional mostrado sobre el gráfico (no repite el título del slide)." },
         "categories": {
@@ -170,14 +170,16 @@
         "items": {
           "type": "array",
           "minItems": 2,
-          "description": "Requerido para donut (partes de un todo) y radar (un eje por ítem; 3+ recomendado).",
+          "description": "Requerido para donut/radar/treemap (usar `value`; un eje por ítem en radar, 3+ recomendado), matrix-2x2 (usar `x`+`y`), funnel/pyramid (usar `value` opcional; el orden del array ES la secuencia, funnel de arriba hacia abajo angostando, pyramid de arriba hacia abajo ensanchando) y venn (solo `label`, 2-3 ítems). Qué campo(s) exige cada `type` lo valida validators/rules/chart-data.mjs, no este esquema.",
           "items": {
             "type": "object",
-            "required": ["label", "value"],
+            "required": ["label"],
             "additionalProperties": false,
             "properties": {
               "label": { "type": "string", "minLength": 1 },
-              "value": { "type": "number" }
+              "value": { "type": "number" },
+              "x": { "type": "number" },
+              "y": { "type": "number" }
             }
           }
         },
@@ -195,14 +197,68 @@
               "group": { "type": "string", "description": "Solo distingue color en HTML; el gráfico nativo de PPTX grafica todos los puntos en una sola serie (limitación de pptxgenjs, ver renderers/pptx/chart-block.mjs)." }
             }
           }
+        },
+        "axes": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Solo aplica a matrix-2x2 — rótulo opcional de cada eje (ej. 'Esfuerzo'/'Impacto').",
+          "properties": {
+            "xLabel": { "type": "string" },
+            "yLabel": { "type": "string" }
+          }
+        },
+        "tree": {
+          "$ref": "#/$defs/chartTreeNode",
+          "description": "Requerido para hierarchy (organigrama/árbol). Estructura, no proceso — para pasos secuenciales usar el tipo de slide `process`, no esto."
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 2,
+          "description": "Requerido para network. Cada `id` debe ser único y referenciado por `links`.",
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Requerido para network. Un hub-and-spoke es simplemente un `nodes` con un elemento central y todos los demás enlazados solo a él — no es un `type` aparte.",
+          "items": {
+            "type": "object",
+            "required": ["source", "target"],
+            "additionalProperties": false,
+            "properties": {
+              "source": { "type": "string", "minLength": 1 },
+              "target": { "type": "string", "minLength": 1 },
+              "value": { "type": "number", "description": "Opcional — si se da, engrosa la línea proporcionalmente." }
+            }
+          }
         }
       },
       "allOf": [
         { "if": { "properties": { "type": { "enum": ["bar-horizontal", "bar-vertical", "line", "area"] } } }, "then": { "required": ["categories", "series"] } },
-        { "if": { "properties": { "type": { "const": "donut" } } }, "then": { "required": ["items"] } },
-        { "if": { "properties": { "type": { "const": "radar" } } }, "then": { "required": ["items"] } },
-        { "if": { "properties": { "type": { "const": "scatter" } } }, "then": { "required": ["points"] } }
+        { "if": { "properties": { "type": { "enum": ["donut", "radar", "matrix-2x2", "funnel", "treemap", "pyramid", "venn"] } } }, "then": { "required": ["items"] } },
+        { "if": { "properties": { "type": { "const": "scatter" } } }, "then": { "required": ["points"] } },
+        { "if": { "properties": { "type": { "const": "hierarchy" } } }, "then": { "required": ["tree"] } },
+        { "if": { "properties": { "type": { "const": "network" } } }, "then": { "required": ["nodes", "links"] } }
       ]
+    },
+
+    "chartTreeNode": {
+      "type": "object",
+      "required": ["label"],
+      "additionalProperties": false,
+      "description": "Nodo recursivo para chart{type:hierarchy}. Un `label` sin `children` es una hoja.",
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/chartTreeNode" }, "minItems": 1 }
+      }
     },
 
     "slideCover": {
