@@ -134,6 +134,77 @@
       }
     },
 
+    "chart": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "description": "Gráfico nativo de PowerPoint (editable, pptxgenjs addChart) para cifras reales — planning/09-visual-richness-and-content-density.md Fase 1. Nunca inventar valores: si el contenido no trae datos numéricos reales, omitir este campo en vez de fabricar cifras (readme.md §Restricción contra visualizaciones inventadas).",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["bar-horizontal", "bar-vertical", "line", "area", "donut", "scatter", "radar"],
+          "description": "bar-horizontal/vertical = comparar categorías. line = evolución temporal. area = evolución + volumen. donut = composición de un todo (pocas categorías). scatter = relación entre dos variables. radar = perfil multidimensional (3+ ejes)."
+        },
+        "title": { "type": "string", "description": "Rótulo corto opcional mostrado sobre el gráfico (no repite el título del slide)." },
+        "categories": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Eje de categorías/tiempo. Requerido para bar-horizontal, bar-vertical, line, area."
+        },
+        "series": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "description": "Requerido para bar-horizontal, bar-vertical, line, area. Cada values.length debe igualar categories.length (validators/rules/chart-data.mjs).",
+          "items": {
+            "type": "object",
+            "required": ["name", "values"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "values": { "type": "array", "items": { "type": "number" }, "minItems": 1 }
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "description": "Requerido para donut (partes de un todo) y radar (un eje por ítem; 3+ recomendado).",
+          "items": {
+            "type": "object",
+            "required": ["label", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "value": { "type": "number" }
+            }
+          }
+        },
+        "points": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Requerido para scatter.",
+          "items": {
+            "type": "object",
+            "required": ["x", "y"],
+            "additionalProperties": false,
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "group": { "type": "string", "description": "Solo distingue color en HTML; el gráfico nativo de PPTX grafica todos los puntos en una sola serie (limitación de pptxgenjs, ver renderers/pptx/chart-block.mjs)." }
+            }
+          }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "enum": ["bar-horizontal", "bar-vertical", "line", "area"] } } }, "then": { "required": ["categories", "series"] } },
+        { "if": { "properties": { "type": { "const": "donut" } } }, "then": { "required": ["items"] } },
+        { "if": { "properties": { "type": { "const": "radar" } } }, "then": { "required": ["items"] } },
+        { "if": { "properties": { "type": { "const": "scatter" } } }, "then": { "required": ["points"] } }
+      ]
+    },
+
     "slideCover": {
       "type": "object",
       "required": ["id", "type", "title", "background"],
@@ -209,7 +280,7 @@
           "description": "Ruta relativa dentro de core/brand/rules/imagery.json#/approvedCampusPhotography. Requerido si background='photo'."
         }
       },
-      "if": { "properties": { "background": { "const": "photo" } } },
+      "if": { "required": ["background"], "properties": { "background": { "const": "photo" } } },
       "then": { "required": ["photo"] }
     },
 
@@ -224,7 +295,8 @@
         "title": { "type": "string", "minLength": 1, "description": "La conclusión central." },
         "supporting": { "type": "string", "description": "Frase de apoyo o prueba, opcional." },
         "banner": { "$ref": "#/$defs/emphasisBanner" },
-        "background": { "$ref": "#/$defs/tintedBackground" }
+        "background": { "$ref": "#/$defs/tintedBackground" },
+        "chart": { "$ref": "#/$defs/chart" }
       }
     },
 
@@ -247,7 +319,8 @@
         "period": { "type": "string", "minLength": 1 },
         "banner": { "$ref": "#/$defs/emphasisBanner" },
         "background": { "$ref": "#/$defs/tintedBackground" },
-        "progress": { "$ref": "#/$defs/progressBar" }
+        "progress": { "$ref": "#/$defs/progressBar" },
+        "chart": { "$ref": "#/$defs/chart" }
       }
     },
 

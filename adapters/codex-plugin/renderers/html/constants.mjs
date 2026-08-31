@@ -22,6 +22,11 @@ export const BANNER_GAP_PX = 32;
 export const PROGRESS_HEIGHT_PX = 40;
 export const PROGRESS_GAP_PX = 24;
 
+// Gráfico nativo (planning/09-visual-richness-and-content-density.md Fase 1)
+// — a diferencia de banner/progress, su alto no es fijo (depende del tipo y
+// de los datos, ver renderers/html/chart-block.mjs), solo el espacio antes.
+export const CHART_GAP_PX = 32;
+
 function resolveClampVw(minPx, vwPercent, maxPx) {
   const v = (CANVAS.width * vwPercent) / 100;
   return Math.round(Math.min(Math.max(v, minPx), maxPx));

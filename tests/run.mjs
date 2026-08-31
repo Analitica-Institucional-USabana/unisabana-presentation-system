@@ -43,6 +43,7 @@ console.log("== Estructural (JSON Schema) ==");
 
 const structuralCases = [
   { path: "tests/schema/example-deck.yaml", kind: "deck", expectValid: true },
+  { path: "tests/schema/example-deck-charts.yaml", kind: "deck", expectValid: true },
   { path: "tests/schema/example-deck-invalid.yaml", kind: "deck", expectValid: false },
   { path: "tests/schema/example-infografia.yaml", kind: "infografia", expectValid: true },
   { path: "tests/schema/example-infografia-invalid.yaml", kind: "infografia", expectValid: false },
@@ -62,6 +63,7 @@ const brandCases = [
   { path: "tests/golden-infografias/density-violation.yaml", kind: "infografia", expect: "warning" },
   { path: "tests/golden-infografias/cobrand-accent-collision.yaml", kind: "infografia", expect: "warning" },
   { path: "tests/schema/example-deck.yaml", kind: "deck", expect: "no-error" },
+  { path: "tests/schema/example-deck-charts.yaml", kind: "deck", expect: "no-error" },
   { path: "tests/schema/example-infografia.yaml", kind: "infografia", expect: "no-error" },
 ];
 

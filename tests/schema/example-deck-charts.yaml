@@ -1,0 +1,154 @@
+# Deck de muestra — un slide por cada tipo de `chart` de Fase 1
+# (planning/09-visual-richness-and-content-density.md): bar-horizontal,
+# bar-vertical, line, area, donut, scatter, radar. Para revisión visual del
+# usuario, no es un fixture de reglas de marca (no ejercita golden violations).
+# Cifras ilustrativas, no reales — nunca se inventan datos institucionales
+# reales para un ejemplo (core/schemas/deck-spec.schema.json#/$defs/chart).
+# Criterio de aceptación: node scripts/validate-deck-spec.mjs -> VÁLIDO,
+# node scripts/validate-brand.mjs -> sin [ERROR].
+schemaVersion: "0.3.0"
+
+presentation:
+  title: "Gráficos nativos en presentaciones — muestra Fase 1"
+  audience: "Equipo de diseño"
+  owner: "Vicerrectoría de Procesos Académicos"
+  density: low
+  palette: institutional
+
+slides:
+  - id: cover-01
+    type: cover
+    title: "Gráficos nativos y editables dentro del PPTX institucional"
+    subtitle: "Un ejemplo de cada tipo — para revisión y aprobación"
+    eyebrow: "MUESTRA · FASE 1"
+    background: navy
+
+  - id: separator-01
+    type: separator
+    sectionNumber: "01"
+    title: "Comparación entre categorías"
+    descriptor: "bar-horizontal y bar-vertical"
+
+  - id: data-bar-horizontal
+    type: data
+    title: "Ingeniería y Medicina concentran la mayor matrícula 2025"
+    stats:
+      - value: "1.400"
+        label: "Matrícula total"
+        caption: "Cuatro facultades"
+    source: "Oficina de Admisiones"
+    period: "2025-1"
+    chart:
+      type: bar-horizontal
+      categories: ["Ingeniería", "Medicina", "Educación", "Derecho"]
+      series:
+        - name: "2025"
+          values: [420, 380, 290, 310]
+
+  - id: data-bar-vertical
+    type: data
+    title: "La matrícula crece frente al año anterior en tres de cuatro facultades"
+    stats:
+      - value: "+6%"
+        label: "Variación total"
+        deltaDirection: "up"
+    source: "Oficina de Admisiones"
+    period: "2024-2025"
+    chart:
+      type: bar-vertical
+      categories: ["Ingeniería", "Medicina", "Educación", "Derecho"]
+      series:
+        - name: "2024"
+          values: [390, 360, 300, 300]
+        - name: "2025"
+          values: [420, 380, 290, 310]
+
+  - id: separator-02
+    type: separator
+    sectionNumber: "02"
+    title: "Evolución en el tiempo"
+    descriptor: "line y area"
+
+  - id: message-line
+    type: message
+    title: "La matrícula de posgrado creció de forma sostenida desde 2021"
+    supporting: "Cuatro años consecutivos de crecimiento, sin caídas interanuales."
+    chart:
+      type: line
+      categories: ["2021", "2022", "2023", "2024"]
+      series:
+        - name: "Posgrado"
+          values: [100, 120, 135, 158]
+
+  - id: message-area
+    type: message
+    title: "Pregrado y posgrado juntos superan los 1.500 estudiantes en 2024"
+    supporting: "El volumen total (área bajo cada serie) es tan relevante como la tendencia."
+    chart:
+      type: area
+      categories: ["2021", "2022", "2023", "2024"]
+      series:
+        - name: "Pregrado"
+          values: [900, 950, 980, 1010]
+        - name: "Posgrado"
+          values: [100, 120, 135, 158]
+
+  - id: separator-03
+    type: separator
+    sectionNumber: "03"
+    title: "Composición y relaciones"
+    descriptor: "donut, scatter y radar"
+
+  - id: data-donut
+    type: data
+    title: "El pregrado representa el 65% de la matrícula total"
+    stats:
+      - value: "65%"
+        label: "Pregrado"
+    source: "Oficina de Admisiones"
+    period: "2025-1"
+    chart:
+      type: donut
+      items:
+        - label: "Pregrado"
+          value: 65
+        - label: "Posgrado"
+          value: 20
+        - label: "Educación continuada"
+          value: 15
+
+  - id: message-scatter
+    type: message
+    title: "A mayor inversión en bienestar, mayor permanencia estudiantil"
+    supporting: "Cada punto es un programa académico."
+    chart:
+      type: scatter
+      points:
+        - { x: 10, y: 78 }
+        - { x: 25, y: 82 }
+        - { x: 40, y: 85 }
+        - { x: 55, y: 88 }
+        - { x: 70, y: 91 }
+        - { x: 85, y: 93 }
+
+  - id: data-radar
+    type: data
+    title: "El programa evalúa fuerte en investigación e internacionalización"
+    stats:
+      - value: "4.3/5"
+        label: "Promedio general"
+    source: "Autoevaluación institucional"
+    period: "2025"
+    chart:
+      type: radar
+      items:
+        - { label: "Docencia", value: 4.2 }
+        - { label: "Investigación", value: 4.6 }
+        - { label: "Internacionalización", value: 4.5 }
+        - { label: "Bienestar", value: 3.9 }
+        - { label: "Extensión", value: 4.0 }
+
+  - id: closing-01
+    type: closing
+    title: "Gracias — quedamos atentos a su revisión"
+    contact: "diseno@unisabana.edu.co"

@@ -21,6 +21,7 @@ import {
   BANNER_GAP_PX,
   PROGRESS_HEIGHT_PX,
   PROGRESS_GAP_PX,
+  CHART_GAP_PX,
   slideFamilyFor,
   contentBand,
   centeredContentY,
@@ -43,6 +44,7 @@ export {
   BANNER_GAP_PX,
   PROGRESS_HEIGHT_PX,
   PROGRESS_GAP_PX,
+  CHART_GAP_PX,
   slideFamilyFor,
   contentBand,
 };

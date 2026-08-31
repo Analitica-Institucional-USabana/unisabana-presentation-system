@@ -9,6 +9,7 @@ import { createSlideReport, mergeSlideReports, overallVerdict } from "./report.m
 import { checkImagery } from "./rules/imagery.mjs";
 import { checkDensity } from "./rules/density.mjs";
 import { checkIcons } from "./rules/icons.mjs";
+import { checkChartData } from "./rules/chart-data.mjs";
 import { checkLogo } from "./rules/logo.mjs";
 import { checkAiDisclosure } from "./rules/ai-disclosure.mjs";
 import { checkFooterOverflow } from "./rules/footer-overflow.mjs";
@@ -23,6 +24,7 @@ export function validateDeckSpecRules(deck, ctx) {
   checkImagery(deck, ctx, reportsById);
   checkDensity(deck, ctx, reportsById);
   checkIcons(deck, ctx, reportsById);
+  checkChartData(deck, ctx, reportsById);
   return [...reportsById.values()].map((r) => r.finalize());
 }
 
