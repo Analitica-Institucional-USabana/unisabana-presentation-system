@@ -1,11 +1,23 @@
-import { SAFE, TYPE_SCALE_PX, TYPE_SCALE_MIN_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
+import { join } from "node:path";
+import { CANVAS, SAFE, TYPE_SCALE_PX, TYPE_SCALE_MIN_PX, centeredContentYIn, px2in, px2pt } from "../constants.mjs";
 import { addTitle, addBody } from "../elements.mjs";
 import { addNavyGradientBackground, addBrandWaveImage } from "../decor.mjs";
 import { estimateBlockHeightPx, fitTitleSizePx } from "../../html/text-measure.mjs";
 
 export default function renderSeparator(pptxSlide, slide, { colors, repoRoot }) {
-  addNavyGradientBackground(pptxSlide, colors);
-  addBrandWaveImage(pptxSlide, repoRoot);
+  if (slide.background === "photo") {
+    // Cortinilla cinematográfica: mismo tratamiento que cover{background:photo}
+    // (imagen full-bleed + velo navy), reutilizado tal cual — planning/09-visual-richness-and-content-density.md.
+    pptxSlide.addImage({ path: join(repoRoot, "core/brand", slide.photo), x: 0, y: 0, w: px2in(CANVAS.width), h: px2in(CANVAS.height) });
+    pptxSlide.addShape("rect", {
+      x: 0, y: 0, w: px2in(CANVAS.width), h: px2in(CANVAS.height),
+      fill: { color: colors.sabanaBlueDeep, transparency: 35 },
+      line: { type: "none" },
+    });
+  } else {
+    addNavyGradientBackground(pptxSlide, colors);
+    addBrandWaveImage(pptxSlide, repoRoot);
+  }
 
   const titleSizePx = fitTitleSizePx(slide.title, {
     maxSizePx: TYPE_SCALE_PX.sectionTitle,

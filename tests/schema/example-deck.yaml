@@ -1,11 +1,12 @@
 # Deck Spec de ejemplo — cubre los 10 tipos de slide del esquema (Hito 4), las
 # 8 primitivas visuales de planning/09-visual-richness-and-content-density.md,
-# y planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md:
+# la cortinilla fotográfica de separator{background:photo}, y
+# planning/10-numbering-footer-safety-logo-and-multiplatform-branding.md:
 # presentation.owner, numeración implícita (1..13), y contenido deliberadamente
 # denso (badges largos en comparison-01, caption larga en data-01, fila extra
 # en table-01) para ejercitar el fix de desborde hacia el pie de página.
 # Criterio de aceptación: node scripts/validate-deck-spec.mjs tests/schema/example-deck.yaml -> VÁLIDO
-schemaVersion: "0.2.0"
+schemaVersion: "0.3.0"
 
 presentation:
   title: "Resultados institucionales 2025"
@@ -52,6 +53,8 @@ slides:
     sectionNumber: "01"
     title: "Contexto institucional"
     descriptor: "Panorama general 2025"
+    background: photo
+    photo: assets/campus-puente.jpg
 
   - id: message-01
     type: message

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:unisabana:schemas:deck-spec:0.2.0",
+  "$id": "urn:unisabana:schemas:deck-spec:0.3.0",
   "title": "Universidad de La Sabana — Deck Spec",
   "$comment": "Hito 4 (planning/03-migration-roadmap.md). Representación intermedia declarativa: el agente (skill unisabana-create) produce una instancia de este esquema; core/brand/rules/*.json y el futuro validators/ (Hito 6) la comprueban antes de renderizar. Consolida dos taxonomías de la fuente original: las 10 familias narrativas de claude-design-system/readme.md §9 (cover, agenda, section-separator, message, data, comparison, process/timeline, table/technical, quote, closing) y los 10 ejemplos de claude-design-system/slides/*.html — 'photo-cover' se modela como cover{background:photo} y 'dashboard' como table{density:high}, sin perder ninguna de las dos.\n\nPolítica de evolución (SemVer del esquema, independiente del SemVer del plugin): PATCH = aclaraciones que no cambian validación; MINOR = campos nuevos opcionales o un nuevo valor de enum aditivo; MAJOR = cualquier campo requerido nuevo, cualquier remoción, o cualquier restricción de un enum existente. Un campo nunca se elimina sin pasar primero por un aviso 'deprecated' en su description durante al menos una versión MINOR.",
   "type": "object",
@@ -9,7 +9,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "enum": ["0.1.0", "0.2.0"],
+      "enum": ["0.1.0", "0.2.0", "0.3.0"],
       "description": "Versión del propio esquema del Deck Spec (no la versión del plugin ni la de core/brand)."
     },
     "presentation": { "$ref": "#/$defs/presentation" },
@@ -197,8 +197,20 @@
         "type": { "const": "separator" },
         "sectionNumber": { "type": ["string", "number"] },
         "title": { "type": "string", "minLength": 1 },
-        "descriptor": { "type": "string" }
-      }
+        "descriptor": { "type": "string" },
+        "background": {
+          "type": "string",
+          "enum": ["navy", "photo"],
+          "default": "navy",
+          "description": "'photo' = cortinilla cinematográfica: fotografía de campus a página completa con velo de degradado navy para contraste, en vez del degradado navy plano. planning/09-visual-richness-and-content-density.md."
+        },
+        "photo": {
+          "type": "string",
+          "description": "Ruta relativa dentro de core/brand/rules/imagery.json#/approvedCampusPhotography. Requerido si background='photo'."
+        }
+      },
+      "if": { "properties": { "background": { "const": "photo" } } },
+      "then": { "required": ["photo"] }
     },
 
     "slideMessage": {

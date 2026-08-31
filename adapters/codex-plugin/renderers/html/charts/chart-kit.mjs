@@ -95,6 +95,48 @@ export function formatNumber(n) {
 // Título de módulo (encabezado "una única idea") + wrapper — cada renderer de
 // familia solo genera el gráfico en sí; el título/fuente del módulo los pone
 // el document.mjs del artefacto para mantener el mismo Y de arranque en todos.
+// Envuelve una etiqueta en hasta 3 líneas que quepan en maxWidthPx — evita
+// cortar texto en vez de dejarlo simplemente más angosto o en varias líneas.
+export function wrapText(label, maxWidthPx, { sizePx = 13, weight = 700 } = {}) {
+  const words = String(label).split(/\s+/);
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (estimateTextWidthPxLocal(candidate, sizePx, weight) > maxWidthPx && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = candidate;
+    }
+    if (lines.length === 2) break;
+  }
+  if (current && lines.length < 3) lines.push(current);
+  const consumedWords = lines.join(" ").split(/\s+/).length;
+  if (consumedWords < words.length && lines.length) {
+    lines[lines.length - 1] = `${lines[lines.length - 1]}…`;
+  }
+  return lines.length ? lines : [label];
+}
+
+// Misma heurística de ancho de carácter que renderers/html/text-measure.mjs
+// (no se importa directamente para no crear una dependencia circular entre
+// charts/ y el árbol de renderers/html/*.mjs de más alto nivel).
+const AVG_CHAR_WIDTH_FACTOR = { 400: 0.5, 500: 0.52, 600: 0.54, 700: 0.57, 900: 0.6 };
+function estimateTextWidthPxLocal(text, sizePx, weight) {
+  const factor = AVG_CHAR_WIDTH_FACTOR[weight] ?? 0.55;
+  return text.length * sizePx * factor;
+}
+
+export function multilineTextEl(x, y, lines, { size = 13, weight = 700, color = "var(--text-strong)", lineHeight = 17 } = {}) {
+  const totalH = lines.length * lineHeight;
+  const startY = y - totalH / 2 + lineHeight * 0.75;
+  const tspans = lines
+    .map((line, i) => `<tspan x="${x}" y="${startY + i * lineHeight}">${escapeXml(line)}</tspan>`)
+    .join("");
+  return `<text text-anchor="middle" font-family="var(--font-sans)" font-size="${size}" font-weight="${weight}" fill="${color}">${tspans}</text>`;
+}
+
 export function legendRow(labels, { widthPx } = {}) {
   const items = labels
     .map(

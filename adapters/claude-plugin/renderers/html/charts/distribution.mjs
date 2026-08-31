@@ -72,12 +72,16 @@ function boxPlot(points, widthPx, { violin = false } = {}) {
   const max = Math.max(...allValues);
   const min = Math.min(...allValues);
   const scaleY = scaleLinear([min, max], [CHART_H, 0]);
-  const bandWidth = Math.min(90, (widthPx - LABEL_GUTTER) / names.length - 20);
+  const slot = (widthPx - LABEL_GUTTER - 40) / names.length;
+  const bandWidth = Math.min(130, slot * 0.55);
   let svg = gridlinesY({ x0: LABEL_GUTTER, x1: widthPx, y0: CHART_H, y1: 0, maxValue: max });
   names.forEach((name, i) => {
     const values = groups.get(name);
     const { min: mn, q1, median, q3, max: mx } = quartiles(values);
-    const cx = LABEL_GUTTER + 40 + i * ((widthPx - LABEL_GUTTER - 40) / names.length);
+    // Centrado de banda (+0.5 del slot) — sin esto los grupos quedaban
+    // apiñados a la izquierda en vez de repartidos por todo el ancho
+    // disponible, dejando una franja vacía a la derecha.
+    const cx = LABEL_GUTTER + 40 + slot * (i + 0.5);
     svg += lineEl(cx, scaleY(mn), cx, scaleY(mx), { color: "var(--ink-300)", width: 2 });
     if (violin) {
       // Silueta simplificada (no es una KDE real): un rombo entre q1/q3 que se

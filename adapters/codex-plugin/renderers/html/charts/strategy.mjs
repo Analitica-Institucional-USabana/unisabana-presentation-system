@@ -4,16 +4,20 @@
 // §9 "únicamente colores institucionales autorizados") — la intensidad de
 // riesgo se codifica con la rampa de acento (claro=bajo, oscuro=alto), nunca
 // con un color fuera de la paleta activa.
-import { escapeXml, colorForIndex, textEl } from "./chart-kit.mjs";
+import { escapeXml, colorForIndex, textEl, svgWrap, wrapText, multilineTextEl } from "./chart-kit.mjs";
 
-const SIZE = 380;
-const PAD = 40;
+const PAD = 56;
+
+function centered(widthPx, innerHtml) {
+  return `<div style="display:flex;justify-content:center;width:${widthPx}px">${innerHtml}</div>`;
+}
 
 function quadrantGrid(items, widthPx, axes, { quadrantLabels, shadeByQuadrant = false, sizeFromItem = false }) {
-  const size = Math.min(widthPx, SIZE + PAD * 2);
-  const plotSize = size - PAD * 2;
+  const plotSize = Math.max(320, Math.min(widthPx * 0.55, 620));
+  const size = plotSize + PAD * 2;
   const cx = PAD + plotSize / 2;
   const cy = PAD + plotSize / 2;
+  const extraH = axes?.xLabel ? 28 : 0;
 
   let svg = "";
   if (shadeByQuadrant) {
@@ -27,10 +31,10 @@ function quadrantGrid(items, widthPx, axes, { quadrantLabels, shadeByQuadrant = 
   svg += `<line x1="${PAD}" y1="${cy}" x2="${PAD + plotSize}" y2="${cy}" stroke="var(--ink-300)" stroke-width="1" />`;
 
   if (quadrantLabels) {
-    svg += textEl(PAD + plotSize * 0.25, PAD + 16, quadrantLabels.topLeft, { size: 12, anchor: "middle", weight: 700, color: "var(--text-muted)" });
-    svg += textEl(PAD + plotSize * 0.75, PAD + 16, quadrantLabels.topRight, { size: 12, anchor: "middle", weight: 700, color: "var(--text-muted)" });
-    svg += textEl(PAD + plotSize * 0.25, PAD + plotSize - 6, quadrantLabels.bottomLeft, { size: 12, anchor: "middle", weight: 700, color: "var(--text-muted)" });
-    svg += textEl(PAD + plotSize * 0.75, PAD + plotSize - 6, quadrantLabels.bottomRight, { size: 12, anchor: "middle", weight: 700, color: "var(--text-muted)" });
+    svg += textEl(PAD + plotSize * 0.25, PAD + 20, quadrantLabels.topLeft, { size: 13, anchor: "middle", weight: 700, color: "var(--text-muted)" });
+    svg += textEl(PAD + plotSize * 0.75, PAD + 20, quadrantLabels.topRight, { size: 13, anchor: "middle", weight: 700, color: "var(--text-muted)" });
+    svg += textEl(PAD + plotSize * 0.25, PAD + plotSize - 8, quadrantLabels.bottomLeft, { size: 13, anchor: "middle", weight: 700, color: "var(--text-muted)" });
+    svg += textEl(PAD + plotSize * 0.75, PAD + plotSize - 8, quadrantLabels.bottomRight, { size: 13, anchor: "middle", weight: 700, color: "var(--text-muted)" });
   }
 
   const xs = items.map((it) => it.x), ys = items.map((it) => it.y);
@@ -41,21 +45,22 @@ function quadrantGrid(items, widthPx, axes, { quadrantLabels, shadeByQuadrant = 
 
   const maxSize = Math.max(1, ...items.map((it) => it.size || 1));
   items.forEach((it, i) => {
-    const r = sizeFromItem ? 8 + ((it.size || 1) / maxSize) * 22 : 9;
-    svg += `<circle cx="${px(it.x)}" cy="${py(it.y)}" r="${r}" fill="${colorForIndex(i)}" stroke="var(--paper)" stroke-width="2" />`;
-    svg += textEl(px(it.x), py(it.y) - r - 6, it.label, { size: 12, anchor: "middle", weight: 600, color: "var(--text-strong)" });
+    const r = sizeFromItem ? 10 + ((it.size || 1) / maxSize) * 28 : 11;
+    svg += `<circle cx="${px(it.x)}" cy="${py(it.y)}" r="${r}" fill="${colorForIndex(i)}" stroke="var(--paper)" stroke-width="2.5" />`;
+    const lines = wrapText(it.label, 150, { sizePx: 13, weight: 700 });
+    svg += multilineTextEl(px(it.x), py(it.y) - r - 10 - (lines.length - 1) * 15, lines, { size: 13, weight: 700, color: "var(--text-strong)" });
   });
 
-  if (axes?.xLabel) svg += textEl(PAD + plotSize / 2, PAD + plotSize + 28, axes.xLabel, { size: 13, anchor: "middle", weight: 700, color: "var(--text-strong)" });
-  if (axes?.yLabel) svg += `<text x="${PAD - 24}" y="${PAD + plotSize / 2}" font-size="13" font-family="var(--font-sans)" font-weight="700" fill="var(--text-strong)" text-anchor="middle" transform="rotate(-90 ${PAD - 24} ${PAD + plotSize / 2})">${escapeXml(axes.yLabel)}</text>`;
+  if (axes?.xLabel) svg += textEl(PAD + plotSize / 2, PAD + plotSize + 32, axes.xLabel, { size: 14, anchor: "middle", weight: 700, color: "var(--text-strong)" });
+  if (axes?.yLabel) svg += `<text x="${PAD - 28}" y="${PAD + plotSize / 2}" font-size="14" font-family="var(--font-sans)" font-weight="700" fill="var(--text-strong)" text-anchor="middle" transform="rotate(-90 ${PAD - 28} ${PAD + plotSize / 2})">${escapeXml(axes.yLabel)}</text>`;
 
-  return { heightPx: size + (axes?.xLabel ? 20 : 0), html: `<svg width="${size}" height="${size + (axes?.xLabel ? 20 : 0)}" viewBox="0 0 ${size} ${size + (axes?.xLabel ? 20 : 0)}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: size + extraH, html: centered(widthPx, svgWrap(size, size + extraH, svg)) };
 }
 
 function radar(items, widthPx) {
-  const size = Math.min(widthPx, 380);
+  const size = Math.max(360, Math.min(widthPx * 0.5, 560));
   const cx = size / 2, cy = size / 2;
-  const r = size / 2 - 50;
+  const r = size / 2 - 70;
   const max = Math.max(1, ...items.map((it) => it.y));
   const n = items.length;
   const angleFor = (i) => -Math.PI / 2 + (i / n) * Math.PI * 2;
@@ -73,28 +78,29 @@ function radar(items, widthPx) {
     const v = (it.y / max) * r;
     return `${cx + v * Math.cos(a)},${cy + v * Math.sin(a)}`;
   });
-  svg += `<polygon points="${dataPts.join(" ")}" fill="var(--accent)" opacity="0.45" stroke="var(--accent-dark)" stroke-width="2" />`;
+  svg += `<polygon points="${dataPts.join(" ")}" fill="var(--accent)" opacity="0.45" stroke="var(--accent-dark)" stroke-width="2.5" />`;
   items.forEach((it, i) => {
     const a = angleFor(i);
-    const lx = cx + (r + 24) * Math.cos(a);
-    const ly = cy + (r + 24) * Math.sin(a);
-    svg += textEl(lx, ly, it.label, { size: 12, anchor: "middle", weight: 600, color: "var(--text-strong)" });
+    const lx = cx + (r + 34) * Math.cos(a);
+    const ly = cy + (r + 34) * Math.sin(a);
+    const lines = wrapText(it.label, 120, { sizePx: 13, weight: 600 });
+    svg += multilineTextEl(lx, ly, lines, { size: 13, weight: 600, color: "var(--text-strong)" });
   });
-  return { heightPx: size, html: `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: size, html: centered(widthPx, svgWrap(size, size, svg)) };
 }
 
 function venn(items, widthPx) {
-  const size = Math.min(widthPx, 380);
-  const r = size / 3.2;
+  const size = Math.max(360, Math.min(widthPx * 0.48, 520));
+  const r = size / 3.1;
   const cy = size / 2;
   const positions = items.length === 2 ? [size / 2 - r * 0.55, size / 2 + r * 0.55] : [size / 2 - r * 0.6, size / 2 + r * 0.6, size / 2];
   const yPositions = items.length === 3 ? [cy - r * 0.4, cy - r * 0.4, cy + r * 0.5] : [cy, cy];
   let svg = "";
   items.forEach((it, i) => {
-    svg += `<circle cx="${positions[i]}" cy="${yPositions[i] ?? cy}" r="${r}" fill="${colorForIndex(i)}" opacity="0.45" stroke="${colorForIndex(i)}" stroke-width="2" />`;
-    svg += textEl(positions[i], (yPositions[i] ?? cy) - r - 10, it.label, { size: 13, anchor: "middle", weight: 700, color: "var(--text-strong)" });
+    svg += `<circle cx="${positions[i]}" cy="${yPositions[i] ?? cy}" r="${r}" fill="${colorForIndex(i)}" opacity="0.45" stroke="${colorForIndex(i)}" stroke-width="2.5" />`;
+    svg += textEl(positions[i], (yPositions[i] ?? cy) - r - 14, it.label, { size: 14, anchor: "middle", weight: 700, color: "var(--text-strong)" });
   });
-  return { heightPx: size, html: `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: size, html: centered(widthPx, svgWrap(size, size, svg)) };
 }
 
 function canvas(items, widthPx) {
@@ -104,14 +110,14 @@ function canvas(items, widthPx) {
   const cards = categories
     .map((cat, i) => {
       const catItems = items.filter((it) => (it.category || "General") === cat);
-      const bullets = catItems.map((it) => `<div style="font-size:14px;color:var(--text-body);margin-bottom:6px">• ${escapeXml(it.label)}</div>`).join("");
-      return `<div style="width:${colWidth}px;box-sizing:border-box;background:var(--paper);border:1px solid var(--border-subtle);border-top:4px solid ${colorForIndex(i)};border-radius:var(--radius-md);padding:14px;margin-bottom:16px">
-        <div style="font-family:var(--font-sans);font-size:14px;font-weight:800;color:var(--text-strong);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px">${escapeXml(cat)}</div>
+      const bullets = catItems.map((it) => `<div style="font-size:15px;color:var(--text-body);margin-bottom:8px;line-height:1.4">• ${escapeXml(it.label)}</div>`).join("");
+      return `<div style="width:${colWidth}px;box-sizing:border-box;background:var(--paper);border:1px solid var(--border-subtle);border-top:4px solid ${colorForIndex(i)};border-radius:var(--radius-md);padding:18px;margin-bottom:16px">
+        <div style="font-family:var(--font-sans);font-size:14px;font-weight:800;color:var(--text-strong);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px">${escapeXml(cat)}</div>
         ${bullets}
       </div>`;
     })
     .join("");
-  return { heightPx: 220, html: `<div style="display:flex;flex-wrap:wrap;gap:16px;width:${widthPx}px">${cards}</div>` };
+  return { heightPx: 240, html: `<div style="display:flex;flex-wrap:wrap;gap:16px;width:${widthPx}px">${cards}</div>` };
 }
 
 export default function renderStrategy(module, { widthPx } = {}) {

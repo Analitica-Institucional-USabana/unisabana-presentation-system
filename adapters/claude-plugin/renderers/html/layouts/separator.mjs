@@ -1,5 +1,6 @@
 import { SAFE, TYPE_SCALE_PX, TYPE_SCALE_MIN_PX, centeredContentY } from "../constants.mjs";
 import { title, bodyText } from "../elements.mjs";
+import { brandAssetDataUri } from "../embed.mjs";
 import { NAVY_GRADIENT_CSS, waveOverlay } from "../decor.mjs";
 import { estimateBlockHeightPx, fitTitleSizePx } from "../text-measure.mjs";
 
@@ -18,7 +19,17 @@ export default function renderSeparator(slide, { repoRoot }) {
   const contentHeight = (slide.sectionNumber != null ? 130 : 0) + titleHeight + 20 + descriptorHeight;
 
   let y = centeredContentY("separator", contentHeight);
-  let boxes = waveOverlay(repoRoot);
+  let boxes = "";
+  let backgroundCss;
+  if (slide.background === "photo") {
+    // Cortinilla cinematográfica (ejemplo compartido por el usuario): mismo
+    // velo que cover{background:photo}, reutilizado tal cual — planning/09-visual-richness-and-content-density.md.
+    const dataUri = brandAssetDataUri(repoRoot, slide.photo);
+    backgroundCss = `background-image:linear-gradient(180deg, rgba(13,33,87,0.15), rgba(13,33,87,0.8)), url('${dataUri}');background-size:cover;background-position:center;`;
+  } else {
+    backgroundCss = NAVY_GRADIENT_CSS;
+    boxes += waveOverlay(repoRoot);
+  }
 
   if (slide.sectionNumber != null) {
     boxes += title(String(slide.sectionNumber), { x: SAFE.left, y, sizePx: 96, color: "var(--sabana-blue-300)" });
@@ -31,5 +42,5 @@ export default function renderSeparator(slide, { repoRoot }) {
     boxes += bodyText(slide.descriptor, { x: SAFE.left, y, width: 800, sizePx: 20, color: "var(--sabana-blue-300)" });
   }
 
-  return { tone: "dark", backgroundCss: NAVY_GRADIENT_CSS, boxesHtml: boxes };
+  return { tone: "dark", backgroundCss, boxesHtml: boxes };
 }

@@ -1,6 +1,6 @@
 // Familia "Procesos" (guidelines/infografias.md §4). module.steps
 // ({label, description?, icon?, lane?, value?}).
-import { escapeXml, colorForIndex, textEl, formatNumber } from "./chart-kit.mjs";
+import { escapeXml, colorForIndex, textEl, formatNumber, svgWrap } from "./chart-kit.mjs";
 import { iconMarkup } from "../icons.mjs";
 
 const STEP_GAP = 16;
@@ -10,6 +10,7 @@ function chevron(steps, widthPx, { repoRoot } = {}) {
   const w = (widthPx - STEP_GAP * (n - 1)) / n;
   const h = 130;
   const notch = 18;
+  const badgeR = 27;
   let svg = "";
   steps.forEach((step, i) => {
     const x = i * (w + STEP_GAP);
@@ -17,9 +18,14 @@ function chevron(steps, widthPx, { repoRoot } = {}) {
       ? `${x},0 ${x + w},0 ${x + w},${h} ${x},${h} ${x + notch},${h / 2}`
       : `${x},0 ${x + w},0 ${x + w + notch},${h / 2} ${x + w},${h} ${x},${h} ${x + notch},${h / 2}`;
     svg += `<polygon points="${points}" fill="${colorForIndex(i)}" />`;
-    svg += textEl(x + w / 2 + notch / 2, 30, `${i + 1}`, { size: 20, anchor: "middle", weight: 900, color: "var(--paper)" });
+    // Insignia circular centrada (antes el número flotaba solo cerca del
+    // borde superior de la flecha, sin relleno ni centrado real).
+    const numCx = x + w / 2 + notch / 2;
+    const numCy = h / 2;
+    svg += `<circle cx="${numCx}" cy="${numCy}" r="${badgeR}" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.6)" stroke-width="2" />`;
+    svg += textEl(numCx, numCy + 9, `${i + 1}`, { size: 26, anchor: "middle", weight: 900, color: "var(--paper)" });
   });
-  const svgHtml = `<svg width="${widthPx}" height="${h}" viewBox="0 0 ${widthPx} ${h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  const svgHtml = svgWrap(widthPx, h, svg);
   const labels = steps
     .map((step, i) => {
       const x = i * (w + STEP_GAP);
@@ -49,19 +55,19 @@ function pipeline(steps, widthPx) {
       svg += `<polygon points="${ax},${boxH / 2 - 7} ${ax + arrowW - 2},${boxH / 2} ${ax},${boxH / 2 + 7}" fill="var(--ink-500)" />`;
     }
   });
-  return { heightPx: boxH, html: `<svg width="${widthPx}" height="${boxH}" viewBox="0 0 ${widthPx} ${boxH}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: boxH, html: svgWrap(widthPx, boxH, svg) };
 }
 
 function flowchart(steps, widthPx) {
-  const boxH = 56;
-  const gap = 34;
-  const boxW = Math.min(360, widthPx);
+  const boxH = 64;
+  const gap = 40;
+  const boxW = Math.min(560, widthPx * 0.6);
   const cx = widthPx / 2;
   let svg = "";
   steps.forEach((step, i) => {
     const y = i * (boxH + gap);
     svg += `<rect x="${cx - boxW / 2}" y="${y}" width="${boxW}" height="${boxH}" rx="10" fill="${colorForIndex(i)}" />`;
-    svg += textEl(cx, y + boxH / 2 + 5, step.label, { size: 15, anchor: "middle", weight: 700, color: "var(--paper)" });
+    svg += textEl(cx, y + boxH / 2 + 5, step.label, { size: 16, anchor: "middle", weight: 700, color: "var(--paper)" });
     if (i < steps.length - 1) {
       const ay = y + boxH;
       svg += `<line x1="${cx}" y1="${ay}" x2="${cx}" y2="${ay + gap - 8}" stroke="var(--ink-400)" stroke-width="2" />`;
@@ -69,13 +75,13 @@ function flowchart(steps, widthPx) {
     }
   });
   const height = steps.length * boxH + (steps.length - 1) * gap;
-  return { heightPx: height, html: `<svg width="${widthPx}" height="${height}" viewBox="0 0 ${widthPx} ${height}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: height, html: svgWrap(widthPx, height, svg) };
 }
 
 function swimlane(steps, widthPx) {
   const lanes = [...new Set(steps.map((s) => s.lane || "General"))];
-  const laneH = 70;
-  const boxW = 150;
+  const laneH = 84;
+  const boxW = Math.min(220, (widthPx - 160) / 3);
   const gap = 30;
   let svg = "";
   lanes.forEach((lane, li) => {
@@ -92,9 +98,9 @@ function swimlane(steps, widthPx) {
     const x = 130 + idx * (boxW + gap);
     const y = li * laneH + 34;
     svg += `<rect x="${x}" y="${y}" width="${boxW}" height="${laneH - 24}" rx="8" fill="${colorForIndex(li)}" />`;
-    svg += textEl(x + boxW / 2, y + (laneH - 24) / 2 + 5, step.label, { size: 13, anchor: "middle", weight: 700, color: "var(--paper)" });
+    svg += textEl(x + boxW / 2, y + (laneH - 24) / 2 + 5, step.label, { size: 14, anchor: "middle", weight: 700, color: "var(--paper)" });
   });
-  return { heightPx: lanes.length * laneH, html: `<svg width="${widthPx}" height="${lanes.length * laneH}" viewBox="0 0 ${widthPx} ${lanes.length * laneH}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: lanes.length * laneH, html: svgWrap(widthPx, lanes.length * laneH, svg) };
 }
 
 function funnel(steps, widthPx) {
@@ -111,7 +117,7 @@ function funnel(steps, widthPx) {
     svg += textEl(widthPx / 2, y + rowH / 2 + 5, `${step.label}${step.value != null ? ` · ${formatNumber(step.value)}` : ""}`, { size: 14, anchor: "middle", weight: 700, color: "var(--paper)" });
   });
   const height = n * (rowH + 6) - 6;
-  return { heightPx: height, html: `<svg width="${widthPx}" height="${height}" viewBox="0 0 ${widthPx} ${height}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>` };
+  return { heightPx: height, html: svgWrap(widthPx, height, svg) };
 }
 
 function journeyMap(steps, widthPx, opts) {

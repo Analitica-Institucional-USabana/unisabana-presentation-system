@@ -1,6 +1,7 @@
-// Regla determinista: toda foto referenciada en un slide cover{background:photo}
-// debe estar en la whitelist de core/brand/rules/imagery.json. Nunca se infiere
-// ni se permite una ruta fuera de esa lista (principio 3.6, preservación institucional).
+// Regla determinista: toda foto referenciada en un slide cover|separator con
+// background:photo debe estar en la whitelist de core/brand/rules/imagery.json.
+// Nunca se infiere ni se permite una ruta fuera de esa lista (principio 3.6,
+// preservación institucional).
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -10,7 +11,7 @@ export function checkImagery(deck, { repoRoot }, reportsById) {
   const approved = new Set(imagery.approvedCampusPhotography.map((a) => a.path));
 
   for (const slide of deck.slides) {
-    if (slide.type !== "cover" || slide.background !== "photo") continue;
+    if ((slide.type !== "cover" && slide.type !== "separator") || slide.background !== "photo") continue;
     const r = reportsById.get(slide.id);
     if (!approved.has(slide.photo)) {
       r.add(
